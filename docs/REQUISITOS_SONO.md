@@ -12,7 +12,7 @@ O sistema é composto por cinco componentes principais:
 
 **Aplicação Mobile**: Desenvolvida em C# utilizando o framework .NET MAUI para garantir uma interface responsiva e intuitiva para dispositivos Android, agora com duas seções principais: Cardíaco e Sono.
 
-**Aplicação Web (Frontend)**: Desenvolvida em React com JavaScript/TypeScript, aproveitando o ecossistema de componentes reutilizáveis e o gerenciamento eficiente de estado para garantir uma interface responsiva e intuitiva que funciona perfeitamente em diferentes navegadores e dispositivos, agora com duas seções principais: Cardíaco e Sono.
+**Aplicação Web (Frontend)**: Desenvolvida em React com JavaScript/TypeScript, aproveitando o ecossistema de componentes reutilizáveis e o gerenciamento eficiente de estado para garantir uma interface responsiva e intuitiva que funciona perfeitamente em diferentes navegadores e dispositivos.
 
 **API Gateway**: Implementada em Node.js com Express, responsável por gerenciar as requisições do aplicativo, roteamento entre módulos, autenticação de usuários e orquestração das comunicações.
 
