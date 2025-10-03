@@ -434,7 +434,7 @@ Mobile App / Web App → API Gateway → Service Bus → AI Processing → Datab
                                 ▼                        ▼
                        ┌─────────────────┐    ┌─────────────────┐
                        │   Database      │    │  AI Processing  │
-                       │  (PostgreSQL)   │    │   (Python)      │
+                       │    (MySQL)      │    │   (Python)      │
                        └─────────────────┘    └─────────────────┘
 ```
 
