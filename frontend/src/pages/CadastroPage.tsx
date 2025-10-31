@@ -11,6 +11,7 @@ import {
     EyeOff,
 } from "lucide-react";
 import "./CadastroPage.css";
+import api from "../services/api";
 
 interface FormData {
     nomeCompleto: string;
@@ -133,22 +134,40 @@ const CadastroPage: React.FC = () => {
         setIsLoading(true);
 
         try {
-            // Simular chamada para API
-            await new Promise((resolve) => setTimeout(resolve, 2000));
+            const response = await api.post("/medicos", {
+                nome: formData.nomeCompleto,
+                crm: formData.crm,
+                email: formData.email,
+                senha: formData.senha,
+                especialidade: formData.especialidade
+            });
 
-            // Aqui você faria a chamada real para sua API
-            console.log("Dados de cadastro:", formData);
+            console.log("Cadastro realizado com sucesso:", response.data);
 
-            // Redirecionar para login após sucesso
-            navigate("/login", {
+            navigate("/", {
                 state: {
-                    message:
-                        "Cadastro realizado com sucesso! Faça login para continuar.",
+                    message: "Cadastro realizado com sucesso! Faça login para continuar.",
                 },
             });
-        } catch (error) {
+
+        } catch (error: any) {
             console.error("Erro no cadastro:", error);
-            // Aqui você pode mostrar uma mensagem de erro
+
+            let errorMessage = "Erro desconhecido. Tente novamente.";
+
+            if (error.response?.data?.error) {
+                errorMessage = error.response.data.error;
+            } else if (error.response?.data?.errors) {
+                const validationErrors = error.response.data.errors;
+                errorMessage = validationErrors.map((err: any) => err.msg).join(', ');
+            } else if (error.message) {
+                errorMessage = "Erro ao conectar com o servidor. Verifique se o backend está rodando.";
+            }
+
+            setErrors({
+                ...errors,
+                email: errorMessage
+            });
         } finally {
             setIsLoading(false);
         }
@@ -161,7 +180,6 @@ const CadastroPage: React.FC = () => {
     return (
         <div className="cadastro-container">
             <div className="cadastro-content">
-                {/* Header com Logo */}
                 <div className="cadastro-header">
                     <div className="logo-container">
                         <h1 className="logo-text">HEALTHCHECK</h1>
@@ -171,7 +189,6 @@ const CadastroPage: React.FC = () => {
                     </div>
                 </div>
 
-                {/* Ícone e Título */}
                 <div className="cadastro-icon-section">
                     <div className="icon-circle">
                         <UserPlus size={40} />
@@ -182,9 +199,7 @@ const CadastroPage: React.FC = () => {
                     </p>
                 </div>
 
-                {/* Formulário */}
                 <form onSubmit={handleSubmit} className="cadastro-form">
-                    {/* Nome Completo */}
                     <div className="form-group">
                         <div className="input-wrapper">
                             <User className="input-icon" size={20} />
@@ -194,9 +209,8 @@ const CadastroPage: React.FC = () => {
                                 placeholder="Nome completo"
                                 value={formData.nomeCompleto}
                                 onChange={handleInputChange}
-                                className={`form-input ${
-                                    errors.nomeCompleto ? "error" : ""
-                                }`}
+                                className={`form-input ${errors.nomeCompleto ? "error" : ""
+                                    }`}
                                 autoComplete="name"
                             />
                         </div>
@@ -207,7 +221,6 @@ const CadastroPage: React.FC = () => {
                         )}
                     </div>
 
-                    {/* CRM */}
                     <div className="form-group">
                         <div className="input-wrapper">
                             <Stethoscope className="input-icon" size={20} />
@@ -217,9 +230,8 @@ const CadastroPage: React.FC = () => {
                                 placeholder="CRM (apenas números)"
                                 value={formData.crm}
                                 onChange={handleInputChange}
-                                className={`form-input ${
-                                    errors.crm ? "error" : ""
-                                }`}
+                                className={`form-input ${errors.crm ? "error" : ""
+                                    }`}
                                 maxLength={6}
                             />
                         </div>
@@ -228,7 +240,6 @@ const CadastroPage: React.FC = () => {
                         )}
                     </div>
 
-                    {/* E-mail */}
                     <div className="form-group">
                         <div className="input-wrapper">
                             <Mail className="input-icon" size={20} />
@@ -238,9 +249,8 @@ const CadastroPage: React.FC = () => {
                                 placeholder="E-mail"
                                 value={formData.email}
                                 onChange={handleInputChange}
-                                className={`form-input ${
-                                    errors.email ? "error" : ""
-                                }`}
+                                className={`form-input ${errors.email ? "error" : ""
+                                    }`}
                                 autoComplete="email"
                             />
                         </div>
@@ -251,7 +261,6 @@ const CadastroPage: React.FC = () => {
                         )}
                     </div>
 
-                    {/* Senha */}
                     <div className="form-group">
                         <div className="input-wrapper">
                             <Lock className="input-icon" size={20} />
@@ -261,9 +270,8 @@ const CadastroPage: React.FC = () => {
                                 placeholder="Senha"
                                 value={formData.senha}
                                 onChange={handleInputChange}
-                                className={`form-input ${
-                                    errors.senha ? "error" : ""
-                                }`}
+                                className={`form-input ${errors.senha ? "error" : ""
+                                    }`}
                                 autoComplete="new-password"
                             />
                             <button
@@ -285,7 +293,6 @@ const CadastroPage: React.FC = () => {
                         )}
                     </div>
 
-                    {/* Confirmar Senha */}
                     <div className="form-group">
                         <div className="input-wrapper">
                             <Lock className="input-icon" size={20} />
@@ -295,9 +302,8 @@ const CadastroPage: React.FC = () => {
                                 placeholder="Confirmar senha"
                                 value={formData.confirmarSenha}
                                 onChange={handleInputChange}
-                                className={`form-input ${
-                                    errors.confirmarSenha ? "error" : ""
-                                }`}
+                                className={`form-input ${errors.confirmarSenha ? "error" : ""
+                                    }`}
                                 autoComplete="new-password"
                             />
                             <button
@@ -321,7 +327,6 @@ const CadastroPage: React.FC = () => {
                         )}
                     </div>
 
-                    {/* Especialidade */}
                     <div className="form-group">
                         <div className="input-wrapper">
                             <Stethoscope className="input-icon" size={20} />
@@ -329,9 +334,8 @@ const CadastroPage: React.FC = () => {
                                 name="especialidade"
                                 value={formData.especialidade}
                                 onChange={handleInputChange}
-                                className={`form-select ${
-                                    errors.especialidade ? "error" : ""
-                                }`}
+                                className={`form-select ${errors.especialidade ? "error" : ""
+                                    }`}
                             >
                                 <option value="">
                                     Selecione sua especialidade
@@ -350,13 +354,11 @@ const CadastroPage: React.FC = () => {
                         )}
                     </div>
 
-                    {/* Botões */}
                     <div className="form-buttons">
                         <button
                             type="submit"
-                            className={`btn btn-primary btn-large ${
-                                isLoading ? "loading" : ""
-                            }`}
+                            className={`btn btn-primary btn-large ${isLoading ? "loading" : ""
+                                }`}
                             disabled={isLoading}
                         >
                             {isLoading ? (
@@ -384,7 +386,6 @@ const CadastroPage: React.FC = () => {
                     </div>
                 </form>
 
-                {/* Footer */}
                 <div className="cadastro-footer">
                     <p>Ao se cadastrar, você concorda com nossos</p>
                     <a href="#" className="link">
