@@ -86,7 +86,6 @@ const QuestionarioPage: React.FC = () => {
             </div>
 
             <form onSubmit={handleSubmit} className="questionario-form">
-                {/* Dados do Paciente */}
                 <div className="form-section">
                     <div className="section-header">
                         <User size={20} />
@@ -138,7 +137,6 @@ const QuestionarioPage: React.FC = () => {
                     </div>
                 </div>
 
-                {/* Dados Clínicos */}
                 <div className="form-section">
                     <div className="section-header">
                         <Activity size={20} />
@@ -222,7 +220,6 @@ const QuestionarioPage: React.FC = () => {
                             <Info
                                 size={16}
                                 className="info-icon"
-                                // title="Depressão do segmento ST induzida por exercício"
                             />
                         </label>
                         <input
@@ -274,7 +271,6 @@ const QuestionarioPage: React.FC = () => {
                         </div>
                     </div>
 
-                    {/* Toggles */}
                     <div className="toggles-section">
                         <div className="toggle-group">
                             <label className="toggle-label">

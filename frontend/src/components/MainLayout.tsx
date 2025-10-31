@@ -1,7 +1,5 @@
-import React from "react";
-import { useNavigate } from "react-router-dom";
-import { LogOut } from "lucide-react";
-import NavigationBar from "./NavigationBar";
+import React, { useState } from "react";
+import Sidebar from "./SideBar";
 import "./MainLayout.css";
 
 interface MainLayoutProps {
@@ -9,31 +7,21 @@ interface MainLayoutProps {
 }
 
 const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
-    const navigate = useNavigate();
+    const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
 
-    const handleLogout = () => {
-        localStorage.removeItem("token");
-        localStorage.removeItem("email");
-        navigate("/", { replace: true });
+    const handleToggleSidebar = () => {
+        setIsSidebarCollapsed(!isSidebarCollapsed);
     };
 
     return (
         <div className="main-layout">
-            <header className="main-header">
-                <div className="header-content">
-                    <h1 className="app-title">
-                        HealthCheck <span className="heart-icon">❤️</span>
-                    </h1>
-                    <button onClick={handleLogout} className="logout-btn">
-                        <LogOut size={18} />
-                        Sair
-                    </button>
-                </div>
-            </header>
-
-            <main className="main-content">{children}</main>
-
-            <NavigationBar />
+            <Sidebar 
+                isCollapsed={isSidebarCollapsed}
+                onToggle={handleToggleSidebar}
+            />
+            <main className={`main-content ${isSidebarCollapsed ? "main-content--expanded" : ""}`}>
+                {children}
+            </main>
         </div>
     );
 };
