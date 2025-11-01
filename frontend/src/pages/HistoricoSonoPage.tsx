@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Calendar, User, Activity, FileText } from "lucide-react"; 
+import { Calendar, User, Moon, Bed, FileText } from "lucide-react"; 
 import api from "../services/api";
-import { type IAvaliacao } from "../types";
-import "./HistoricoPage.css";
+import { type IAvaliacaoSono } from "../types";
+import "./HistoricoSonoPage.css";
 
-const HistoricoPage: React.FC = () => {
-    const [historico, setHistorico] = useState<IAvaliacao[]>([]);
+const HistoricoSonoPage: React.FC = () => {
+    const [historico, setHistorico] = useState<IAvaliacaoSono[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const navigate = useNavigate();
@@ -14,15 +14,14 @@ const HistoricoPage: React.FC = () => {
     useEffect(() => {
         const fetchHistorico = async () => {
             try {
-                const response = await api.get<IAvaliacao[]>("/historico");
-                // Ordena do mais recente para o mais antigo
+                const response = await api.get<IAvaliacaoSono[]>("/historico-sono");
                 const sortedData = response.data.sort(
                     (a, b) =>
                         new Date(b.data).getTime() - new Date(a.data).getTime()
                 );
                 setHistorico(sortedData);
             } catch {
-                setError("Não foi possível carregar o histórico.");
+                setError("Não foi possível carregar o histórico de sono.");
             } finally {
                 setLoading(false);
             }
@@ -31,16 +30,12 @@ const HistoricoPage: React.FC = () => {
         fetchHistorico();
     }, []);
 
-    const handleViewResult = (avaliacao: IAvaliacao) => {
-        const resultado = {
-            predicao: avaliacao.resultado,
-            recomendacao:
-                avaliacao.resultado === 1
-                    ? "Paciente apresenta alto risco cardiovascular. Recomenda-se acompanhamento médico especializado e exames complementares."
-                    : "Paciente apresenta baixo risco cardiovascular. Mantenha hábitos saudáveis e acompanhamento regular.",
-        };
-        navigate("/resultado", {
-            state: { questionario: avaliacao.questionario, resultado },
+    const handleViewResult = (avaliacao: IAvaliacaoSono) => {
+        navigate("/resultado-sono", {
+            state: { 
+                questionario: avaliacao.questionario, 
+                resultado: avaliacao.resultado 
+            },
         });
     };
 
@@ -54,9 +49,21 @@ const HistoricoPage: React.FC = () => {
         });
     };
 
+    const getQualityColor = (score: number) => {
+        if (score >= 8) return "#10B981";
+        if (score >= 6) return "#F59E0B";
+        return "#EF4444";
+    };
+
+    const getQualityText = (score: number) => {
+        if (score >= 8) return "Excelente";
+        if (score >= 6) return "Regular";
+        return "Ruim";
+    };
+
     if (loading) return (
         <div className="loading-state">
-            <Activity size={48} className="loading-spinner" />
+            <Moon size={48} className="loading-spinner" />
             <p>Carregando histórico...</p>
         </div>
     );
@@ -68,26 +75,26 @@ const HistoricoPage: React.FC = () => {
     );
 
     return (
-        <div className="historico-container">
-            <div className="historico-header">
-                <h1 className="historico-title">Histórico de Avaliações</h1>
-                <p className="historico-subtitle">
-                    Visualize todas as avaliações cardiovasculares realizadas
+        <div className="historico-sono-container">
+            <div className="historico-sono-header">
+                <h1 className="historico-sono-title">Histórico de Análises de Sono</h1>
+                <p className="historico-sono-subtitle">
+                    Visualize todas as avaliações de qualidade do sono realizadas
                 </p>
             </div>
 
             {historico.length === 0 ? (
                 <div className="empty-state">
-                    <FileText size={64} className="empty-icon" />
-                    <h3>Nenhuma avaliação encontrada</h3>
-                    <p>Realize sua primeira avaliação para ver o histórico aqui.</p>
+                    <Bed size={64} className="empty-icon" />
+                    <h3>Nenhuma análise de sono encontrada</h3>
+                    <p>Realize sua primeira análise para ver o histórico aqui.</p>
                 </div>
             ) : (
-                <div className="historico-grid">
+                <div className="historico-sono-grid">
                     {historico.map((item, index) => (
                         <div
                             key={`${item.data}-${index}`}
-                            className="avaliacao-card"
+                            className="avaliacao-sono-card"
                             onClick={() => handleViewResult(item)}
                         >
                             <div className="card-header">
@@ -101,35 +108,52 @@ const HistoricoPage: React.FC = () => {
                                         {formatarData(item.data)}
                                     </p>
                                 </div>
-                                <div className={`risco-badge ${item.resultado === 1 ? 'alto-risco' : 'baixo-risco'}`}>
-                                    {item.resultado === 1 ? "Alto Risco" : "Baixo Risco"}
+                                <div 
+                                    className="quality-badge"
+                                    style={{ backgroundColor: getQualityColor(item.resultado.scoreQualidade) }}
+                                >
+                                    {getQualityText(item.resultado.scoreQualidade)}
                                 </div>
+                            </div>
+
+                            <div className="quality-score-display">
+                                <Moon size={16} />
+                                <span>Score: {item.resultado.scoreQualidade}/10</span>
                             </div>
 
                             <div className="avaliacao-detalhes">
                                 <div className="detalhe-item">
-                                    <span className="detalhe-label">Idade</span>
-                                    <span className="detalhe-value">{item.questionario.age} anos</span>
-                                </div>
-                                <div className="detalhe-item">
-                                    <span className="detalhe-label">Sexo</span>
+                                    <span className="detalhe-label">Duração</span>
                                     <span className="detalhe-value">
-                                        {item.questionario.sex === 1 ? "Masculino" : "Feminino"}
+                                        {item.questionario.duracaoSono.toFixed(1)}h
                                     </span>
                                 </div>
                                 <div className="detalhe-item">
-                                    <span className="detalhe-label">Pressão</span>
+                                    <span className="detalhe-label">Qualidade</span>
                                     <span className="detalhe-value">
-                                        {item.questionario.restingBloodPressure} mmHg
+                                        {item.questionario.qualidadeSono}/10
                                     </span>
                                 </div>
                                 <div className="detalhe-item">
-                                    <span className="detalhe-label">Colesterol</span>
+                                    <span className="detalhe-label">Atividade</span>
                                     <span className="detalhe-value">
-                                        {item.questionario.serumCholesterol} mg/dl
+                                        {item.questionario.nivelAtividadeFisica}
+                                    </span>
+                                </div>
+                                <div className="detalhe-item">
+                                    <span className="detalhe-label">Estresse</span>
+                                    <span className="detalhe-value">
+                                        {item.questionario.nivelEstresse}/8
                                     </span>
                                 </div>
                             </div>
+
+                            {item.resultado.disturbiosIdentificados.length > 0 && (
+                                <div className="disturbios-alert">
+                                    <Bed size={14} />
+                                    <span>Distúrbios: {item.resultado.disturbiosIdentificados.join(", ")}</span>
+                                </div>
+                            )}
                         </div>
                     ))}
                 </div>
@@ -138,4 +162,4 @@ const HistoricoPage: React.FC = () => {
     );
 };
 
-export default HistoricoPage;
+export default HistoricoSonoPage;   

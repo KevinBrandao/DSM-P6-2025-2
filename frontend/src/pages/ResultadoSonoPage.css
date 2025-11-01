@@ -1,4 +1,4 @@
-.resultado-container {
+.resultado-sono-container {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -20,7 +20,7 @@
   box-sizing: border-box;
 }
 
-.resultado-card {
+.resultado-sono-card {
   text-align: center;
   padding: 30px 20px;
   border-radius: 0;
@@ -29,36 +29,56 @@
   max-width: none;
 }
 
-.resultado-card--low-risk {
+.resultado-sono-card--good {
   background-color: #E8F5E9;
 }
 
-.resultado-card--high-risk {
+.resultado-sono-card--poor {
   background-color: #FFF3E0;
 }
 
-.resultado-icon {
+.resultado-sono-icon {
   margin-bottom: 15px;
 }
 
-.resultado-icon svg {
+.resultado-sono-icon svg {
   width: 80px;
   height: 80px;
 }
 
-.risk-status-text {
-  font-size: 28px;
+.quality-score {
+  margin-bottom: 20px;
+}
+
+.score-circle {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: white;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 10px;
+}
+
+.score-number {
+  font-size: 36px;
   font-weight: bold;
-  margin-bottom: 15px;
+  line-height: 1;
+}
+
+.score-label {
+  font-size: 16px;
+  color: #666;
+}
+
+.quality-status {
+  font-size: 24px;
+  font-weight: bold;
   text-transform: uppercase;
-}
-
-.risk-status-text.low-risk {
-  color: #4CAF50;
-}
-
-.risk-status-text.high-risk {
-  color: #FFC107;
+  margin-bottom: 15px;
 }
 
 .recommendation {
@@ -66,6 +86,21 @@
   color: #555;
   line-height: 1.5;
   text-align: center;
+  margin-bottom: 15px;
+}
+
+.disturbios-alert {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background-color: #FEF3F2;
+  border: 1px solid #FECDCA;
+  border-radius: 8px;
+  padding: 12px;
+  color: #D92D20;
+  font-size: 14px;
+  margin-top: 15px;
 }
 
 .summary-card {
@@ -153,21 +188,23 @@
 }
 
 @media (max-width: 600px) {
-  .resultado-container {
+  .resultado-sono-container {
     padding: 0;
   }
 
-  .resultado-card,
+  .resultado-sono-card,
   .summary-card {
     border-radius: 0;
     padding-left: 20px;
     padding-right: 20px;
   }
-}
 
-.patient-basic,
-.clinical-data,
-.data-grid,
-.data-item {
-  display: none;
+  .score-circle {
+    width: 100px;
+    height: 100px;
+  }
+
+  .score-number {
+    font-size: 28px;
+  }
 }

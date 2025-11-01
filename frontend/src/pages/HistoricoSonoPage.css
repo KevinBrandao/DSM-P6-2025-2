@@ -1,0 +1,237 @@
+.historico-sono-container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 0 1rem;
+}
+
+.historico-sono-header {
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+.historico-sono-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--color-text-primary);
+    margin-bottom: 0.5rem;
+}
+
+.historico-sono-subtitle {
+    font-size: 1rem;
+    color: var(--color-text-muted);
+}
+
+.loading-state,
+.error-state,
+.empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem 2rem;
+    text-align: center;
+}
+
+.loading-state {
+    color: var(--color-text-muted);
+}
+
+.error-state {
+    color: var(--color-error);
+}
+
+.empty-state {
+    color: var(--color-text-muted);
+}
+
+.empty-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    opacity: 0.5;
+}
+
+.historico-sono-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+}
+
+.avaliacao-sono-card {
+    background: var(--color-bg-secondary);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.avaliacao-sono-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+    border-color: #8B5CF6;
+}
+
+.avaliacao-sono-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    background: var(--color-border);
+    transition: background-color 0.3s ease;
+}
+
+.avaliacao-sono-card:hover::before {
+    background: #8B5CF6;
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+}
+
+.paciente-info {
+    flex: 1;
+}
+
+.paciente-nome {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--color-text-primary);
+    margin-bottom: 0.25rem;
+}
+
+.avaliacao-data {
+    font-size: 0.875rem;
+    color: var(--color-text-muted);
+}
+
+.quality-badge {
+    padding: 0.375rem 0.75rem;
+    border-radius: var(--radius-full);
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: white;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.quality-score-display {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+    padding: 0.5rem;
+    background: rgba(139, 92, 246, 0.1);
+    border-radius: var(--radius-md);
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #8B5CF6;
+}
+
+.avaliacao-detalhes {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--color-border);
+}
+
+.detalhe-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.detalhe-label {
+    font-size: 0.75rem;
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.detalhe-value {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--color-text-secondary);
+}
+
+.disturbios-alert {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 1rem;
+    padding: 0.75rem;
+    background-color: #FEF3F2;
+    border: 1px solid #FECDCA;
+    border-radius: var(--radius-md);
+    color: #D92D20;
+    font-size: 0.75rem;
+    font-weight: 500;
+}
+
+@media (max-width: 768px) {
+    .historico-sono-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+    
+    .historico-sono-title {
+        font-size: 1.5rem;
+    }
+    
+    .avaliacao-sono-card {
+        padding: 1.25rem;
+    }
+    
+    .avaliacao-detalhes {
+        grid-template-columns: 1fr;
+        gap: 0.5rem;
+    }  
+}
+
+@media (max-width: 480px) {
+    .historico-sono-container {
+        padding: 0 0.5rem;
+    }
+    
+    .card-header {
+        flex-direction: column;
+        gap: 0.75rem;
+        align-items: flex-start;
+    }
+    
+    .quality-badge {
+        align-self: flex-start;
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.avaliacao-sono-card {
+    animation: fadeIn 0.5s ease forwards;
+}
+
+.avaliacao-sono-card:nth-child(odd) {
+    animation-delay: 0.1s;
+}
+
+.avaliacao-sono-card:nth-child(even) {
+    animation-delay: 0.2s;
+}

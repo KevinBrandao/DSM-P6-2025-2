@@ -1,30 +1,30 @@
-.questionario-container {
+.questionario-sono-container {
     max-width: none;
     width: 100%;
     margin: 0 auto;
     padding: 0 2rem;
 }
 
-.questionario-header {
+.questionario-sono-header {
     text-align: center;
     margin-bottom: 2rem;
     padding-top: 1rem;
 }
 
-.questionario-header h2 {
+.questionario-sono-header h2 {
     font-size: 2rem;
     font-weight: 700;
     color: var(--color-text-primary);
     margin-bottom: 0.5rem;
 }
 
-.questionario-header p {
+.questionario-sono-header p {
     color: var(--color-text-secondary);
     font-size: 1.1rem;
     margin: 0 auto;
 }
 
-.questionario-form {
+.questionario-sono-form {
     background: white;
     border-radius: 16px;
     padding: 2.5rem;
@@ -36,7 +36,7 @@
 
 .form-grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(5, 1fr);
     gap: 1.5rem;
     align-items: start;
 }
@@ -51,18 +51,11 @@
     font-size: 0.9rem;
     font-weight: 600;
     color: var(--color-text-primary);
-    display: flex;
-    align-items: center;
-    gap: 0.25rem;
-}
-
-.info-icon {
-    color: #6b7280;
-    cursor: help;
 }
 
 /* Input Styles */
-.input, .form-select {
+.input,
+.form-select {
     width: 100%;
     padding: 0.75rem 1rem;
     border: 2px solid #e5e7eb;
@@ -73,13 +66,15 @@
     font-family: inherit;
 }
 
-.input:focus, .form-select:focus {
+.input:focus,
+.form-select:focus {
     outline: none;
-    border-color: #667eea;
-    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    border-color: #8B5CF6;
+    box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
 }
 
-.input:hover, .form-select:hover {
+.input:hover,
+.form-select:hover {
     border-color: #9ca3af;
 }
 
@@ -98,10 +93,21 @@
 .slider-value {
     font-size: 0.9rem;
     font-weight: 600;
-    color: #667eea;
     background: #f8fafc;
     padding: 0.25rem 0.75rem;
     border-radius: 12px;
+}
+
+.slider-value.sleep {
+    color: #06B6D4;
+}
+
+.slider-value.health {
+    color: #10B981;
+}
+
+.slider-value.personal {
+    color: #8B5CF6;
 }
 
 .slider {
@@ -120,10 +126,21 @@
     width: 18px;
     height: 18px;
     border-radius: 50%;
-    background: #667eea;
     cursor: pointer;
     border: 2px solid white;
-    box-shadow: 0 2px 4px rgba(102, 126, 234, 0.3);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.slider.sleep::-webkit-slider-thumb {
+    background: #06B6D4;
+}
+
+.slider.health::-webkit-slider-thumb {
+    background: #10B981;
+}
+
+.slider.personal::-webkit-slider-thumb {
+    background: #8B5CF6;
 }
 
 .slider-labels {
@@ -133,75 +150,6 @@
     color: #6b7280;
     font-weight: 500;
     margin-top: 0.25rem;
-}
-
-/* Toggle Styles */
-.toggle-group {
-    display: flex;
-    align-items: center;
-    background: #f8fafc;
-    padding: 0.875rem 1rem;
-    border-radius: 8px;
-    border: 1px solid #f1f5f9;
-    transition: all 0.2s ease;
-}
-
-.toggle-group:hover {
-    border-color: #e2e8f0;
-}
-
-.toggle-label {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    width: 100%;
-    cursor: pointer;
-    font-size: 0.9rem;
-    font-weight: 500;
-    color: var(--color-text-primary);
-}
-
-.toggle {
-    position: relative;
-    width: 44px;
-    height: 24px;
-    background-color: #d1d5db;
-    border-radius: 12px;
-    transition: all 0.2s ease;
-    margin: 0 0.75rem;
-    flex-shrink: 0;
-}
-
-.toggle--active {
-    background-color: #10b981;
-}
-
-.toggle-thumb {
-    position: absolute;
-    top: 2px;
-    left: 2px;
-    width: 20px;
-    height: 20px;
-    background-color: white;
-    border-radius: 50%;
-    transition: transform 0.2s ease;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-}
-
-.toggle--active .toggle-thumb {
-    transform: translateX(20px);
-}
-
-.toggle-text {
-    font-size: 0.9rem;
-    font-weight: 600;
-    color: #374151;
-    min-width: 35px;
-    text-align: center;
-}
-
-.toggle--active + .toggle-text {
-    color: #10b981;
 }
 
 /* Submit Section */
@@ -221,15 +169,15 @@
     min-width: 280px;
     border-radius: 10px;
     font-weight: 600;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #8B5CF6 0%, #A78BFA 100%);
     border: none;
-    box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+    box-shadow: 0 2px 8px rgba(139, 92, 246, 0.3);
     transition: all 0.2s ease;
 }
 
 .submit-btn:hover:not(:disabled) {
     transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+    box-shadow: 0 4px 12px rgba(139, 92, 246, 0.4);
 }
 
 .error-message {
@@ -246,6 +194,12 @@
 }
 
 /* Responsive */
+@media (max-width: 1400px) {
+    .form-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
 @media (max-width: 1200px) {
     .form-grid {
         grid-template-columns: repeat(3, 1fr);
@@ -259,19 +213,19 @@
 }
 
 @media (max-width: 768px) {
-    .questionario-container {
+    .questionario-sono-container {
         padding: 0 1rem;
     }
-    
-    .questionario-form {
+
+    .questionario-sono-form {
         padding: 2rem;
     }
-    
+
     .form-grid {
         grid-template-columns: 1fr;
         gap: 1.25rem;
     }
-    
+
     .submit-btn {
         min-width: auto;
         width: 100%;
@@ -280,11 +234,11 @@
 }
 
 @media (max-width: 480px) {
-    .questionario-container {
+    .questionario-sono-container {
         padding: 0 0.75rem;
     }
-    
-    .questionario-form {
+
+    .questionario-sono-form {
         padding: 1.5rem;
     }
 }
