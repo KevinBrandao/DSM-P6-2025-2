@@ -1,6 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { Activity, ArrowRight, Shield, Clock, Users } from "lucide-react";
+import { Activity, ArrowRight, Shield, Clock, Users, Heart, Moon } from "lucide-react";
 import "./HomePage.css";
 
 const HomePage: React.FC = () => {
@@ -13,25 +13,29 @@ const HomePage: React.FC = () => {
                     <div className="welcome-icon">
                         <Activity size={48} />
                     </div>
-                    <h2>Análise Rápida de Risco Cardíaco</h2>
+                    <h2>Sistema de Análise de Saúde</h2>
                     <p>
-                        Utilize nossa ferramenta baseada em IA para uma
-                        avaliação precisa em minutos.
+                        Utilize nossas ferramentas baseadas em IA para avaliações
+                        precisas em minutos.
                     </p>
 
-                    <div className="carousel-dots">
-                        <span className="dot active"></span>
-                        <span className="dot"></span>
-                        <span className="dot"></span>
-                    </div>
+                    <div className="modules-section">
+                        <button
+                            onClick={() => navigate("/questionario")}
+                            className="module-btn module-btn--heart"
+                        >
+                            <Heart size={20} />
+                            <span>Avaliação Cardíaca</span>
+                        </button>
 
-                    <button
-                        onClick={() => navigate("/questionario")}
-                        className="start-btn"
-                    >
-                        <span>Iniciar Avaliação</span>
-                        <ArrowRight size={20} />
-                    </button>
+                        <button
+                            onClick={() => navigate("/questionario-sono")}
+                            className="module-btn module-btn--sleep"
+                        >
+                            <Moon size={20} />
+                            <span>Análise de Sono</span>
+                        </button>
+                    </div>
                 </div>
             </div>
 

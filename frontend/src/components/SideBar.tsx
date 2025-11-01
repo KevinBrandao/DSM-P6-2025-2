@@ -1,13 +1,15 @@
 import React from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { 
-    Home, 
-    Heart, 
-    FileText, 
-    LogOut, 
-    Activity, 
+import {
+    Home,
+    Heart,
+    FileText,
+    LogOut,
+    Activity,
     ChevronLeft,
-    ChevronRight 
+    ChevronRight,
+    Moon,
+    Bed
 } from "lucide-react";
 import "./Sidebar.css";
 
@@ -30,22 +32,24 @@ const Sidebar: React.FC<SidebarProps> = ({ isCollapsed, onToggle }) => {
         { path: "/home", icon: Home, label: "Início" },
         { path: "/questionario", icon: Heart, label: "Checagem Cardíaca" },
         { path: "/historico", icon: FileText, label: "Histórico Cardíaco" },
+        { path: "/questionario-sono", icon: Moon, label: "Análise de Sono" },
+        { path: "/historico-sono", icon: Bed, label: "Histórico de Sono" },
     ];
 
     const isActive = (path: string) => location.pathname === path;
 
     return (
-        <div className={`sidebar ${isCollapsed ? "sidebar--collapsed" : ""}`}>           
+        <div className={`sidebar ${isCollapsed ? "sidebar--collapsed" : ""}`}>
             <div className="sidebar-header">
                 <div className="app-title">
                     <Activity size={24} />
                     {!isCollapsed && (
                         <>
-                            <span>HealthCheck</span>                            
+                            <span>HealthCheck</span>
                         </>
                     )}
                 </div>
-                <button 
+                <button
                     onClick={onToggle}
                     className="sidebar-toggle"
                     aria-label={isCollapsed ? "Expandir menu" : "Recolher menu"}
@@ -72,8 +76,8 @@ const Sidebar: React.FC<SidebarProps> = ({ isCollapsed, onToggle }) => {
             </nav>
 
             <div className="sidebar-footer">
-                <button 
-                    onClick={handleLogout} 
+                <button
+                    onClick={handleLogout}
                     className="logout-btn"
                     title={isCollapsed ? "Sair" : ""}
                 >

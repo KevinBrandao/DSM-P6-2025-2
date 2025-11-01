@@ -1,4 +1,3 @@
-// Baseado em mobile/CardioCheck/Model/Questionario.cs
 export interface IQuestionario {
     nome: string;
     age: number;
@@ -14,15 +13,44 @@ export interface IQuestionario {
     stSlope: number;
 }
 
-// Baseado em mobile/CardioCheck/Model/Resultado.cs
 export interface IResultado {
     predicao: number;
     recomendacao: string;
 }
 
-// Baseado em mobile/CardioCheck/Model/Avaliacao.cs
 export interface IAvaliacao {
     data: string;
     resultado: number;
     questionario: IQuestionario;
+}
+
+export interface IQuestionarioSono {
+    id?: number;
+    nome?: string;
+    genero: string;
+    idade: number;
+    ocupacao: string;
+    duracaoSono: number;
+    qualidadeSono: number;
+    nivelAtividadeFisica: number;
+    nivelEstresse: number;
+    categoriaIMC: string;
+    pressaoArterial: string;
+    frequenciaCardiaca: number;
+    passosDiarios: number;
+    disturbioSono: string;
+}
+
+export interface IResultadoSono {
+    predicao: number;
+    scoreQualidade: number;
+    recomendacao: string;
+    disturbiosIdentificados: string[];
+}
+
+export interface IAvaliacaoSono {
+    id: number;
+    data: string;
+    questionario: IQuestionarioSono;
+    resultado: IResultadoSono;
 }
