@@ -1,6 +1,6 @@
 import React, { useState, type FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
-import { User, Moon, Bed, Activity, Info } from "lucide-react";
+import { Moon } from "lucide-react";
 import api from "../services/api";
 import { type IQuestionarioSono, type IResultadoSono } from "../types";
 import "./QuestionarioSonoPage.css";
@@ -28,7 +28,7 @@ const QuestionarioSonoPage: React.FC = () => {
     const navigate = useNavigate();
 
     const ocupacoes = [
-        "Engineer", "Doctor", "Teacher", "Nurse", "Accountant", 
+        "Engineer", "Doctor", "Teacher", "Nurse", "Accountant",
         "Software Developer", "Sales", "Manager", "Student", "Other"
     ];
 
@@ -81,19 +81,15 @@ const QuestionarioSonoPage: React.FC = () => {
     return (
         <div className="questionario-sono-container">
             <div className="questionario-sono-header">
-                <h2>Formulário de Avaliação do Sono</h2>
+                <h2>Avaliação da Qualidade do Sono</h2>
                 <p>
-                    Preencha os dados para análise da qualidade do sono
+                    Analise padrões de sono e identifique possíveis distúrbios do sono
                 </p>
             </div>
 
             <form onSubmit={handleSubmit} className="questionario-sono-form">
-                <div className="form-section">
-                    <div className="section-header">
-                        <User size={20} />
-                        <h3>Dados do Paciente</h3>
-                    </div>
-
+                <div className="form-grid">
+                    {/* Linha 1 */}
                     <div className="form-group">
                         <label htmlFor="nome">Nome do Paciente</label>
                         <input
@@ -102,28 +98,33 @@ const QuestionarioSonoPage: React.FC = () => {
                             name="nome"
                             value={formData.nome}
                             onChange={handleChange}
-                            placeholder="Digite o nome (opcional)"
+                            placeholder="Nome completo"
                             className="input"
                         />
                     </div>
 
-                    <div className="form-row">
-                        <div className="form-group">
-                            <label htmlFor="genero">Gênero</label>
-                            <select
-                                id="genero"
-                                name="genero"
-                                value={formData.genero}
-                                onChange={handleChange}
-                                className="input"
-                            >
-                                <option value="Male">Masculino</option>
-                                <option value="Female">Feminino</option>
-                            </select>
-                        </div>
+                    <div className="form-group">
+                        <label htmlFor="genero">Gênero</label>
+                        <select
+                            id="genero"
+                            name="genero"
+                            value={formData.genero}
+                            onChange={handleChange}
+                            className="form-select"
+                        >
+                            <option value="Male">Masculino</option>
+                            <option value="Female">Feminino</option>
+                        </select>
+                    </div>
 
-                        <div className="form-group">
-                            <label htmlFor="idade">Idade: {formData.idade}</label>
+                    <div className="form-group">
+                        <label htmlFor="idade">Idade</label>
+                        <div className="slider-container">
+                            <div className="slider-header">
+                                <span className="slider-value personal">
+                                    {formData.idade} anos
+                                </span>
+                            </div>
                             <input
                                 type="range"
                                 id="idade"
@@ -132,7 +133,7 @@ const QuestionarioSonoPage: React.FC = () => {
                                 max="59"
                                 value={formData.idade}
                                 onChange={handleChange}
-                                className="slider"
+                                className="slider personal"
                             />
                             <div className="slider-labels">
                                 <span>27</span>
@@ -148,7 +149,7 @@ const QuestionarioSonoPage: React.FC = () => {
                             name="ocupacao"
                             value={formData.ocupacao}
                             onChange={handleChange}
-                            className="input"
+                            className="form-select"
                         >
                             {ocupacoes.map((ocupacao) => (
                                 <option key={ocupacao} value={ocupacao}>
@@ -157,19 +158,34 @@ const QuestionarioSonoPage: React.FC = () => {
                             ))}
                         </select>
                     </div>
-                </div>
 
-                <div className="form-section">
-                    <div className="section-header">
-                        <Bed size={20} />
-                        <h3>Dados do Sono</h3>
+                    <div className="form-group">
+                        <label htmlFor="categoriaIMC">IMC</label>
+                        <select
+                            id="categoriaIMC"
+                            name="categoriaIMC"
+                            value={formData.categoriaIMC}
+                            onChange={handleChange}
+                            className="form-select"
+                        >
+                            {categoriasIMC.map((categoria) => (
+                                <option key={categoria} value={categoria}>
+                                    {categoria === "Normal" ? "Normal" :
+                                        categoria === "Overweight" ? "Sobrepeso" : "Obeso"}
+                                </option>
+                            ))}
+                        </select>
                     </div>
 
-                    <div className="form-row">
-                        <div className="form-group">
-                            <label htmlFor="duracaoSono">
-                                Duração do Sono (horas): {formData.duracaoSono.toFixed(1)}
-                            </label>
+                    {/* Linha 2 */}
+                    <div className="form-group">
+                        <label htmlFor="duracaoSono">Duração do Sono</label>
+                        <div className="slider-container">
+                            <div className="slider-header">
+                                <span className="slider-value sleep">
+                                    {formData.duracaoSono.toFixed(1)}h
+                                </span>
+                            </div>
                             <input
                                 type="range"
                                 id="duracaoSono"
@@ -179,18 +195,23 @@ const QuestionarioSonoPage: React.FC = () => {
                                 step="0.1"
                                 value={formData.duracaoSono}
                                 onChange={handleChange}
-                                className="slider"
+                                className="slider sleep"
                             />
                             <div className="slider-labels">
-                                <span>5.8</span>
-                                <span>8.5</span>
+                                <span>5.8h</span>
+                                <span>8.5h</span>
                             </div>
                         </div>
+                    </div>
 
-                        <div className="form-group">
-                            <label htmlFor="qualidadeSono">
-                                Qualidade do Sono: {formData.qualidadeSono}/10
-                            </label>
+                    <div className="form-group">
+                        <label htmlFor="qualidadeSono">Qualidade do Sono</label>
+                        <div className="slider-container">
+                            <div className="slider-header">
+                                <span className="slider-value sleep">
+                                    {formData.qualidadeSono}/10
+                                </span>
+                            </div>
                             <input
                                 type="range"
                                 id="qualidadeSono"
@@ -199,7 +220,7 @@ const QuestionarioSonoPage: React.FC = () => {
                                 max="10"
                                 value={formData.qualidadeSono}
                                 onChange={handleChange}
-                                className="slider"
+                                className="slider sleep"
                             />
                             <div className="slider-labels">
                                 <span>1</span>
@@ -215,7 +236,7 @@ const QuestionarioSonoPage: React.FC = () => {
                             name="disturbioSono"
                             value={formData.disturbioSono}
                             onChange={handleChange}
-                            className="input"
+                            className="form-select"
                         >
                             {disturbiosSono.map((disturbio) => (
                                 <option key={disturbio} value={disturbio}>
@@ -224,19 +245,15 @@ const QuestionarioSonoPage: React.FC = () => {
                             ))}
                         </select>
                     </div>
-                </div>
 
-                <div className="form-section">
-                    <div className="section-header">
-                        <Activity size={20} />
-                        <h3>Saúde e Atividade</h3>
-                    </div>
-
-                    <div className="form-row">
-                        <div className="form-group">
-                            <label htmlFor="nivelAtividadeFisica">
-                                Atividade Física: {formData.nivelAtividadeFisica}
-                            </label>
+                    <div className="form-group">
+                        <label htmlFor="nivelAtividadeFisica">Atividade Física</label>
+                        <div className="slider-container">
+                            <div className="slider-header">
+                                <span className="slider-value health">
+                                    {formData.nivelAtividadeFisica}
+                                </span>
+                            </div>
                             <input
                                 type="range"
                                 id="nivelAtividadeFisica"
@@ -245,18 +262,23 @@ const QuestionarioSonoPage: React.FC = () => {
                                 max="90"
                                 value={formData.nivelAtividadeFisica}
                                 onChange={handleChange}
-                                className="slider"
+                                className="slider health"
                             />
                             <div className="slider-labels">
                                 <span>30</span>
                                 <span>90</span>
                             </div>
                         </div>
+                    </div>
 
-                        <div className="form-group">
-                            <label htmlFor="nivelEstresse">
-                                Nível de Estresse: {formData.nivelEstresse}
-                            </label>
+                    <div className="form-group">
+                        <label htmlFor="nivelEstresse">Nível de Estresse</label>
+                        <div className="slider-container">
+                            <div className="slider-header">
+                                <span className="slider-value health">
+                                    {formData.nivelEstresse}/8
+                                </span>
+                            </div>
                             <input
                                 type="range"
                                 id="nivelEstresse"
@@ -265,7 +287,7 @@ const QuestionarioSonoPage: React.FC = () => {
                                 max="8"
                                 value={formData.nivelEstresse}
                                 onChange={handleChange}
-                                className="slider"
+                                className="slider health"
                             />
                             <div className="slider-labels">
                                 <span>3</span>
@@ -274,81 +296,73 @@ const QuestionarioSonoPage: React.FC = () => {
                         </div>
                     </div>
 
-                    <div className="form-row">
-                        <div className="form-group">
-                            <label htmlFor="categoriaIMC">Categoria de IMC</label>
-                            <select
-                                id="categoriaIMC"
-                                name="categoriaIMC"
-                                value={formData.categoriaIMC}
-                                onChange={handleChange}
-                                className="input"
-                            >
-                                {categoriasIMC.map((categoria) => (
-                                    <option key={categoria} value={categoria}>
-                                        {categoria === "Normal" ? "Normal" : 
-                                         categoria === "Overweight" ? "Sobrepeso" : "Obeso"}
-                                    </option>
-                                ))}
-                            </select>
-                        </div>
-
-                        <div className="form-group">
-                            <label htmlFor="frequenciaCardiaca">Frequência Cardíaca</label>
-                            <input
-                                type="number"
-                                id="frequenciaCardiaca"
-                                name="frequenciaCardiaca"
-                                min="65"
-                                max="86"
-                                value={formData.frequenciaCardiaca}
-                                onChange={handleChange}
-                                className="input"
-                                required
-                            />
-                        </div>
+                    {/* Linha 3 */}
+                    <div className="form-group">
+                        <label htmlFor="pressaoArterial">Pressão Arterial</label>
+                        <input
+                            type="text"
+                            id="pressaoArterial"
+                            name="pressaoArterial"
+                            placeholder="Ex: 120/80"
+                            value={formData.pressaoArterial}
+                            onChange={handleChange}
+                            className="input"
+                            required
+                        />
                     </div>
 
-                    <div className="form-row">
-                        <div className="form-group">
-                            <label htmlFor="pressaoArterial">Pressão Arterial</label>
-                            <input
-                                type="text"
-                                id="pressaoArterial"
-                                name="pressaoArterial"
-                                placeholder="Ex: 120/80"
-                                value={formData.pressaoArterial}
-                                onChange={handleChange}
-                                className="input"
-                                required
-                            />
-                        </div>
+                    <div className="form-group">
+                        <label htmlFor="frequenciaCardiaca">Freq. Cardíaca</label>
+                        <input
+                            type="number"
+                            id="frequenciaCardiaca"
+                            name="frequenciaCardiaca"
+                            min="65"
+                            max="86"
+                            value={formData.frequenciaCardiaca}
+                            onChange={handleChange}
+                            className="input"
+                            required
+                        />
+                    </div>
 
-                        <div className="form-group">
-                            <label htmlFor="passosDiarios">Passos Diários</label>
+                    <div className="form-group">
+                        <label htmlFor="passosDiarios">Passos Diários</label>
+                        <div className="slider-container">
+                            <div className="slider-header">
+                                <span className="slider-value health">
+                                    {formData.passosDiarios.toLocaleString()}
+                                </span>
+                            </div>
                             <input
-                                type="number"
+                                type="range"
                                 id="passosDiarios"
                                 name="passosDiarios"
                                 min="3000"
                                 max="10000"
+                                step="100"
                                 value={formData.passosDiarios}
                                 onChange={handleChange}
-                                className="input"
-                                required
+                                className="slider health"
                             />
+                            <div className="slider-labels">
+                                <span>3.000</span>
+                                <span>10.000</span>
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <button
-                    type="submit"
-                    disabled={isLoading}
-                    className="btn btn-primary submit-btn"
-                >
-                    <Moon size={20} />
-                    {isLoading ? "Analisando..." : "Analisar Qualidade do Sono"}
-                </button>
+                <div className="submit-section">
+                    <button
+                        type="submit"
+                        disabled={isLoading}
+                        className="btn btn-primary submit-btn"
+                    >
+                        <Moon size={18} />
+                        {isLoading ? "Analisando..." : "Analisar Qualidade do Sono"}
+                    </button>
+                </div>
 
                 {error && <div className="error-message">{error}</div>}
             </form>

@@ -7,8 +7,7 @@ import {
     LogOut,
     Activity,
     ChevronLeft,
-    ChevronRight,
-    Moon,
+    ChevronRight,    
     Bed
 } from "lucide-react";
 import "./Sidebar.css";
@@ -32,8 +31,8 @@ const Sidebar: React.FC<SidebarProps> = ({ isCollapsed, onToggle }) => {
         { path: "/home", icon: Home, label: "Início" },
         { path: "/questionario", icon: Heart, label: "Checagem Cardíaca" },
         { path: "/historico", icon: FileText, label: "Histórico Cardíaco" },
-        { path: "/questionario-sono", icon: Moon, label: "Análise de Sono" },
-        { path: "/historico-sono", icon: Bed, label: "Histórico de Sono" },
+        { path: "/questionario-sono", icon: Bed, label: "Análise de Sono" },
+        { path: "/historico-sono", icon: FileText, label: "Histórico de Sono" },
     ];
 
     const isActive = (path: string) => location.pathname === path;

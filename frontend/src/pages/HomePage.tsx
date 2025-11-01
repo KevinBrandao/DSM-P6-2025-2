@@ -1,6 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { Activity, ArrowRight, Shield, Clock, Users, Heart, Moon } from "lucide-react";
+import { Activity, Shield, Clock, Users, Heart, Bed } from "lucide-react";
 import "./HomePage.css";
 
 const HomePage: React.FC = () => {
@@ -32,7 +32,7 @@ const HomePage: React.FC = () => {
                             onClick={() => navigate("/questionario-sono")}
                             className="module-btn module-btn--sleep"
                         >
-                            <Moon size={20} />
+                            <Bed size={20} />
                             <span>Análise de Sono</span>
                         </button>
                     </div>
