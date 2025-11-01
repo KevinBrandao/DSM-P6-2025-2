@@ -15,7 +15,6 @@ import ResultadoPage from "./pages/ResultadoPage";
 import MainLayout from "./components/MainLayout";
 import QuestionarioSonoPage from "./pages/QuestionarioSonoPage";
 import ResultadoSonoPage from "./pages/ResultadoSonoPage";
-import HistoricoSonoPage from "./pages/HistoricoSonoPage";
 
 const PrivateRoute: React.FC = () => {
     const token = localStorage.getItem("token");
@@ -44,8 +43,7 @@ function App() {
                     <Route path="/historico" element={<HistoricoPage />} />
                     <Route path="/resultado" element={<ResultadoPage />} />
                     <Route path="/questionario-sono" element={<QuestionarioSonoPage />} />
-                    <Route path="/resultado-sono" element={<ResultadoSonoPage />} />
-                    <Route path="/historico-sono" element={<HistoricoSonoPage />} />
+                    <Route path="/resultado-sono" element={<ResultadoSonoPage />} />                    
                 </Route>
             </Routes>
         </Router>

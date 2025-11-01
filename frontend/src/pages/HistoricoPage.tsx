@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Calendar, User, Activity, FileText } from "lucide-react"; 
+import { Calendar, User, Activity, FileText } from "lucide-react";
 import api from "../services/api";
 import { type IAvaliacao } from "../types";
 import "./HistoricoPage.css";
@@ -60,7 +60,7 @@ const HistoricoPage: React.FC = () => {
             <p>Carregando histórico...</p>
         </div>
     );
-    
+
     if (error) return (
         <div className="error-state">
             <p>{error}</p>
@@ -93,48 +93,36 @@ const HistoricoPage: React.FC = () => {
                             <div className="card-header">
                                 <div className="paciente-info">
                                     <h3 className="paciente-nome">
-                                        <User size={16} style={{ display: 'inline', marginRight: '8px' }} />
-                                        {item.questionario.nome || "Paciente não identificado"}
+                                        <User size={16} style={{ display: "inline", marginRight: "8px" }} />
+                                        {item.questionario.nome || "Paciente não identificado"},
+                                        <span className="paciente-idade"> {item.questionario.age} anos</span>
                                     </h3>
-                                    <p className="avaliacao-data">
-                                        <Calendar size={14} style={{ display: 'inline', marginRight: '6px' }} />
-                                        {formatarData(item.data)}
-                                    </p>
-                                </div>
-                                <div className={`risco-badge ${item.resultado === 1 ? 'alto-risco' : 'baixo-risco'}`}>
-                                    {item.resultado === 1 ? "Alto Risco" : "Baixo Risco"}
-                                </div>
-                            </div>
 
-                            <div className="avaliacao-detalhes">
-                                <div className="detalhe-item">
-                                    <span className="detalhe-label">Idade</span>
-                                    <span className="detalhe-value">{item.questionario.age} anos</span>
-                                </div>
-                                <div className="detalhe-item">
-                                    <span className="detalhe-label">Sexo</span>
-                                    <span className="detalhe-value">
-                                        {item.questionario.sex === 1 ? "Masculino" : "Feminino"}
-                                    </span>
-                                </div>
-                                <div className="detalhe-item">
-                                    <span className="detalhe-label">Pressão</span>
-                                    <span className="detalhe-value">
-                                        {item.questionario.restingBloodPressure} mmHg
-                                    </span>
-                                </div>
-                                <div className="detalhe-item">
-                                    <span className="detalhe-label">Colesterol</span>
-                                    <span className="detalhe-value">
-                                        {item.questionario.serumCholesterol} mg/dl
-                                    </span>
+                                    <div className="date-risk">
+                                        <div className="avaliacao-data">
+                                            <div className="data-esquerda">
+                                                <Calendar size={14} style={{ marginRight: "8px" }} />
+                                                <span>{formatarData(item.data)}</span>
+                                            </div>
+
+                                            <span
+                                                className={`risco-badge ${item.resultado === 1 ? "alto-risco" : "baixo-risco"
+                                                    }`}
+                                            >
+                                                {item.resultado === 1 ? "Alto Risco" : "Baixo Risco"}
+                                            </span>
+                                        </div>
+
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     ))}
                 </div>
-            )}
-        </div>
+
+            )
+            }
+        </div >
     );
 };
 

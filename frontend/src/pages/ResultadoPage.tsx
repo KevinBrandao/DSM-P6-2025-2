@@ -84,7 +84,7 @@ const ResultadoPage: React.FC = () => {
                 <div className="resultado-icon">
                     {/* Usa smiley para baixo risco, AlertTriangle para alto risco */}
                     {isHighRisk ? (
-                        <AlertTriangle size={48} color="#FFC107" />
+                        <AlertTriangle size={48} color="#ff3407ff" />
                     ) : (
                         <SmileyIcon />
                     )}

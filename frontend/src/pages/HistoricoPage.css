@@ -1,7 +1,7 @@
 .historico-container {
-    max-width: 1000px;
+    max-width: 1400px; 
     margin: 0 auto;
-    padding: 0 1rem;
+    padding: 0 2rem;
 }
 
 .historico-header {
@@ -62,6 +62,7 @@
     border: 1px solid var(--color-border);
     border-radius: var(--radius-lg);
     padding: 1.5rem;
+    height: 100px;
     cursor: pointer;
     transition: all 0.3s ease;
     position: relative;
@@ -105,20 +106,21 @@
     font-weight: 600;
     color: var(--color-text-primary);
     margin-bottom: 0.25rem;
-}
+}   
 
 .avaliacao-data {
-    font-size: 0.875rem;
-    color: var(--color-text-muted);
+    display: flex;
+    justify-content: space-between; /* empurra elementos para as extremidades */
+    /* align-items: left; centraliza verticalmente */
+    /* gap: 1rem; opcional, para dar espaço */
 }
 
 .risco-badge {
-    padding: 0.375rem 0.75rem;
-    border-radius: var(--radius-full);
-    font-size: 0.75rem;
+    flex-shrink: 0; /* garante que o badge não encolha */
+    padding: 0.25rem 0.5rem;
+    border-radius: 12px;
     font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
+    color: white;
 }
 
 .risco-badge.alto-risco {

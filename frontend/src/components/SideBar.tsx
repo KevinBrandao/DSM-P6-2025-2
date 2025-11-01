@@ -29,10 +29,9 @@ const Sidebar: React.FC<SidebarProps> = ({ isCollapsed, onToggle }) => {
 
     const menuItems = [
         { path: "/home", icon: Home, label: "Início" },
-        { path: "/questionario", icon: Heart, label: "Checagem Cardíaca" },
-        { path: "/historico", icon: FileText, label: "Histórico Cardíaco" },
-        { path: "/questionario-sono", icon: Bed, label: "Análise de Sono" },
-        { path: "/historico-sono", icon: FileText, label: "Histórico de Sono" },
+        { path: "/questionario", icon: Heart, label: "Cardio" },        
+        { path: "/questionario-sono", icon: Bed, label: "Sono" },
+        { path: "/historico", icon: FileText, label: "Histórico" }        
     ];
 
     const isActive = (path: string) => location.pathname === path;

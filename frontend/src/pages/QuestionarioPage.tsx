@@ -30,7 +30,11 @@ const QuestionarioPage: React.FC = () => {
         e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
     ) => {
         const { name, value, type } = e.target;
-        const processedValue = type === "number" ? parseFloat(value) : value;
+
+        const processedValue =
+            type === "number" || name === "maxHeartRate" || name === "oldpeak"
+                ? parseFloat(value)
+                : value;
 
         setFormData((prev) => ({
             ...prev,
@@ -86,222 +90,237 @@ const QuestionarioPage: React.FC = () => {
             </div>
 
             <form onSubmit={handleSubmit} className="questionario-form">
-                <div className="form-grid">
+                <div className="form-grid-wrapper">
                     {/* Linha 1 */}
-                    <div className="form-group">
-                        <label htmlFor="nome">Nome do Paciente</label>
-                        <input
-                            type="text"
-                            id="nome"
-                            name="nome"
-                            value={formData.nome}
-                            onChange={handleChange}
-                            placeholder="Nome completo"
-                            className="input"
-                        />
-                    </div>
+                    <div className="form-grid-row">
+                        <div className="form-group">
+                            <label htmlFor="nome">Nome do Paciente</label>
+                            <input
+                                type="text"
+                                id="nome"
+                                name="nome"
+                                value={formData.nome}
+                                onChange={handleChange}
+                                placeholder="Nome completo"
+                                className="input"
+                            />
+                        </div>
 
-                    <div className="form-group">
-                        <label htmlFor="age">Idade</label>
-                        <input
-                            type="number"
-                            id="age"
-                            name="age"
-                            value={formData.age}
-                            onChange={handleChange}
-                            min="1"
-                            max="110"
-                            className="input"
-                            required
-                        />
-                    </div>
+                        <div className="form-group">
+                            <label htmlFor="age">Idade</label>
+                            <input
+                                type="number"
+                                id="age"
+                                name="age"
+                                value={formData.age}
+                                onChange={handleChange}
+                                min="1"
+                                max="110"
+                                className="input"
+                                required
+                            />
+                        </div>
 
-                    <div className="form-group">
-                        <label htmlFor="sex">Sexo</label>
-                        <select
-                            id="sex"
-                            name="sex"
-                            value={formData.sex}
-                            onChange={handleChange}
-                            className="form-select"
-                        >
-                            <option value="1">Masculino</option>
-                            <option value="0">Feminino</option>
-                        </select>
-                    </div>
+                        <div className="form-group">
+                            <label htmlFor="sex">Sexo</label>
+                            <select
+                                id="sex"
+                                name="sex"
+                                value={formData.sex}
+                                onChange={handleChange}
+                                className="form-select"
+                            >
+                                <option value="1">Masculino</option>
+                                <option value="0">Feminino</option>
+                            </select>
+                        </div>
 
-                    <div className="form-group">
-                        <label htmlFor="chestPainType">Tipo de Dor no Peito</label>
-                        <select
-                            id="chestPainType"
-                            name="chestPainType"
-                            value={formData.chestPainType}
-                            onChange={handleChange}
-                            className="form-select"
-                        >
-                            <option value="1">Angina Típica</option>
-                            <option value="2">Angina Atípica</option>
-                            <option value="3">Dor Não-anginosa</option>
-                            <option value="4">Assintomático</option>
-                        </select>
+                        <div className="form-group">
+                            <label htmlFor="chestPainType">Tipo de Dor no Peito</label>
+                            <select
+                                id="chestPainType"
+                                name="chestPainType"
+                                value={formData.chestPainType}
+                                onChange={handleChange}
+                                className="form-select"
+                            >
+                                <option value="1">Angina Típica</option>
+                                <option value="2">Angina Atípica</option>
+                                <option value="3">Dor Não-anginosa</option>
+                                <option value="4">Assintomático</option>
+                            </select>
+                        </div>
                     </div>
 
                     {/* Linha 2 */}
-                    <div className="form-group">
-                        <label htmlFor="restingBloodPressure">Pressão Arterial</label>
-                        <input
-                            type="number"
-                            id="restingBloodPressure"
-                            name="restingBloodPressure"
-                            value={formData.restingBloodPressure}
-                            onChange={handleChange}
-                            placeholder="mm Hg"
-                            className="input"
-                            required
-                        />
-                    </div>
-
-                    <div className="form-group">
-                        <label htmlFor="serumCholesterol">Colesterol</label>
-                        <input
-                            type="number"
-                            id="serumCholesterol"
-                            name="serumCholesterol"
-                            value={formData.serumCholesterol}
-                            onChange={handleChange}
-                            placeholder="mg/dl"
-                            className="input"
-                            required
-                        />
-                    </div>
-
-                    <div className="form-group">
-                        <label htmlFor="maxHeartRate">Freq. Cardíaca Máxima</label>
-                        <div className="slider-container">
-                            <div className="slider-header">
-                                <span className="slider-value">
-                                    {formData.maxHeartRate} bpm
-                                </span>
-                            </div>
-                            <input
-                                type="range"
-                                id="maxHeartRate"
-                                name="maxHeartRate"
-                                min="60"
-                                max="220"
-                                value={formData.maxHeartRate}
-                                onChange={handleChange}
-                                className="slider"
-                            />
-                            <div className="slider-labels">
-                                <span>60</span>
-                                <span>220</span>
+                    <div className="form-grid-row">
+                        <div className="form-group">
+                            <label htmlFor="restingBloodPressure">Pressão Arterial em Repouso</label>
+                            <div className="slider-container">
+                                <div className="slider-header">
+                                    <span className="slider-value">
+                                        {formData.restingBloodPressure} mm Hg
+                                    </span>
+                                </div>
+                                <input
+                                    type="range"
+                                    id="restingBloodPressure"
+                                    name="restingBloodPressure"
+                                    min="70"
+                                    max="220"
+                                    value={formData.restingBloodPressure}
+                                    onChange={handleChange}
+                                    className="slider"
+                                />
+                                <div className="slider-labels">
+                                    <span>70</span>
+                                    <span>220</span>
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                    <div className="form-group">
-                        <label htmlFor="oldpeak">
-                            Depressão ST
-                            <Info size={14} className="info-icon" />
-                        </label>
-                        <div className="slider-container">
-                            <div className="slider-header">
-                                <span className="slider-value">
-                                    {formData.oldpeak.toFixed(1)}
-                                </span>
-                            </div>
-                            <input
-                                type="range"
-                                id="oldpeak"
-                                name="oldpeak"
-                                min="0.0"
-                                max="6.2"
-                                step="0.1"
-                                value={formData.oldpeak}
-                                onChange={handleChange}
-                                className="slider"
-                            />
-                            <div className="slider-labels">
-                                <span>0.0</span>
-                                <span>6.2</span>
+                        <div className="form-group">
+                            <label htmlFor="serumCholesterol">Colesterol Sérico</label>
+                            <div className="slider-container">
+                                <div className="slider-header">
+                                    <span className="slider-value">
+                                        {formData.serumCholesterol} mg/dl
+                                    </span>
+                                </div>
+                                <input
+                                    type="range"
+                                    id="serumCholesterol"
+                                    name="serumCholesterol"
+                                    min="100"
+                                    max="500"
+                                    value={formData.serumCholesterol}
+                                    onChange={handleChange}
+                                    className="slider"
+                                />
+                                <div className="slider-labels">
+                                    <span>100</span>
+                                    <span>500</span>
+                                </div>
                             </div>
                         </div>
+
+                        <div className="form-group">
+                            <label htmlFor="restingECG">Eletrocardiograma em Repouso</label>
+                            <select
+                                id="restingECG"
+                                name="restingECG"
+                                value={formData.restingECG}
+                                onChange={handleChange}
+                                className="form-select"
+                            >
+                                <option value="0">Normal</option>
+                                <option value="1">Anormalidade ST-T</option>
+                                <option value="2">Hipertrofia VE</option>
+                            </select>
+                        </div>
+
+                        <div className="form-group">
+                            <label htmlFor="stSlope">Inclinação do Pico do Segmento ST</label>
+                            <select
+                                id="stSlope"
+                                name="stSlope"
+                                value={formData.stSlope}
+                                onChange={handleChange}
+                                className="form-select"
+                            >
+                                <option value="0">Normal</option>
+                                <option value="1">Ascendente</option>
+                                <option value="2">Descendente</option>
+                            </select>
+                        </div>
+
                     </div>
 
                     {/* Linha 3 */}
-                    <div className="form-group">
-                        <label htmlFor="restingECG">ECG em Repouso</label>
-                        <select
-                            id="restingECG"
-                            name="restingECG"
-                            value={formData.restingECG}
-                            onChange={handleChange}
-                            className="form-select"
-                        >
-                            <option value="0">Normal</option>
-                            <option value="1">Anormalidade ST-T</option>
-                            <option value="2">Hipertrofia VE</option>
-                        </select>
-                    </div>
-
-                    <div className="form-group">
-                        <label htmlFor="stSlope">Inclinação do ST</label>
-                        <select
-                            id="stSlope"
-                            name="stSlope"
-                            value={formData.stSlope}
-                            onChange={handleChange}
-                            className="form-select"
-                        >
-                            <option value="0">Normal</option>
-                            <option value="1">Ascendente</option>
-                            <option value="2">Descendente</option>
-                        </select>
-                    </div>
-
-                    <div className="toggle-group">
-                        <label className="toggle-label">
-                            <span>Glicemia {">"} 120 mg/dl</span>
-                            <div
-                                className={`toggle ${formData.fastingBloodSugar === 1
-                                        ? "toggle--active"
-                                        : ""
-                                    }`}
-                                onClick={() =>
-                                    handleToggleChange("fastingBloodSugar")
-                                }
-                            >
-                                <div className="toggle-thumb"></div>
+                    <div className="form-grid-row">
+                        <div className="form-group">
+                            <label htmlFor="maxHeartRate">Frequência Cardíaca Máxima Atingida</label>
+                            <div className="slider-container">
+                                <div className="slider-header">
+                                    <span className="slider-value">
+                                        {formData.maxHeartRate} bpm
+                                    </span>
+                                </div>
+                                <input
+                                    type="range"
+                                    id="maxHeartRate"
+                                    name="maxHeartRate"
+                                    min="60"
+                                    max="220"
+                                    value={formData.maxHeartRate}
+                                    onChange={handleChange}
+                                    className="slider"
+                                />
+                                <div className="slider-labels">
+                                    <span>60</span>
+                                    <span>220</span>
+                                </div>
                             </div>
-                            <span className="toggle-text">
-                                {formData.fastingBloodSugar === 1
-                                    ? "Sim"
-                                    : "Não"}
-                            </span>
-                        </label>
-                    </div>
+                        </div>
 
-                    <div className="toggle-group">
-                        <label className="toggle-label">
-                            <span>Angina por Exercício</span>
-                            <div
-                                className={`toggle ${formData.exerciseAngina === 1
-                                        ? "toggle--active"
-                                        : ""
-                                    }`}
-                                onClick={() =>
-                                    handleToggleChange("exerciseAngina")
-                                }
-                            >
-                                <div className="toggle-thumb"></div>
+                        <div className="form-group">
+                            <label htmlFor="oldpeak">
+                                Oldpeak (Depressão de ST induzida por exercício)
+                                <Info size={14} className="info-icon" />
+                            </label>
+                            <div className="slider-container">
+                                <div className="slider-header">
+                                    <span className="slider-value">
+                                        {formData.oldpeak.toFixed(1)}
+                                    </span>
+                                </div>
+                                <input
+                                    type="range"
+                                    id="oldpeak"
+                                    name="oldpeak"
+                                    min="0.0"
+                                    max="6.2"
+                                    step="0.1"
+                                    value={formData.oldpeak}
+                                    onChange={handleChange}
+                                    className="slider"
+                                />
+                                <div className="slider-labels">
+                                    <span>0.0</span>
+                                    <span>6.2</span>
+                                </div>
                             </div>
-                            <span className="toggle-text">
-                                {formData.exerciseAngina === 1
-                                    ? "Sim"
-                                    : "Não"}
-                            </span>
-                        </label>
+                        </div>
+
+                        <div className="toggle-group">
+                            <label className="toggle-label">
+                                <span>Glicemia em Jejum {">"} 120 mg/dl</span>
+                                <div
+                                    className={`toggle ${formData.fastingBloodSugar === 1 ? "toggle--active" : ""}`}
+                                    onClick={() => handleToggleChange("fastingBloodSugar")}
+                                >
+                                    <div className="toggle-thumb"></div>
+                                </div>
+                                <span className="toggle-text">
+                                    {formData.fastingBloodSugar === 1 ? "Sim" : "Não"}
+                                </span>
+                            </label>
+                        </div>
+
+                        <div className="toggle-group">
+                            <label className="toggle-label">
+                                <span>Angina Induzida por Exercício</span>
+                                <div
+                                    className={`toggle ${formData.exerciseAngina === 1 ? "toggle--active" : ""}`}
+                                    onClick={() => handleToggleChange("exerciseAngina")}
+                                >
+                                    <div className="toggle-thumb"></div>
+                                </div>
+                                <span className="toggle-text">
+                                    {formData.exerciseAngina === 1 ? "Sim" : "Não"}
+                                </span>
+                            </label>
+                        </div>
                     </div>
                 </div>
 
@@ -320,6 +339,7 @@ const QuestionarioPage: React.FC = () => {
             </form>
         </div>
     );
+
 };
 
 export default QuestionarioPage;

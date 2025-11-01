@@ -29,13 +29,6 @@
   max-width: none;
 }
 
-.resultado-card--low-risk {
-  background-color: #E8F5E9;
-}
-
-.resultado-card--high-risk {
-  background-color: #FFF3E0;
-}
 
 .resultado-icon {
   margin-bottom: 15px;
@@ -51,14 +44,6 @@
   font-weight: bold;
   margin-bottom: 15px;
   text-transform: uppercase;
-}
-
-.risk-status-text.low-risk {
-  color: #4CAF50;
-}
-
-.risk-status-text.high-risk {
-  color: #FFC107;
 }
 
 .recommendation {
