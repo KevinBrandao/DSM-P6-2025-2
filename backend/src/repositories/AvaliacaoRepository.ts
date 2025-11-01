@@ -27,10 +27,6 @@ export class AvaliacaoRepository {
         return await this.repository.save(avaliacao);
     }
 
-    async save(avaliacao: Avaliacao): Promise<Avaliacao> {
-        return await this.repository.save(avaliacao);
-    }
-
     async findByMedicoId(medicoId: string): Promise<Avaliacao[]> {
         return await this.repository.find({
             where: { medicoId },
