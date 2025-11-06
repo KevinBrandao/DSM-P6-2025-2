@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
-import { QuestionarioService } from "../services/QuestionarioService";
 import { validationResult } from "express-validator";
+import { QuestionarioService } from "../services/QuestionarioService";
 
 export class QuestionarioController {
     private questionarioService: QuestionarioService;
@@ -20,15 +20,22 @@ export class QuestionarioController {
             const questionarioData = req.body;
             const medicoId = req.userId; // Vem do middleware de autenticação
 
-            const resultado =
-                await this.questionarioService.processQuestionario(
+            // Chama o método que inicia a análise assíncrona
+            const resultadoInicial =
+                await this.questionarioService.startAnalysis(
                     questionarioData,
                     medicoId
                 );
 
-            return res.json(resultado);
+            // Retorna uma resposta imediata para o cliente (HTTP 202 Accepted)
+            return res.status(202).json(resultadoInicial);
+
         } catch (error) {
             if (error instanceof Error) {
+                // Captura erros específicos, como a indisponibilidade do NATS
+                if (error.message.includes('indisponível')) {
+                    return res.status(503).json({ error: error.message });
+                }
                 return res.status(400).json({ error: error.message });
             }
             return res
@@ -36,4 +43,6 @@ export class QuestionarioController {
                 .json({ error: "Erro ao processar questionário" });
         }
     }
+
+    // Outros métodos do controller (ex: getHistorico) permanecem os mesmos
 }
