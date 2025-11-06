@@ -7,8 +7,7 @@
         "start": "node dist/app.js",
         "dev": "nodemon src/app.ts",
         "build": "tsc",
-        "typeorm": "ts-node-dev ./node_modules/typeorm/cli.js",
-        "postinstall": "node install-python-deps.js"
+        "typeorm": "ts-node-dev ./node_modules/typeorm/cli.js"
     },
     "dependencies": {
         "bcryptjs": "^3.0.2",
@@ -18,8 +17,10 @@
         "express-validator": "^7.2.1",
         "jsonwebtoken": "^9.0.2",
         "mysql2": "^3.14.1",
+        "nats": "^2.29.3",
         "reflect-metadata": "^0.2.2",
-        "typeorm": "^0.3.24"
+        "typeorm": "^0.3.24",
+        "uuid": "^13.0.0"
     },
     "devDependencies": {
         "@types/cors": "^2.8.18",
