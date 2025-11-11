@@ -162,6 +162,9 @@ export class NatsService {
 			max_msgs_per_subject: 100000, // Limite de mensagens por assunto para evitar sobrecarga
 			max_bytes: 1024 * 1024 * 1024, // 1GB de armazenamento
 			num_replicas: 1, // Para ambientes de produção, considere 3 ou mais para alta disponibilidade
+			AckPolicy: AckPolicy.Explicit, // Requer ACK explícito dos consumidores
+			timeout: 30000, // 30 segundos para ACK
+			max_deliver: -1, // Tentativas ilimitadas de entrega
 		};
 
 		// Configuração para o stream RESULTS
@@ -173,6 +176,9 @@ export class NatsService {
 			storage: StorageType.File,
 			max_consumers: -1,
 			num_replicas: 1,
+			AckPolicy: AckPolicy.Explicit, // Requer ACK explícito dos consumidores
+			timeout: 30000, // 30 segundos para ACK
+			max_deliver: -1, // Tentativas ilimitadas de entrega
 		};
 
 		console.log("NATS JetStream: Verificando e criando streams...");

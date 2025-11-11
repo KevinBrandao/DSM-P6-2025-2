@@ -16,7 +16,7 @@ from nats.js.api import ConsumerConfig, AckPolicy, StreamConfig, RetentionPolicy
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 NATS_URL = os.getenv("NATS_URL", "nats://localhost:4222")
-MODEL_PATH = os.getenv("MODEL_PATH", "./heart_modelo_lda.joblib")
+MODEL_PATH = os.getenv("MODEL_PATH", "./heart_disease_full_pipeline.joblib")
 STREAM_ANALYSES = "ANALYSES"
 SUBJECT_ANALYSES_REQUEST = "analyses.request"
 STREAM_RESULTS = "RESULTS"
@@ -29,9 +29,6 @@ class AnalysisService:
     def __init__(self, model_path: str):
         self.model = None
         self.model_path = model_path
-        self.mu = np.array([53.51089325, 132.39651416, 198.79956427, 136.80936819, 0.88736383])
-        self.sigma = np.array([9.43261651, 18.51415412, 109.38414455, 25.46033414, 1.06657015])
-        self.cols_to_normalize = ['age', 'resting bp s', 'cholesterol', 'max heart rate', 'oldpeak']
         self.all_columns = [
             'age', 'resting bp s', 'cholesterol', 'max heart rate', 'oldpeak',
             'sex', 'chest pain type', 'fasting blood sugar', 'resting ecg',
@@ -53,12 +50,9 @@ class AnalysisService:
         if not self.model:
             raise RuntimeError("O modelo de IA não foi carregado.")
         
-        novos_df = pd.DataFrame([input_data], columns=self.all_columns)
-        novos_norm_subset = novos_df[self.cols_to_normalize].values
-        novos_other_subset = novos_df.drop(columns=self.cols_to_normalize).values
-        novos_scaled_subset = (novos_norm_subset - self.mu) / self.sigma
-        novos_scaled = np.hstack((novos_scaled_subset, novos_other_subset))
-        previsao = self.model.predict(novos_scaled)
+        df = pd.DataFrame([input_data], columns=self.all_columns)
+
+        previsao = self.model.predict(df)
         return int(previsao[0])
 
 
@@ -118,7 +112,7 @@ class NatsConsumer:
                 queue=DURABLE_NAME,
                 durable=DURABLE_NAME,
                 cb=message_handler_wrapper,
-                config=ConsumerConfig(ack_policy=AckPolicy.EXPLICIT, max_deliver=3),
+                config=ConsumerConfig(ack_policy=AckPolicy.EXPLICIT, max_deliver=-1, ack_wait=30_000),
                 manual_ack=True
             )
             logger.info(f"Inscrito em '{SUBJECT_ANALYSES_REQUEST}'. Aguardando mensagens...")
