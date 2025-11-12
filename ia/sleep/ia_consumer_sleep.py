@@ -4,6 +4,7 @@ import logging
 import os
 import signal
 
+from sklearn.base import BaseEstimator, TransformerMixin
 import joblib
 import numpy as np
 import pandas as pd
@@ -14,22 +15,38 @@ from nats.js.api import ConsumerConfig, AckPolicy, StreamConfig, RetentionPolicy
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 NATS_URL = os.getenv("NATS_URL", "nats://localhost:4222")
-MODEL_PATH = os.getenv("MODEL_PATH", "./heart_disease_full_pipeline.joblib")
+MODEL_PATH = os.getenv("MODEL_PATH", "./sleep_disorder_full_pipeline.joblib")
 STREAM_ANALYSES = "ANALYSES"
-SUBJECT_ANALYSES_REQUEST = "analyses.heart.request"
+SUBJECT_ANALYSES_REQUEST = "analyses.sleep.request"
 STREAM_RESULTS = "RESULTS"
-SUBJECT_RESULTS_COMPLETED = "results.heart.completed"
-DURABLE_NAME = "ia-analysis-processor-heart"
+SUBJECT_RESULTS_COMPLETED = "results.sleep.completed"
+DURABLE_NAME = "ia-analysis-processor-sleep"
 
+# Transformador Personalizado
+# Esta classe divide 'Blood Pressure'.
+class BPSplitter(BaseEstimator, TransformerMixin):
+    def __init__(self):
+        pass
+
+    def fit(self, X, y=None):
+        return self
+
+    def transform(self, X, y=None):
+        X_ = X.copy()
+        # Dividir Blood Pressure
+        if 'Blood Pressure' in X_.columns:
+            X_[['Systolic BP', 'Diastolic BP']] = X_['Blood Pressure'].str.split('/', expand=True).astype(int)
+            X_ = X_.drop(columns=['Blood Pressure'])
+        return X_
 
 class AnalysisService:
     def __init__(self, model_path: str):
         self.model = None
         self.model_path = model_path
         self.all_columns = [
-            'age', 'resting bp s', 'cholesterol', 'max heart rate', 'oldpeak',
-            'sex', 'chest pain type', 'fasting blood sugar', 'resting ecg',
-            'exercise angina', 'ST slope'
+            'Gender', 'Age', 'Occupation', 'Sleep Duration',
+            'Quality of Sleep', 'Physical Activity Level', 'Stress Level',
+            'BMI Category', 'Blood Pressure', 'Heart Rate', 'Daily Steps'
         ]
 
     def load_model(self):
@@ -93,7 +110,7 @@ class NatsConsumer:
             # Configuração para o stream RESULTS (retenção por limite, ex: 7 dias)
             results_config = StreamConfig(
                 name=STREAM_RESULTS,
-                subjects=[SUBJECT_RESULTS_COMPLETED, "results.heart.failed"], # Adicionando o de falha
+                subjects=[SUBJECT_RESULTS_COMPLETED, "results.sleep.failed"], # Adicionando o de falha
                 retention=RetentionPolicy.LIMITS,
                 max_age=60 * 60 * 24 * 7 # 7 dias em segundos
             )
