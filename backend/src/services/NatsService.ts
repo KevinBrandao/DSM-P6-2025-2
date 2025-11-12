@@ -155,7 +155,7 @@ export class NatsService {
 		// Configuração para o stream ANALYSES
 		const analysesStreamConfig = {
 			name: "ANALYSES",
-			subjects: ["analyses.request"],
+			subjects: ["analyses.heart.request", "analyses.sleep.request"],
 			retention: RetentionPolicy.Workqueue, // Mensagens são removidas após serem ack'd por um consumidor
 			storage: StorageType.File,
 			max_consumers: -1, // Sem limite de consumidores
@@ -170,7 +170,7 @@ export class NatsService {
 		// Configuração para o stream RESULTS
 		const resultsStreamConfig = {
 			name: "RESULTS",
-			subjects: ["results.completed", "results.failed"],
+			subjects: ["results.heart.completed", "results.heart.failed", "results.sleep.completed", "results.sleep.failed"],
 			retention: RetentionPolicy.Limits, // Retenção baseada em limites (tempo, mensagens, bytes)
 			max_age: 1000 * 60 * 60 * 24 * 7, // 7 dias
 			storage: StorageType.File,

@@ -78,7 +78,7 @@ export class QuestionarioService {
 			};
 
 			// Publicar a mensagem no NATS para ser consumida pelo serviço de IA
-			await this.natsService.publish("analyses.request", messagePayload);
+			await this.natsService.publish("analyses.heart.request", messagePayload);
 
 			// Retornar a avaliação inicial para o controller
 			return {

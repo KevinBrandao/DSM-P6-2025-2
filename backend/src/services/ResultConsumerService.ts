@@ -31,7 +31,7 @@ export class ResultConsumerService {
 
         // Assina o tópico de resultados concluídos
         await this.natsService.subscribe(
-            'results.completed',
+            'results.heart.completed',
             'RESULTS',
             'api_results_consumer', // Nome durável
             this.handleCompletedResult.bind(this) // Usa o método de tratamento

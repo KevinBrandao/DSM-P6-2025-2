@@ -18,10 +18,10 @@ logger = logging.getLogger(__name__)
 NATS_URL = os.getenv("NATS_URL", "nats://localhost:4222")
 MODEL_PATH = os.getenv("MODEL_PATH", "./heart_disease_full_pipeline.joblib")
 STREAM_ANALYSES = "ANALYSES"
-SUBJECT_ANALYSES_REQUEST = "analyses.request"
+SUBJECT_ANALYSES_REQUEST = "analyses.heart.request"
 STREAM_RESULTS = "RESULTS"
-SUBJECT_RESULTS_COMPLETED = "results.completed"
-DURABLE_NAME = "ia-analysis-processor"
+SUBJECT_RESULTS_COMPLETED = "results.heart.completed"
+DURABLE_NAME = "ia-analysis-processor-heart"
 
 
 class AnalysisService:
@@ -96,7 +96,7 @@ class NatsConsumer:
             # Configuração para o stream RESULTS (retenção por limite, ex: 7 dias)
             results_config = StreamConfig(
                 name=STREAM_RESULTS,
-                subjects=[SUBJECT_RESULTS_COMPLETED, "results.failed"], # Adicionando o de falha
+                subjects=[SUBJECT_RESULTS_COMPLETED, "results.heart.failed"], # Adicionando o de falha
                 retention=RetentionPolicy.LIMITS,
                 max_age=60 * 60 * 24 * 7 # 7 dias em segundos
             )
