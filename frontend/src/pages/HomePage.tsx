@@ -34,7 +34,7 @@ const HomePage: React.FC = () => {
                             className="module-btn module-btn--sleep"
                         >
                             <Bed size={20} />
-                            <span>Análise de Sono</span>
+                            <span>Avaliação de Sono</span>
                         </button>
                     </div>
                 </div>
