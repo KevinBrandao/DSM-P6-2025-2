@@ -46,7 +46,3 @@ export class CreateTableQuestionariosSono1748990904206 implements MigrationInter
         await queryRunner.query(`DROP TABLE questionarios_sono`);
     }
 }
-
-
-git config --global user.name "KevinBrandao"
-git config --global user.email "kevenbrandaoms@outlook.com"
