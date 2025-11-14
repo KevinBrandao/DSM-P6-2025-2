@@ -12,6 +12,11 @@ declare global {
 	namespace Express {
 		interface Request {
 			userId: string;
+			// Indica se o serviço NATS está disponível no momento da requisição
+			natsAvailable?: boolean;
+			// Referência opcional ao serviço NATS para casos em que desejamos
+			// publicar/assinar diretamente a partir do request (opcional)
+			natsService?: import("./services/NatsService").NatsService;
 		}
 	}
 }
