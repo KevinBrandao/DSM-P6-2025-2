@@ -4,6 +4,7 @@ import {
     Column,
     OneToOne,
     CreateDateColumn,
+    UpdateDateColumn,
 } from "typeorm";
 import { AvaliacaoSono } from "./AvaliacaoSono";
 
@@ -11,6 +12,9 @@ import { AvaliacaoSono } from "./AvaliacaoSono";
 export class QuestionarioSono {
     @PrimaryGeneratedColumn("uuid")
     id: string;
+
+    @Column({ type: "varchar" })
+    nome: string;
 
     @Column({ type: "tinyint" })
     gender: number;
@@ -45,15 +49,12 @@ export class QuestionarioSono {
     @Column({ type: "int" })
     dailySteps: number;
 
-    @Column({ type: "varchar", nullable: true })
-    sleepDisorder: string;
-
-    @Column({ type: "varchar" })
-    pacienteId: string;
-
     @CreateDateColumn({ type: "timestamp" })
     createdAt: Date;
 
-    @OneToOne(() => AvaliacaoSono, (avaliacao) => avaliacao.questionarioSono)
+    @UpdateDateColumn({ type: "timestamp" })
+    updatedAt: Date;
+
+    @OneToOne(() => AvaliacaoSono, (avaliacao) => avaliacao.questionario)
     avaliacao: AvaliacaoSono;
 }

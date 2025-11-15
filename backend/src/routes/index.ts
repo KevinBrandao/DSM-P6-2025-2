@@ -11,6 +11,6 @@ routes.use("/medicos", medicoRoutes);
 routes.use("/auth", authRoutes);
 routes.use("/questionarios", questionarioRoutes);
 routes.use("/historico", historicoRoutes);
-routes.use("/questionarioSono", questionarioSonoRoutes);
+routes.use("/questionariosSono", questionarioSonoRoutes);
 
 export default routes;
