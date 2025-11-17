@@ -17,62 +17,62 @@ interface QuestionarioSonoRequest {
 
 export class QuestionarioSonoController {
     async process(req: Request, res: Response): Promise<void> {
-        try {
-            // Verificar erros de validação
-            const errors = validationResult(req);
-            if (!errors.isEmpty()) {
-                res.status(400).json({
-                    success: false,
-                    errors: errors.array()
-                });
-                return;
-            }
+        // try {
+        //     // Verificar erros de validação
+        //     const errors = validationResult(req);
+        //     if (!errors.isEmpty()) {
+        //         res.status(400).json({
+        //             success: false,
+        //             errors: errors.array()
+        //         });
+        //         return;
+        //     }
 
-            const data: QuestionarioSonoRequest = req.body;
-            const requestId = this.generateRequestId();
-            const natsAvailable = req.natsAvailable;
+        //     const data: QuestionarioSonoRequest = req.body;
+        //     const requestId = this.generateRequestId();
+        //     const natsAvailable = req.natsAvailable;
 
-            let predictionResult: number;
+        //     let predictionResult: number;
 
-            if (natsAvailable) {
-                try {
-                    // Tentar usar NATS se disponível
-                    predictionResult = await this.sendToAnalysisService(data, requestId);
-                } catch (error) {
-                    console.log(`[${requestId}] NATS falhou, usando predição local`);
-                    predictionResult = await this.localPrediction(data);
-                }
-            } else {
-                // Usar predição local
-                predictionResult = await this.localPrediction(data);
-                console.log(`[${requestId}] Predição local executada. Resultado: ${predictionResult}`);
-            }
+        //     if (natsAvailable) {
+        //         try {
+        //             // Tentar usar NATS se disponível
+        //             predictionResult = await this.sendToAnalysisService(data, requestId);
+        //         } catch (error) {
+        //             console.log(`[${requestId}] NATS falhou, usando predição local`);
+        //             predictionResult = await this.localPrediction(data);
+        //         }
+        //     } else {
+        //         // Usar predição local
+        //         predictionResult = await this.localPrediction(data);
+        //         console.log(`[${requestId}] Predição local executada. Resultado: ${predictionResult}`);
+        //     }
 
-            // Interpretar o resultado
-            const interpretacao = this.interpretarResultado(predictionResult);
+        //     // Interpretar o resultado
+        //     const interpretacao = this.interpretarResultado(predictionResult);
             
-            // Gerar recomendações baseadas no resultado
-            const recomendacoes = this.gerarRecomendacoes(data, predictionResult);
+        //     // Gerar recomendações baseadas no resultado
+        //     const recomendacoes = this.gerarRecomendacoes(data, predictionResult);
 
-            res.status(200).json({
-                success: true,
-                data: {
-                    requestId,
-                    resultado: predictionResult,
-                    interpretacao,
-                    recomendacoes,
-                    dadosAnalisados: this.formatarDadosAnalisados(data),
-                    modo: natsAvailable ? "NATS" : "Local"
-                }
-            });
+        //     res.status(200).json({
+        //         success: true,
+        //         data: {
+        //             requestId,
+        //             resultado: predictionResult,
+        //             interpretacao,
+        //             recomendacoes,
+        //             dadosAnalisados: this.formatarDadosAnalisados(data),
+        //             modo: natsAvailable ? "NATS" : "Local"
+        //         }
+        //     });
 
-        } catch (error) {
-            console.error("Erro ao processar questionário de sono:", error);
-            res.status(500).json({
-                success: false,
-                message: "Erro interno do servidor ao processar análise do sono"
-            });
-        }
+        // } catch (error) {
+        //     console.error("Erro ao processar questionário de sono:", error);
+        //     res.status(500).json({
+        //         success: false,
+        //         message: "Erro interno do servidor ao processar análise do sono"
+        //     });
+        // }
     }
 
     private async sendToAnalysisService(data: QuestionarioSonoRequest, requestId: string): Promise<number> {

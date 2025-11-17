@@ -7,18 +7,18 @@ import "./QuestionarioSonoPage.css";
 
 const initialFormState: IQuestionarioSono = {
     nome: "",
-    genero: "Male",
-    idade: 35,
-    ocupacao: "Engenheiro",
-    duracaoSono: 7.0,
-    qualidadeSono: 7,
-    nivelAtividadeFisica: 60,
-    nivelEstresse: 5,
-    categoriaIMC: "Normal",
-    pressaoArterial: "120/80",
-    frequenciaCardiaca: 72,
-    passosDiarios: 6000,
-    disturbioSono: "None",
+    gender: "Male",
+    age: 35,
+    occupation: "Engenheiro",
+    sleepDuration: 7.0,
+    qualityOfSleep: 7,
+    physicalActivityLevel: 60,
+    stressLevel: 5,
+    bmiCategory: "Normal",
+    bloodPressure: "120/80",
+    heartRate: 72,
+    dailySteps: 6000,
+    sleepDisorder: "None",
 };
 
 interface SliderFieldProps {
@@ -157,7 +157,7 @@ const QuestionarioSonoPage: React.FC = () => {
                             <select
                                 id="genero"
                                 name="genero"
-                                value={formData.genero}
+                                value={formData.gender}
                                 onChange={handleChange}
                                 className="form-select"
                             >
@@ -172,7 +172,7 @@ const QuestionarioSonoPage: React.FC = () => {
                                 type="number"
                                 id="idade"
                                 name="idade"
-                                value={formData.idade}
+                                value={formData.age}
                                 onChange={handleChange}
                                 min="27"
                                 max="59"
@@ -186,13 +186,13 @@ const QuestionarioSonoPage: React.FC = () => {
                             <select
                                 id="ocupacao"
                                 name="ocupacao"
-                                value={formData.ocupacao}
+                                value={formData.occupation}
                                 onChange={handleChange}
                                 className="form-select"
                             >
-                                {ocupacoes.map((ocupacao) => (
-                                    <option key={ocupacao} value={ocupacao}>
-                                        {ocupacao}
+                                {ocupacoes.map((occupation) => (
+                                    <option key={occupation} value={occupation}>
+                                        {occupation}
                                     </option>
                                 ))}
                             </select>
@@ -212,8 +212,8 @@ const QuestionarioSonoPage: React.FC = () => {
                             <div className="column-content">
                                 <SliderField
                                     label="Duração do Sono"
-                                    name="duracaoSono"
-                                    value={formData.duracaoSono}
+                                    name="sleepDuration"
+                                    value={formData.sleepDuration}
                                     min={5.8}
                                     max={8.5}
                                     step={0.1}
@@ -228,8 +228,8 @@ const QuestionarioSonoPage: React.FC = () => {
                                             <Info size={14} className="info-icon" />
                                         </>
                                     }
-                                    name="qualidadeSono"
-                                    value={formData.qualidadeSono}
+                                    name="qualityOfSleep"
+                                    value={formData.qualityOfSleep}
                                     min={1}
                                     max={10}
                                     unit="/10"
@@ -241,7 +241,7 @@ const QuestionarioSonoPage: React.FC = () => {
                                     <select
                                         id="disturbioSono"
                                         name="disturbioSono"
-                                        value={formData.disturbioSono}
+                                        value={formData.sleepDisorder}
                                         onChange={handleChange}
                                         className="form-select"
                                     >
@@ -267,14 +267,14 @@ const QuestionarioSonoPage: React.FC = () => {
                                     <select
                                         id="categoriaIMC"
                                         name="categoriaIMC"
-                                        value={formData.categoriaIMC}
+                                        value={formData.bmiCategory}
                                         onChange={handleChange}
                                         className="form-select"
                                     >
-                                        {categoriasIMC.map((categoria) => (
-                                            <option key={categoria} value={categoria}>
-                                                {categoria === "Normal" ? "Normal" :
-                                                 categoria === "Overweight" ? "Sobrepeso" : "Obeso"}
+                                        {categoriasIMC.map((bmiCategory) => (
+                                            <option key={bmiCategory} value={bmiCategory}>
+                                                {bmiCategory === "Normal" ? "Normal" :
+                                                 bmiCategory === "Overweight" ? "Sobrepeso" : "Obeso"}
                                             </option>
                                         ))}
                                     </select>
@@ -287,7 +287,7 @@ const QuestionarioSonoPage: React.FC = () => {
                                         id="pressaoArterial"
                                         name="pressaoArterial"
                                         placeholder="Ex: 120/80"
-                                        value={formData.pressaoArterial}
+                                        value={formData.bloodPressure}
                                         onChange={handleChange}
                                         className="input"
                                         required
@@ -302,7 +302,7 @@ const QuestionarioSonoPage: React.FC = () => {
                                         name="frequenciaCardiaca"
                                         min="65"
                                         max="86"
-                                        value={formData.frequenciaCardiaca}
+                                        value={formData.heartRate}
                                         onChange={handleChange}
                                         className="input"
                                         required
@@ -318,8 +318,8 @@ const QuestionarioSonoPage: React.FC = () => {
                             <div className="column-content">
                                 <SliderField
                                     label="Nível de Atividade Física"
-                                    name="nivelAtividadeFisica"
-                                    value={formData.nivelAtividadeFisica}
+                                    name="physicalActivityLevel"
+                                    value={formData.physicalActivityLevel}
                                     min={30}
                                     max={90}
                                     unit=""
@@ -328,8 +328,8 @@ const QuestionarioSonoPage: React.FC = () => {
 
                                 <SliderField
                                     label="Nível de Estresse"
-                                    name="nivelEstresse"
-                                    value={formData.nivelEstresse}
+                                    name="stressLevel"
+                                    value={formData.stressLevel}
                                     min={3}
                                     max={8}
                                     unit="/8"
@@ -338,8 +338,8 @@ const QuestionarioSonoPage: React.FC = () => {
 
                                 <SliderField
                                     label="Passos Diários"
-                                    name="passosDiarios"
-                                    value={formData.passosDiarios}
+                                    name="dailySteps"
+                                    value={formData.dailySteps}
                                     min={3000}
                                     max={10000}
                                     step={100}

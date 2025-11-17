@@ -141,7 +141,7 @@ O sistema é composto por cinco componentes principais:
   - Passos diários (numérico: 3000-10000)
   - Distúrbio do sono (categórico: None, Sleep Apnea, Insomnia)
 
-**RF08 - Processamento e Análise de Sono**
+**RF08 - Processamento e Avaliação de Sono**
 - O sistema deve enviar os dados coletados para o modelo de IA de sono
 - O sistema deve classificar a qualidade do sono e identificar possíveis distúrbios
 - O sistema deve gerar score de qualidade do sono

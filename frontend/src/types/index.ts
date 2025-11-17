@@ -28,18 +28,18 @@ export interface IAvaliacao {
 export interface IQuestionarioSono {
     id?: number;
     nome?: string;
-    genero: string;
-    idade: number;
-    ocupacao: string;
-    duracaoSono: number;
-    qualidadeSono: number;
-    nivelAtividadeFisica: number;
-    nivelEstresse: number;
-    categoriaIMC: string;
-    pressaoArterial: string;
-    frequenciaCardiaca: number;
-    passosDiarios: number;
-    disturbioSono: string;
+    gender: string;
+    age: number;
+    occupation: string;
+    sleepDuration: number;
+    qualityOfSleep: number;
+    physicalActivityLevel: number;
+    stressLevel: number;
+    bmiCategory: string;
+    bloodPressure: string;
+    heartRate: number;
+    dailySteps: number;
+    sleepDisorder: string;
 }
 
 export interface IResultadoSono {

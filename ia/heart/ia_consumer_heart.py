@@ -5,8 +5,8 @@ import os
 import signal
 
 import joblib
-import numpy as np
 import pandas as pd
+import numpy as np
 import nats
 from nats.js import JetStreamContext
 from nats.js.api import ConsumerConfig, AckPolicy, StreamConfig, RetentionPolicy
