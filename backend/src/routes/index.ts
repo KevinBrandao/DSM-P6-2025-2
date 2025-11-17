@@ -9,8 +9,8 @@ const routes = Router();
 
 routes.use("/medicos", medicoRoutes);
 routes.use("/auth", authRoutes);
-routes.use("/questionarios", questionarioRoutes);
+routes.use("/questionarios/coracao", questionarioRoutes);
 routes.use("/historico", historicoRoutes);
-routes.use("/questionariosSono", questionarioSonoRoutes);
+routes.use("/questionarios/sono", questionarioSonoRoutes);
 
 export default routes;

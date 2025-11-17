@@ -22,7 +22,7 @@ const HistoricoPage: React.FC = () => {
                 console.log("🔍 Buscando histórico cardíaco...");
 
                 try {
-                    const responseCardiaco = await api.get<IAvaliacao[]>("/historico");
+                    const responseCardiaco = await api.get<IAvaliacao[]>("/historico/coracao");
                     console.log("✅ Histórico cardíaco carregado:", responseCardiaco.data);
                     
                     const sortedCardiaco = responseCardiaco.data.sort(
@@ -37,7 +37,7 @@ const HistoricoPage: React.FC = () => {
 
                 try {
                     console.log("🔍 Tentando buscar histórico de sono...");
-                    const responseSono = await api.get<IAvaliacaoSono[]>("/historico-sono");
+                    const responseSono = await api.get<IAvaliacaoSono[]>("/historico/sono");
                     console.log("✅ Histórico sono carregado:", responseSono.data);
                     
                     const sortedSono = responseSono.data.sort(
@@ -46,7 +46,8 @@ const HistoricoPage: React.FC = () => {
                     setHistoricoSono(sortedSono);
                     
                 } catch (sonoError: any) {
-                    console.log("ℹ️  Histórico de sono não disponível:", sonoError.message);
+                    console.log("❌ Erro no histórico do sono:", sonoError);
+                    setError("Não foi possível carregar o histórico do sono");
                     setHistoricoSono([]);
                 }
                 

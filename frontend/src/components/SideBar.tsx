@@ -10,7 +10,7 @@ import {
     ChevronRight,    
     Bed
 } from "lucide-react";
-import "./Sidebar.css";
+import "./SideBar.css";
 
 interface SidebarProps {
     isCollapsed: boolean;
