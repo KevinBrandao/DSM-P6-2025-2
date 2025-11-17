@@ -1,21 +1,9 @@
 import { Request, Response } from "express";
 import { validationResult } from "express-validator";
-
-interface QuestionarioSonoRequest {
-    Gender: number;
-    Age: number;
-    Occupation: string;
-    "Sleep Duration": number;
-    "Quality of Sleep": number;
-    "Physical Activity Level": number;
-    "Stress Level": number;
-    "BMI Category": string;
-    "Blood Pressure": string;
-    "Heart Rate": number;
-    "Daily Steps": number;
-}
+import { QuestionarioSonoService } from "../services/QuestionarioSonoService";
 
 export class QuestionarioSonoController {
+<<<<<<< HEAD
     async process(req: Request, res: Response): Promise<void> {
         // try {
         //     // Verificar erros de validação
@@ -149,92 +137,48 @@ export class QuestionarioSonoController {
                 descricao: "Múltiplos indicadores apontam para distúrbios significativos do sono. Recomenda-se avaliação médica especializada.",
                 gravidade: "Alta",
                 cor: "red"
+=======
+    private questionarioService: QuestionarioSonoService;
+
+    constructor() {
+        this.questionarioService = new QuestionarioSonoService();
+    }
+
+    async process(req: Request, res: Response) {
+        try {
+            // Validar entrada
+            const errors = validationResult(req);
+            if (!errors.isEmpty()) {
+                return res.status(400).json({ errors: errors.array() });
             }
-        };
 
-        return interpretacoes[resultado as keyof typeof interpretacoes] || interpretacoes[0];
-    }
+            const questionarioData = req.body;
+            const medicoId = req.userId; // Vem do middleware de autenticação
 
-    private gerarRecomendacoes(data: QuestionarioSonoRequest, resultado: number): string[] {
-        const recomendacoes: string[] = [];
+            // Chama o método que inicia a análise assíncrona
+            const resultadoInicial =
+                await this.questionarioService.startAnalysis(
+                    questionarioData,
+                    medicoId
+                );
 
-        // Recomendações gerais baseadas no resultado
-        if (resultado >= 1) {
-            recomendacoes.push("Mantenha um horário regular para dormir e acordar, mesmo nos fins de semana");
-        }
+            // Retorna uma resposta imediata para o cliente (HTTP 202 Accepted)
+            return res.status(202).json(resultadoInicial);
 
-        if (resultado >= 2) {
-            recomendacoes.push("Consulte um especialista em medicina do sono para avaliação detalhada");
-            recomendacoes.push("Considere realizar um estudo polissonográfico para diagnóstico preciso");
-        }
-
-        // Recomendações específicas baseadas nos dados
-        if (data["Sleep Duration"] < 7) {
-            recomendacoes.push("Tente aumentar gradualmente a duração do sono para 7-9 horas por noite");
-        }
-
-        if (data["Sleep Duration"] > 9) {
-            recomendacoes.push("Avalie a qualidade do sono - quantidade excessiva pode indicar má qualidade ou outros problemas");
-        }
-
-        if (data["Quality of Sleep"] <= 5) {
-            recomendacoes.push("Crie um ambiente propício para o sono: escuro, silencioso e com temperatura amena");
-            recomendacoes.push("Evite cafeína e refeições pesadas pelo menos 4 horas antes de dormir");
-        }
-
-        if (data["Stress Level"] >= 5) {
-            recomendacoes.push("Pratique técnicas de relaxamento como meditação ou respiração profunda antes de dormir");
-            recomendacoes.push("Considere manter um diário para liberar preocupações antes de deitar");
-        }
-
-        if (data["Physical Activity Level"] < 30) {
-            recomendacoes.push("Inclua pelo menos 30 minutos de atividade física moderada na sua rotina diária");
-        }
-
-        if (data["Daily Steps"] < 5000) {
-            recomendacoes.push("Estabeleça a meta de caminhar pelo menos 5.000 passos por dia");
-        }
-
-        if (data["BMI Category"] === "Obese" || data["BMI Category"] === "Overweight") {
-            recomendacoes.push("Manter um peso saudável pode reduzir significativamente problemas como apneia do sono");
-        }
-
-        // Pressão arterial
-        const [systolic, diastolic] = data["Blood Pressure"].split('/').map(Number);
-        if (systolic > 130 || diastolic > 85) {
-            recomendacoes.push("Monitore regularmente sua pressão arterial e consulte um cardiologista se necessário");
-        }
-
-        return recomendacoes;
-    }
-
-    private formatarDadosAnalisados(data: QuestionarioSonoRequest): any {
-        const [systolic, diastolic] = data["Blood Pressure"].split('/').map(Number);
-        
-        return {
-            dadosDemograficos: {
-                genero: data.Gender === 1 ? "Masculino" : "Feminino",
-                idade: data.Age,
-                ocupacao: data.Occupation
-            },
-            parametrosSono: {
-                duracao: `${data["Sleep Duration"]} horas`,
-                qualidade: `${data["Quality of Sleep"]}/10`
-            },
-            saudeFisica: {
-                nivelAtividade: `${data["Physical Activity Level"]}/100`,
-                passosDiarios: data["Daily Steps"].toLocaleString(),
-                categoriaIMC: data["BMI Category"],
-                pressaoArterial: `${systolic}/${diastolic} mmHg`,
-                frequenciaCardiaca: `${data["Heart Rate"]} bpm`
-            },
-            saudeMental: {
-                nivelEstresse: `${data["Stress Level"]}/10`
+        } catch (error) {
+            if (error instanceof Error) {
+                // Captura erros específicos, como a indisponibilidade do NATS
+                if (error.message.includes('indisponível')) {
+                    return res.status(503).json({ error: error.message });
+                }
+                return res.status(400).json({ error: error.message });
+>>>>>>> fef86bd4023968b53319a74631eaac6a783e77d9
             }
-        };
+            return res
+                .status(500)
+                .json({ error: "Erro ao processar questionário" });
+        }
     }
 
-    private generateRequestId(): string {
-        return `sleep_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-    }
+    // Outros métodos do controller (ex: getHistorico) permanecem os mesmos
 }

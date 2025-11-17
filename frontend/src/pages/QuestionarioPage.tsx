@@ -162,7 +162,7 @@ const QuestionarioPage: React.FC = () => {
             }
 
             const response = await api.post<IResultado>(
-                "/questionarios",
+                "/questionarios/coracao",
                 dataToSend
             );
 

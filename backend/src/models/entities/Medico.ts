@@ -7,10 +7,10 @@ import {
     UpdateDateColumn,
 } from "typeorm";
 import { Avaliacao } from "./Avaliacao";
+import { AvaliacaoSono } from "./AvaliacaoSono";
 
 @Entity("medicos")
 export class Medico {
-    [x: string]: any;
     @PrimaryGeneratedColumn("uuid")
     id: string;
 
@@ -37,4 +37,7 @@ export class Medico {
 
     @OneToMany(() => Avaliacao, (avaliacao) => avaliacao.medico)
     avaliacoes: Avaliacao[];
+
+    @OneToMany(() => AvaliacaoSono, (avaliacao) => avaliacao.medico)
+    avaliacoesSono: AvaliacaoSono[];
 }

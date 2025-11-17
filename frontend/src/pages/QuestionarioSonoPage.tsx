@@ -105,7 +105,7 @@ const QuestionarioSonoPage: React.FC = () => {
             }
 
             const response = await api.post<IResultadoSono>(
-                "/questionarios-sono",
+                "/questionarios/sono",
                 dataToSend
             );
 
@@ -115,10 +115,11 @@ const QuestionarioSonoPage: React.FC = () => {
                     resultado: response.data,
                 },
             });
-        } catch {
+        } catch (error:any) {
             setError(
                 "Houve um erro ao enviar o questionário. Tente novamente."
             );
+            console.error("Erro ao enviar questionário de sono:", error);
         } finally {
             setIsLoading(false);
         }
