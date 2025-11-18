@@ -1,10 +1,10 @@
 openapi: 3.0.3
 info:
-  title: CardioCheck API
-  description: API para o aplicativo móvel CardioCheck, utilizado por médicos para avaliar o risco de doenças cardíacas em pacientes.
-  version: 1.0.0
+  title: HealthCheck API
+  description: API para a aplicação HealthCheck, utilizado por médicos para avaliar o risco de doenças cardíacas e distúrbios do sono em pacientes.
+  version: 1.1.0
 servers:
-  - url: http://cardiocheck.eastus2.cloudapp.azure.com/
+  - url: http://healthcheck.eastus2.cloudapp.azure.com/v1
     description: Servidor de Produção
   - url: http://localhost:3000/v1
     description: Servidor de Homologação
@@ -48,9 +48,9 @@ paths:
         '401':
           description: Credenciais inválidas
 
-  /questionarios:
+  /questionarios/coracao:
     post:
-      summary: Envio de questionário de saúde do paciente
+      summary: Envio de questionário de saúde do coração
       tags:
         - Questionários
       security:
@@ -60,7 +60,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Questionario'
+              $ref: '#/components/schemas/QuestionarioCoracao'
       responses:
         '200':
           description: Questionário processado com sucesso
@@ -71,22 +71,64 @@ paths:
         '400':
           description: Dados do questionário inválidos
 
-  /historico:
+  /questionarios/sono:
+    post:
+      summary: Envio de questionário de qualidade do sono
+      tags:
+        - Questionários
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/QuestionarioSono'
+      responses:
+        '200':
+          description: Questionário de sono processado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Resultado'
+        '400':
+          description: Dados do questionário inválidos
+
+  /historico/coracao:
     get:
-      summary: Recupera o histórico de avaliações do médico
+      summary: Recupera o histórico de avaliações cardíacas do médico
       tags:
         - Histórico
       security:
         - bearerAuth: []
       responses:
         '200':
-          description: Histórico recuperado com sucesso
+          description: Histórico cardíaco recuperado com sucesso
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Avaliacao'
+                  $ref: '#/components/schemas/AvaliacaoCoracao'
+        '401':
+          description: Não autorizado
+
+  /historico/sono:
+    get:
+      summary: Recupera o histórico de avaliações de sono do médico
+      tags:
+        - Histórico
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Histórico de sono recuperado com sucesso
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AvaliacaoSono'
         '401':
           description: Não autorizado
 
@@ -124,6 +166,7 @@ components:
           format: password
       required:
         - senha
+        - email
 
     Token:
       type: object
@@ -134,7 +177,7 @@ components:
           type: string
           example: Bearer
 
-    Questionario:
+    QuestionarioCoracao:
       type: object
       properties:
         nome:
@@ -144,6 +187,7 @@ components:
         sex:
           type: integer
           enum: [0, 1]
+          description: 0 = Feminino, 1 = Masculino
         chestPainType:
           type: integer
           enum: [1, 2, 3, 4]
@@ -181,26 +225,121 @@ components:
         - oldpeak
         - stSlope
 
+    QuestionarioSono:
+      type: object
+      properties:
+        nome:
+          type: string
+          minLength: 2
+          maxLength: 100
+        gender:
+          type: integer
+          enum: [0, 1]
+          description: 0 = Feminino, 1 = Masculino
+        age:
+          type: integer
+          minimum: 1
+          maximum: 120
+        occupation:
+          type: string
+          enum:
+            - Accountant
+            - Doctor
+            - Engineer
+            - Lawyer
+            - Manager
+            - Nurse
+            - Sales Representative
+            - Salesperson
+            - Scientist
+            - Software Engineer
+            - Teacher
+        sleepDuration:
+          type: number
+          minimum: 0
+          maximum: 24
+        qualityOfSleep:
+          type: integer
+          minimum: 1
+          maximum: 10
+        physicalActivityLevel:
+          type: integer
+          minimum: 0
+          maximum: 100
+        stressLevel:
+          type: integer
+          minimum: 1
+          maximum: 10
+        bmiCategory:
+          type: string
+          enum: ["Normal", "Overweight", "Obese", "Underweight"]
+        bloodPressure:
+          type: string
+          pattern: '^\d{2,3}\/\d{2,3}$'
+          example: "120/80"
+        heartRate:
+          type: integer
+        dailySteps:
+          type: integer
+          minimum: 0
+          maximum: 50000
+      required:
+        - nome
+        - gender
+        - age
+        - occupation
+        - sleepDuration
+        - qualityOfSleep
+        - physicalActivityLevel
+        - stressLevel
+        - bmiCategory
+        - bloodPressure
+        - heartRate
+        - dailySteps
+
     Resultado:
       type: object
       properties:
         resultado:
           type: integer
           enum: [0, 1]
+          description: 0 = Negativo/Normal, 1 = Positivo/Alterado
         recomendacao:
           type: string
 
-    Avaliacao:
+    AvaliacaoCoracao:
       type: object
       properties:
+        id:
+          type: string
+          format: uuid
         data:
           type: string
           format: date-time
         resultado:
           type: integer
           enum: [0, 1]
+        recomendacao:
+          type: string
         questionario:
-          $ref: '#/components/schemas/Questionario'
+          $ref: '#/components/schemas/QuestionarioCoracao'
+
+    AvaliacaoSono:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        data:
+          type: string
+          format: date-time
+        resultado:
+          type: integer
+          enum: [0, 1]
+        recomendacao:
+          type: string
+        questionario:
+          $ref: '#/components/schemas/QuestionarioSono'
 
   securitySchemes:
     bearerAuth:
