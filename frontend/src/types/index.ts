@@ -28,7 +28,7 @@ export interface IAvaliacao {
 export interface IQuestionarioSono {
     id?: number;
     nome?: string;
-    gender: string;
+    gender: number;
     age: number;
     occupation: string;
     sleepDuration: number;
@@ -39,7 +39,7 @@ export interface IQuestionarioSono {
     bloodPressure: string;
     heartRate: number;
     dailySteps: number;
-    sleepDisorder: string;
+    sleepDisorder?: string;
 }
 
 export interface IResultadoSono {
