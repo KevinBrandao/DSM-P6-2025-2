@@ -46,7 +46,9 @@
             <Setter Property="CornerRadius" Value="8" />
         </Style>
     </ContentPage.Resources>
-    <ScrollView>
+
+
+    <ScrollView x:Name="MainScrollView">
         <VerticalStackLayout Spacing="16" Padding="25,20">
 
             <Label 

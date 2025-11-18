@@ -1,4 +1,6 @@
 using CardioCheck.Model;
+using Microsoft.Maui.Controls;
+using Microsoft.Maui.Graphics;
 
 namespace CardioCheck;
 
@@ -32,7 +34,7 @@ public partial class ResultadoPage : ContentPage
         ResultadoIcon.Source = new FontImageSource
         {
             Glyph = iconeGlyph,
-            FontFamily = "FontIcons", 
+            FontFamily = "FontIcons",
             Size = 45,
             Color = corResultado
         };

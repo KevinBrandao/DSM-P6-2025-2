@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="CardioCheck.ResultadoSonoPage"
+             Title="Resultado do Sono"
+             BackgroundColor="{StaticResource Gray100}"
+             NavigationPage.HasNavigationBar="False">
+
+    <ContentPage.Resources>
+        <Style x:Key="DetailLabelStyle" TargetType="Label">
+            <Setter Property="FontFamily" Value="LatoBold" />
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="TextColor" Value="{StaticResource Gray600}" />
+            <Setter Property="VerticalOptions" Value="Center" />
+        </Style>
+
+        <Style x:Key="DetailValueStyle" TargetType="Label">
+            <Setter Property="FontFamily" Value="LatoRegular" />
+            <Setter Property="FontSize" Value="16" />
+            <Setter Property="TextColor" Value="{StaticResource Gray900}" />
+            <Setter Property="HorizontalOptions" Value="End" />
+            <Setter Property="VerticalOptions" Value="Center" />
+        </Style>
+
+        <Style x:Key="PrimaryButtonStyle" TargetType="Button">
+            <Setter Property="FontFamily" Value="LatoBold" />
+            <Setter Property="FontSize" Value="16" />
+            <Setter Property="TextColor" Value="{StaticResource White}" />
+            <Setter Property="BackgroundColor" Value="{StaticResource Primary}" />
+            <Setter Property="Padding" Value="14" />
+            <Setter Property="CornerRadius" Value="8" />
+        </Style>
+    </ContentPage.Resources>
+
+    <ScrollView>
+        <VerticalStackLayout Spacing="25" Padding="25,20">
+
+            <Label 
+                Text="Resultado da Avaliação do Sono 💤"
+                FontSize="20" FontFamily="ComfortaaBold"
+                HorizontalOptions="Center"
+                TextColor="{StaticResource Primary}"
+                Margin="0,0,0,5"/>
+
+            <Border x:Name="ResultadoBorder"
+                    StrokeThickness="2"
+                    StrokeShape="RoundRectangle 12"
+                    BackgroundColor="{StaticResource White}"
+                    Padding="20">
+                <VerticalStackLayout Spacing="15">
+
+                    <HorizontalStackLayout Spacing="15" HorizontalOptions="Center">
+                        <Border x:Name="ResultadoIconCircle"
+                                WidthRequest="80" HeightRequest="80"
+                                HorizontalOptions="Center"
+                                VerticalOptions="Center"
+                                Padding="15"
+                                StrokeShape="RoundRectangle 40">
+                            <Image x:Name="ResultadoIcon" WidthRequest="45" HeightRequest="45" />
+                        </Border>
+
+                        <VerticalStackLayout VerticalOptions="Center" Spacing="0">
+                            <Label Text="PREDIÇÃO:" 
+                                   FontSize="12" TextColor="{StaticResource Gray600}" FontFamily="LatoRegular"/>
+                            <Label x:Name="ResultadoPredicaoLabel"
+                                   FontSize="24" FontFamily="ComfortaaBold"
+                                   Text="SONO NORMAL" 
+                                   TextColor="{StaticResource Green}" />
+                        </VerticalStackLayout>
+                    </HorizontalStackLayout>
+
+                    <BoxView HeightRequest="1" Color="{StaticResource Gray200}" Margin="0,5"/>
+
+                    <Label Text="RECOMENDAÇÃO:" 
+                           FontSize="12" TextColor="{StaticResource Gray600}" FontFamily="LatoBold"/>
+                    <Label x:Name="ResultadoRecomendacaoLabel"
+                           Text="Consulte um especialista para uma análise completa." 
+                           FontSize="14" TextColor="{StaticResource Gray900}" FontFamily="LatoRegular"/>
+                </VerticalStackLayout>
+            </Border>
+
+            <VerticalStackLayout Spacing="15">
+                <Label Text="DADOS DO PACIENTE" 
+                       FontSize="16" FontFamily="ComfortaaBold" 
+                       TextColor="{StaticResource Primary}" Margin="0,5,0,0" />
+
+                <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10" RowSpacing="10">
+
+                    <Label Text="Nome" Style="{StaticResource DetailLabelStyle}" Grid.Row="0" Grid.Column="0"/>
+                    <Label x:Name="NomeLabel" Text="[Nome]" Style="{StaticResource DetailValueStyle}" Grid.Row="0" Grid.Column="1"/>
+
+                    <Label Text="Idade" Style="{StaticResource DetailLabelStyle}" Grid.Row="1" Grid.Column="0"/>
+                    <Label x:Name="IdadeLabel" Text="[Idade]" Style="{StaticResource DetailValueStyle}" Grid.Row="1" Grid.Column="1"/>
+
+                    <Label Text="Sexo" Style="{StaticResource DetailLabelStyle}" Grid.Row="2" Grid.Column="0"/>
+                    <Label x:Name="SexoLabel" Text="[Sexo]" Style="{StaticResource DetailValueStyle}" Grid.Row="2" Grid.Column="1"/>
+
+                    <Label Text="Ocupação" Style="{StaticResource DetailLabelStyle}" Grid.Row="3" Grid.Column="0"/>
+                    <Label x:Name="OcupacaoLabel" Text="[Ocupação]" Style="{StaticResource DetailValueStyle}" Grid.Row="3" Grid.Column="1"/>
+
+                    <Label Text="Duração do Sono" Style="{StaticResource DetailLabelStyle}" Grid.Row="4" Grid.Column="0"/>
+                    <Label x:Name="DuracaoSonoLabel" Text="[X.X horas]" Style="{StaticResource DetailValueStyle}" Grid.Row="4" Grid.Column="1"/>
+
+                    <Label Text="Qualidade do Sono (1-10)" Style="{StaticResource DetailLabelStyle}" Grid.Row="5" Grid.Column="0"/>
+                    <Label x:Name="QualidadeSonoLabel" Text="[X]" Style="{StaticResource DetailValueStyle}" Grid.Row="5" Grid.Column="1"/>
+
+                    <Label Text="Categoria IMC" Style="{StaticResource DetailLabelStyle}" Grid.Row="6" Grid.Column="0"/>
+                    <Label x:Name="ImcLabel" Text="[Categoria IMC]" Style="{StaticResource DetailValueStyle}" Grid.Row="6" Grid.Column="1"/>
+
+                    <Label Text="Nível de Atividade Física (0-100)" Style="{StaticResource DetailLabelStyle}" Grid.Row="7" Grid.Column="0"/>
+                    <Label x:Name="AtividadeFisicaLabel" Text="[X]" Style="{StaticResource DetailValueStyle}" Grid.Row="7" Grid.Column="1"/>
+
+                    <Label Text="Passos Diários" Style="{StaticResource DetailLabelStyle}" Grid.Row="8" Grid.Column="0"/>
+                    <Label x:Name="PassosDiariosLabel" Text="[X passos]" Style="{StaticResource DetailValueStyle}" Grid.Row="8" Grid.Column="1"/>
+
+                    <Label Text="Pressão Arterial" Style="{StaticResource DetailLabelStyle}" Grid.Row="9" Grid.Column="0"/>
+                    <Label x:Name="PressaoLabel" Text="[X/Y]" Style="{StaticResource DetailValueStyle}" Grid.Row="9" Grid.Column="1"/>
+
+                    <Label Text="Frequência Cardíaca" Style="{StaticResource DetailLabelStyle}" Grid.Row="10" Grid.Column="0"/>
+                    <Label x:Name="FreqCardiacaLabel" Text="[X]" Style="{StaticResource DetailValueStyle}" Grid.Row="10" Grid.Column="1"/>
+
+                    <Label Text="Nível de Stress (1-10)" Style="{StaticResource DetailLabelStyle}" Grid.Row="11" Grid.Column="0"/>
+                    <Label x:Name="NivelStressLabel" Text="[X]" Style="{StaticResource DetailValueStyle}" Grid.Row="11" Grid.Column="1"/>
+
+                </Grid>
+            </VerticalStackLayout>
+
+            <Button 
+                Text="Finalizar e Voltar"
+                Style="{StaticResource PrimaryButtonStyle}"
+                Clicked="OnFinalizarClicked" 
+                Margin="0,20,0,0"/>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

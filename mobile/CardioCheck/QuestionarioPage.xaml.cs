@@ -154,7 +154,7 @@ public partial class QuestionarioPage : ContentPage
 
             var httpClient = new HttpClient();
             httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", SessaoLogin.Token);
-            var url = $"{SessaoLogin.UrlApi}/questionarios";
+            var url = $"{SessaoLogin.UrlApi}/questionarios/coracao";
 
             var json = JsonSerializer.Serialize(questionario);
             var content = new StringContent(json, Encoding.UTF8, "application/json");

@@ -40,7 +40,7 @@ public partial class HistoricoPage : ContentPage
         {
             var httpClient = new HttpClient();
             httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", SessaoLogin.Token);
-            var url = $"{SessaoLogin.UrlApi}/historico";
+            var url = $"{SessaoLogin.UrlApi}/historico/coracao";
 
             var response = await httpClient.GetAsync(url);
 

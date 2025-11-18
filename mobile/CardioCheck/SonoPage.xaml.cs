@@ -1,6 +1,10 @@
+using CardioCheck.Models;
 using CardioCheck.Model;
 using System.Text.Json;
 using System.Text;
+using System.Net.Http.Headers; // NECESSÁRIO
+using System.Globalization;     // NECESSÁRIO
+using System.Threading.Tasks;
 
 namespace CardioCheck;
 
@@ -14,7 +18,13 @@ public partial class SonoPage : ContentPage
     {
         InitializeComponent();
 
-        // Define os valores iniciais dos labels dos sliders (descomentado)
+        // 1. Configura a subscrição para a limpeza do formulário (Chamado por ResultadoSonoPage)
+        MessagingCenter.Subscribe<object>(this, "LimparFormularioSono", async (sender) =>
+        {
+            await ClearFormSono();
+        });
+
+        // Define os valores iniciais dos labels dos sliders
         OnSliderValueChanged(DuracaoSonoSlider, new ValueChangedEventArgs(DuracaoSonoSlider.Value, DuracaoSonoSlider.Value));
         OnSliderValueChanged(AtividadeSlider, new ValueChangedEventArgs(AtividadeSlider.Value, AtividadeSlider.Value));
         OnSliderValueChanged(PassosSlider, new ValueChangedEventArgs(PassosSlider.Value, PassosSlider.Value));
@@ -24,15 +34,22 @@ public partial class SonoPage : ContentPage
 
     private async void OnAnalisarClicked(object sender, EventArgs e)
     {
-        // --- INÍCIO DA LÓGICA DE COLETA E TRADUÇÃO ---
+        // 1. Validação
+        if (!ValidateInputs())
+        {
+            await DisplayAlert("Erro de Validação", "Por favor, preencha todos os campos obrigatórios corretamente.", "OK");
+            return;
+        }
 
+        // Cria o modelo de requisição com os dados traduzidos (o restante do seu código)
         var requestData = new SonoRequestModel
         {
             nome = NomeEntry.Text,
             gender = TraduzirGenero(SexoPicker.SelectedItem as string),
             age = int.TryParse(IdadeEntry.Text, out int i) ? i : 0,
             occupation = TraduzirOcupacao(OcupacaoPicker.SelectedItem as string),
-            sleepDuration = DuracaoSonoSlider.Value,
+            // Usa CultureInfo.InvariantCulture para garantir que o ponto decimal seja usado na serialização
+            sleepDuration = double.Parse(DuracaoSonoSlider.Value.ToString(CultureInfo.InvariantCulture), CultureInfo.InvariantCulture),
             qualityOfSleep = (int)QualidadeSonoSlider.Value,
             physicalActivityLevel = (int)AtividadeSlider.Value,
             stressLevel = (int)StressSlider.Value,
@@ -42,47 +59,45 @@ public partial class SonoPage : ContentPage
             dailySteps = (int)PassosSlider.Value
         };
 
-        // --- FIM DA LÓGICA DE COLETA ---
-
         try
         {
-            // 1. Serializar os dados para JSON
+            // 2. Define o token de autenticação
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", SessaoLogin.Token);
+
+            // 3. Define a URL da API, usando a rota correta do OpenAPI
+            var url = $"{SessaoLogin.UrlApi}/questionarios/sono";
+
+            // 4. Serializar e enviar
             string jsonPayload = JsonSerializer.Serialize(requestData);
             var content = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
+            HttpResponseMessage response = await client.PostAsync(url, content);
+            string responseBody = await response.Content.ReadAsStringAsync();
 
-            // 2. Enviar para a API (substitua pela URL real do seu backend)
-            // Ex: "https://seu-backend.com/api/sono"
-            string apiUrl = "URL_DA_SUA_API_AQUI";
-
-            HttpResponseMessage response = await client.PostAsync(apiUrl, content);
-
-            // 3. Tratar a resposta
+            // 5. Tratar a resposta
             if (response.IsSuccessStatusCode)
             {
-                string responseBody = await response.Content.ReadAsStringAsync();
-                // Ex: Deserializar a resposta e navegar para a página de resultado
-                // var resultado = JsonSerializer.Deserialize<ResultadoModel>(responseBody);
-                // await Navigation.PushAsync(new ResultadoSonoPage(resultado));
+                // Deserializar a resposta (Modelo Resultado da API)
+                var resultadoResponse = JsonSerializer.Deserialize<Resultado>(responseBody);
 
-                await DisplayAlert("Sucesso", "Dados enviados com sucesso!", "OK");
+                // Navegar para a página de resultado de sono
+                await Navigation.PushAsync(new ResultadoSonoPage(requestData, resultadoResponse));
             }
             else
             {
-                // Mostra o erro do backend se houver
-                string errorBody = await response.Content.ReadAsStringAsync();
-                await DisplayAlert("Erro", $"Falha ao enviar dados: {response.StatusCode}\nDetalhes: {errorBody}", "OK");
+                // Mostra o erro do backend
+                await DisplayAlert("Erro da API", $"Falha ao processar a avaliação. Status: {response.StatusCode}\nDetalhes: {responseBody}", "OK");
             }
         }
         catch (Exception ex)
         {
-            // Captura erros de rede ou outros
-            await DisplayAlert("Erro de Conexão", $"Não foi possível conectar à API: {ex.Message}", "OK");
+            // Captura erros de rede, desserialização ou outros
+            await DisplayAlert("Erro Crítico", $"Ocorreu um erro: {ex.Message}", "OK");
         }
     }
 
     private void OnSliderValueChanged(object sender, ValueChangedEventArgs e)
     {
-        // Atualiza os labels dos sliders em tempo real (descomentado)
+        // Atualiza os labels dos sliders
         if (sender == DuracaoSonoSlider)
         {
             DuracaoSonoLabel.Text = $"{e.NewValue:F1} horas";
@@ -105,47 +120,84 @@ public partial class SonoPage : ContentPage
         }
     }
 
+    // --- MÉTODOS DE SUPORTE ---
+
+    private bool ValidateInputs()
+    {
+        // Adiciona validação simples para campos obrigatórios
+        return !string.IsNullOrWhiteSpace(NomeEntry.Text) &&
+               int.TryParse(IdadeEntry.Text, out _) &&
+               !string.IsNullOrWhiteSpace(PressaoEntry.Text) &&
+               int.TryParse(FreqCardiacaEntry.Text, out _) &&
+               SexoPicker.SelectedIndex != -1 &&
+               OcupacaoPicker.SelectedIndex != -1 &&
+               ImcPicker.SelectedIndex != -1;
+    }
+
+    public async Task ClearFormSono()
+    {
+        // Implementação da limpeza do formulário (chamado via MessagingCenter)
+        NomeEntry.Text = string.Empty;
+        IdadeEntry.Text = string.Empty;
+        PressaoEntry.Text = string.Empty;
+        FreqCardiacaEntry.Text = string.Empty;
+
+        // Reseta Pickers
+        SexoPicker.SelectedIndex = -1;
+        OcupacaoPicker.SelectedIndex = -1;
+        ImcPicker.SelectedIndex = -1;
+
+        // Reseta Sliders para os valores iniciais
+        DuracaoSonoSlider.Value = 8.0;
+        AtividadeSlider.Value = 50;
+        PassosSlider.Value = 5000;
+        StressSlider.Value = 4;
+        QualidadeSonoSlider.Value = 7;
+
+        // CORREÇÃO: Usa o nome da instância da ScrollView
+        await MainScrollView.ScrollToAsync(0, 0, true);
+    }
+
     // --- MÉTODOS DE TRADUÇÃO ---
 
     private int? TraduzirGenero(string generoPt)
     {
-        switch (generoPt)
+        return generoPt switch
         {
-            case "Feminino": return 0;
-            case "Masculino": return 1;
-            default: return null; // "Prefiro não informar" ou nulo
-        }
+            "Feminino" => 0,
+            "Masculino" => 1,
+            _ => null,
+        };
     }
 
     private string TraduzirImc(string imcPt)
     {
-        switch (imcPt)
+        return imcPt switch
         {
-            case "Abaixo do peso": return "Underweight";
-            case "Peso normal": return "Normal";
-            case "Sobrepeso": return "Overweight";
-            case "Obesidade": return "Obese";
-            default: return null;
-        }
+            "Abaixo do peso" => "Underweight",
+            "Peso normal" => "Normal",
+            "Sobrepeso" => "Overweight",
+            "Obesidade" => "Obese",
+            _ => null,
+        };
     }
 
     private string TraduzirOcupacao(string ocupacaoPt)
     {
-        // Mapeia de volta para o inglês que o backend espera
-        switch (ocupacaoPt)
+        return ocupacaoPt switch
         {
-            case "Médico(a)": return "Doctor";
-            case "Engenheiro(a)": return "Engineer";
-            case "Enfermeiro(a)": return "Nurse";
-            case "Professor(a)": return "Teacher";
-            case "Advogado(a)": return "Lawyer";
-            case "Engenheiro(a) de Software": return "Software Engineer";
-            case "Cientista": return "Scientist";
-            case "Contador(a)": return "Accountant";
-            case "Gerente": return "Manager";
-            case "Representante de Vendas": return "Sales Representative";
-            case "Vendedor(a)": return "Salesperson";
-            default: return null;
-        }
+            "Médico(a)" => "Doctor",
+            "Engenheiro(a)" => "Engineer",
+            "Enfermeiro(a)" => "Nurse",
+            "Professor(a)" => "Teacher",
+            "Advogado(a)" => "Lawyer",
+            "Engenheiro(a) de Software" => "Software Engineer",
+            "Cientista" => "Scientist",
+            "Contador(a)" => "Accountant",
+            "Gerente" => "Manager",
+            "Representante de Vendas" => "Sales Representative",
+            "Vendedor(a)" => "Salesperson",
+            _ => null,
+        };
     }
 }
