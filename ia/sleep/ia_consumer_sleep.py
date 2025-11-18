@@ -100,23 +100,23 @@ class NatsConsumer:
             # E definir a configuração explicitamente para garantir consistência.
             
             # Configuração para o stream ANALYSES (Work Queue)
-            analyses_config = StreamConfig(
-                name=STREAM_ANALYSES,
-                subjects=[SUBJECT_ANALYSES_REQUEST],
-                retention=RetentionPolicy.WORK_QUEUE,
-            )
-            await js.update_stream(analyses_config)
+            # analyses_config = StreamConfig(
+            #     name=STREAM_ANALYSES,
+            #     subjects=[SUBJECT_ANALYSES_REQUEST],
+            #     retention=RetentionPolicy.WORK_QUEUE,
+            # )
+            # await js.update_stream(analyses_config)
             
-            # Configuração para o stream RESULTS (retenção por limite, ex: 7 dias)
-            results_config = StreamConfig(
-                name=STREAM_RESULTS,
-                subjects=[SUBJECT_RESULTS_COMPLETED, "results.sleep.failed"], # Adicionando o de falha
-                retention=RetentionPolicy.LIMITS,
-                max_age=60 * 60 * 24 * 7 # 7 dias em segundos
-            )
-            await js.update_stream(results_config)
+            # # Configuração para o stream RESULTS (retenção por limite, ex: 7 dias)
+            # results_config = StreamConfig(
+            #     name=STREAM_RESULTS,
+            #     subjects=[SUBJECT_RESULTS_COMPLETED, "results.sleep.failed"], # Adicionando o de falha
+            #     retention=RetentionPolicy.LIMITS,
+            #     max_age=60 * 60 * 24 * 7 # 7 dias em segundos
+            # )
+            # await js.update_stream(results_config)
             
-            logger.info("Streams garantidos/atualizados com sucesso.")
+            # logger.info("Streams garantidos/atualizados com sucesso.")
 
             async def message_handler_wrapper(msg):
                 await self.message_handler(msg, js)

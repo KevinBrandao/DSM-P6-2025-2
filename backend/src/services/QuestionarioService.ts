@@ -103,17 +103,17 @@ export class QuestionarioService {
 		questionario: IQuestionario
 	): number[] {
 		return [
-			questionario.age,
-			questionario.restingBloodPressure,
-			questionario.serumCholesterol,
-			questionario.maxHeartRate,
-			questionario.oldpeak,
-			questionario.sex,
-			questionario.chestPainType,
-			questionario.fastingBloodSugar,
-			questionario.restingECG,
-			questionario.exerciseAngina,
-			questionario.stSlope,
+			questionario.age,                  // 1. age
+			questionario.sex,                  // 2. sex
+			questionario.chestPainType,        // 3. chest pain type
+			questionario.restingBloodPressure, // 4. resting bp s
+			questionario.serumCholesterol,     // 5. cholesterol
+			questionario.fastingBloodSugar,    // 6. fasting blood sugar
+			questionario.restingECG,           // 7. resting ecg
+			questionario.maxHeartRate,         // 8. max heart rate
+			questionario.exerciseAngina,       // 9. exercise angina
+			questionario.oldpeak,              // 10. oldpeak
+			questionario.stSlope,              // 11. ST slope
 		];
 	}
 
