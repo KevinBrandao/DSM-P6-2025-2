@@ -113,7 +113,7 @@ const ResultadoSonoPage: React.FC = () => {
                         <div className="data-item-row">
                             <span className="data-label">Gênero</span>
                             <span className="data-value">
-                                {questionario.gender === "Male" ? "Masculino" : "Feminino"}
+                                {questionario.gender === 0 ? 1 : 0}
                             </span>
                         </div>
                         <div className="data-item-row">
