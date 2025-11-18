@@ -107,74 +107,74 @@ const ResultadoSonoPage: React.FC = () => {
                         <div className="data-item-row">
                             <span className="data-label">Idade</span>
                             <span className="data-value">
-                                {questionario.idade}
+                                {questionario.age}
                             </span>
                         </div>
                         <div className="data-item-row">
                             <span className="data-label">Gênero</span>
                             <span className="data-value">
-                                {questionario.genero === "Male" ? "Masculino" : "Feminino"}
+                                {questionario.gender === "Male" ? "Masculino" : "Feminino"}
                             </span>
                         </div>
                         <div className="data-item-row">
                             <span className="data-label">Ocupação</span>
                             <span className="data-value">
-                                {questionario.ocupacao}
+                                {questionario.occupation}
                             </span>
                         </div>
                         <div className="data-item-row">
                             <span className="data-label">Duração do Sono</span>
                             <span className="data-value">
-                                {questionario.duracaoSono.toFixed(1)} horas
+                                {questionario.sleepDuration.toFixed(1)} horas
                             </span>
                         </div>
                         <div className="data-item-row">
                             <span className="data-label">Qualidade do Sono</span>
                             <span className="data-value">
-                                {questionario.qualidadeSono}/10
+                                {questionario.qualityOfSleep}/10
                             </span>
                         </div>
                         <div className="data-item-row">
                             <span className="data-label">Atividade Física</span>
                             <span className="data-value">
-                                {questionario.nivelAtividadeFisica}
+                                {questionario.physicalActivityLevel}
                             </span>
                         </div>
                         <div className="data-item-row">
                             <span className="data-label">Nível de Estresse</span>
                             <span className="data-value">
-                                {questionario.nivelEstresse}/8
+                                {questionario.stressLevel}/8
                             </span>
                         </div>
                         <div className="data-item-row">
                             <span className="data-label">IMC</span>
                             <span className="data-value">
-                                {questionario.categoriaIMC === "Normal" ? "Normal" : 
-                                 questionario.categoriaIMC === "Overweight" ? "Sobrepeso" : "Obeso"}
+                                {questionario.bmiCategory === "Normal" ? "Normal" : 
+                                 questionario.bmiCategory === "Overweight" ? "Sobrepeso" : "Obeso"}
                             </span>
                         </div>
                         <div className="data-item-row">
                             <span className="data-label">Pressão Arterial</span>
                             <span className="data-value">
-                                {questionario.pressaoArterial}
+                                {questionario.bloodPressure}
                             </span>
                         </div>
                         <div className="data-item-row">
                             <span className="data-label">Freq. Cardíaca</span>
                             <span className="data-value">
-                                {questionario.frequenciaCardiaca} bpm
+                                {questionario.heartRate} bpm
                             </span>
                         </div>
                         <div className="data-item-row">
                             <span className="data-label">Passos Diários</span>
                             <span className="data-value">
-                                {questionario.passosDiarios}
+                                {questionario.dailySteps}
                             </span>
                         </div>
                         <div className="data-item-row">
                             <span className="data-label">Distúrbio do Sono</span>
                             <span className="data-value">
-                                {questionario.disturbioSono === "None" ? "Nenhum" : questionario.disturbioSono}
+                                {questionario.sleepDisorder === "None" ? "Nenhum" : questionario.sleepDisorder}
                             </span>
                         </div>
                     </div>
