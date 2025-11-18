@@ -22,64 +22,88 @@
 
     </ContentPage.Resources>
 
-    <ScrollView>
-        <VerticalStackLayout Padding="30" Spacing="15" VerticalOptions="CenterAndExpand">
+    <Grid>
+        <Image 
+            Source="fundo.png" 
+            Aspect="AspectFill" />
 
-            <Image Source="logo.png" HeightRequest="80" HorizontalOptions="Center" />
-            <Image Source="adduser.png" HeightRequest="80" HorizontalOptions="Center" />
+        <ScrollView>
+            <VerticalStackLayout Padding="30" Spacing="15" VerticalOptions="CenterAndExpand">
 
-            <Label Text="Cadastro de Médico"
+                <Image Source="logo.png" HeightRequest="80" HorizontalOptions="Center" />
+                <Image Source="adduser.png" HeightRequest="80" HorizontalOptions="Center" />
+
+                <Label Text="Cadastro de Médico"
                    FontSize="18"
                    FontFamily="ComfortaaBold"
                    FontAttributes="Bold"
                    HorizontalOptions="Center"
-                   TextColor="#0073C2"/>
+                   TextColor="White"/>
 
-            <Border Style="{StaticResource RoundedEntryBorderStyle}">
-                <Entry x:Name="NomeEntry" Placeholder="Nome completo" Style="{StaticResource RoundedEntryStyle}" BackgroundColor="Transparent"/>
-            </Border>
+                <Border Style="{StaticResource RoundedEntryBorderStyle}">
+                    <Entry x:Name="NomeEntry" 
+                           FontFamily="ComfortaaRegular"
+                           Placeholder="Nome completo" 
+                           Style="{StaticResource RoundedEntryStyle}" 
+                           PlaceholderColor="#80000000"
+                           BackgroundColor="Transparent"/>
+                </Border>
 
-            <Border Style="{StaticResource RoundedEntryBorderStyle}">
-                <Entry x:Name="CrmEntry" Placeholder="CRM" Keyboard="Numeric" Style="{StaticResource RoundedEntryStyle}" BackgroundColor="Transparent"/>
-            </Border>
+                <Border Style="{StaticResource RoundedEntryBorderStyle}">
+                    <Entry x:Name="CrmEntry" 
+                           FontFamily="ComfortaaRegular"
+                           Placeholder="CRM"
+                           Keyboard="Numeric" Style="{StaticResource RoundedEntryStyle}" BackgroundColor="Transparent"/>
+                </Border>
 
-            <Border Style="{StaticResource RoundedEntryBorderStyle}">
-                <Entry x:Name="EmailEntry" Placeholder="E-mail" Keyboard="Email" Style="{StaticResource RoundedEntryStyle}" BackgroundColor="Transparent"/>
-            </Border>
+                <Border Style="{StaticResource RoundedEntryBorderStyle}">
+                    <Entry x:Name="EmailEntry" 
+                           FontFamily="ComfortaaRegular"
+                           Placeholder="E-mail" 
+                           Keyboard="Email" 
+                           Style="{StaticResource RoundedEntryStyle}" 
+                           BackgroundColor="Transparent"/>
+                </Border>
 
-            <Border Style="{StaticResource RoundedEntryBorderStyle}">
-                <Entry x:Name="SenhaEntry" Placeholder="Senha" IsPassword="True" Style="{StaticResource RoundedEntryStyle}" BackgroundColor="Transparent"/>
-            </Border>
+                <Border Style="{StaticResource RoundedEntryBorderStyle}">
+                    <Entry x:Name="SenhaEntry" 
+                           FontFamily="ComfortaaRegular"
+                           Placeholder="Senha" 
+                           IsPassword="True" Style="{StaticResource RoundedEntryStyle}" BackgroundColor="Transparent"/>
+                </Border>
 
-            <Border Style="{StaticResource RoundedEntryBorderStyle}">
-                <Entry x:Name="EspecialidadeEntry" 
+                <Border Style="{StaticResource RoundedEntryBorderStyle}">
+                    <Entry x:Name="EspecialidadeEntry" 
                        Placeholder="Especialidade" 
+                       FontFamily="ComfortaaRegular"
                        Text="Clínico Geral" 
                        Style="{StaticResource RoundedEntryStyle}"
                        BackgroundColor="Transparent"/>
-            </Border>
+                </Border>
 
-            <Label x:Name="MensagemLabel"
+                <Label x:Name="MensagemLabel"
                    TextColor="Red"
                    FontSize="14"
                    HorizontalOptions="Center"/>
 
-            <Button Text="Cadastrar"
+                <Button Text="Cadastrar"
                     Clicked="OnCadastrarClicked"
-                    BackgroundColor="#0073C2"
+                    BackgroundColor="#5409af"
                     FontFamily="ComfortaaBold"
                     TextColor="White"
                     CornerRadius="10"
                     HeightRequest="50"/>
 
-            <Button Text="Voltar para Login"
+                <Button Text="Voltar para Login"
                     Clicked="OnVoltarClicked"
-                    BackgroundColor="#595959"
+                    BackgroundColor="#a363f0"
                     FontFamily="ComfortaaBold"
                     TextColor="White"
                     CornerRadius="10"
                     HeightRequest="50"/>
 
-        </VerticalStackLayout>
-    </ScrollView>
+            </VerticalStackLayout>
+        </ScrollView>
+
+    </Grid>
 </ContentPage>

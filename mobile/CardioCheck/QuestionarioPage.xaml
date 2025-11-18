@@ -51,10 +51,13 @@
         <ScrollView x:Name="MainContentScrollView">
             <VerticalStackLayout Spacing="16" Padding="25,20">
 
-                <Image Source="logo.png"
-                       HeightRequest="60"
-                       Margin="30,20,30,20"
-                       HorizontalOptions="Center" />
+                <Label 
+                   Text="Questionário do Coração 💖"
+                   FontSize="20" FontFamily="ComfortaaBold"
+                   FontAttributes="Bold"
+                   HorizontalOptions="Center"
+                   TextColor="{StaticResource Primary}"
+                   Margin="0,0,0,10"/>
 
 
                 <VerticalStackLayout>
@@ -186,8 +189,6 @@
                                HorizontalTextAlignment="Center"/>
                     </Grid>
                 </VerticalStackLayout>
-
-
 
 
                 <VerticalStackLayout>
@@ -491,7 +492,7 @@
                     Clicked="OnEnviarQuestionarioClicked"
                     FontSize="16"
                     FontFamily="ComfortaaBold"
-                    BackgroundColor="#007BFF"
+                    BackgroundColor="#7102f7"
                     Margin="0,20,0,0"/>
 
                 <Label x:Name="ResultadoLabel" FontSize="Medium" HorizontalTextAlignment="Center" Margin="0,10,0,0"/>

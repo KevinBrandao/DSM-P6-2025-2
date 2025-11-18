@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:CardioCheck"
+             x:Class="CardioCheck.SonoPage"
+             Title="Sono"
+             BackgroundColor="{StaticResource Gray100}"
+             NavigationPage.HasNavigationBar="False">
+
+    <ContentPage.Resources>
+        <Style x:Key="FormLabelStyle" TargetType="Label">
+            <Setter Property="FontFamily" Value="LatoBold" />
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="TextColor" Value="{StaticResource Gray600}" />
+            <Setter Property="Margin" Value="10,10,0,8" />
+        </Style>
+
+        <Style x:Key="FormFieldBorderStyle" TargetType="Border">
+            <Setter Property="Stroke" Value="{StaticResource Gray200}" />
+            <Setter Property="StrokeThickness" Value="1" />
+            <Setter Property="BackgroundColor" Value="{StaticResource White}" />
+            <Setter Property="Padding" Value="12,8" />
+            <Setter Property="StrokeShape" Value="RoundRectangle 8" />
+        </Style>
+
+        <Style x:Key="FormEntryStyle" TargetType="Entry">
+            <Setter Property="FontFamily" Value="LatoRegular" />
+            <Setter Property="FontSize" Value="16" />
+            <Setter Property="TextColor" Value="{StaticResource Gray900}" />
+            <Setter Property="PlaceholderColor" Value="{StaticResource Gray300}" />
+        </Style>
+
+        <Style x:Key="FormPickerStyle" TargetType="Picker">
+            <Setter Property="FontFamily" Value="LatoRegular" />
+            <Setter Property="FontSize" Value="16" />
+            <Setter Property="TextColor" Value="{StaticResource Gray900}" />
+            <Setter Property="TitleColor" Value="{StaticResource Gray300}" />
+        </Style>
+
+        <Style x:Key="PrimaryButtonStyle" TargetType="Button">
+            <Setter Property="FontFamily" Value="LatoBold" />
+            <Setter Property="FontSize" Value="16" />
+            <Setter Property="TextColor" Value="{StaticResource White}" />
+            <Setter Property="BackgroundColor" Value="{StaticResource Primary}" />
+            <Setter Property="Padding" Value="14" />
+            <Setter Property="CornerRadius" Value="8" />
+        </Style>
+    </ContentPage.Resources>
+    <ScrollView>
+        <VerticalStackLayout Spacing="16" Padding="25,20">
+
+            <Label 
+                Text="Questionário do Sono 💤"
+                FontSize="20" FontFamily="ComfortaaBold"
+                FontAttributes="Bold"
+                HorizontalOptions="Center"
+                TextColor="{StaticResource Primary}"
+                Margin="0,0,0,10"/>
+
+            <VerticalStackLayout Spacing="0">
+                <Label Text="Nome" Style="{StaticResource FormLabelStyle}" />
+                <Border Style="{StaticResource FormFieldBorderStyle}">
+                    <Entry x:Name="NomeEntry" Placeholder="Digite seu nome" Style="{StaticResource FormEntryStyle}" />
+                </Border>
+            </VerticalStackLayout>
+
+            <VerticalStackLayout Spacing="0">
+                <Label Text="Sexo" Style="{StaticResource FormLabelStyle}" />
+                <Border Style="{StaticResource FormFieldBorderStyle}">
+                    <Picker x:Name="SexoPicker" Title="Selecione seu sexo" Style="{StaticResource FormPickerStyle}">
+                        <Picker.ItemsSource>
+                            <x:Array Type="{x:Type x:String}">
+                                <x:String>Masculino</x:String>
+                                <x:String>Feminino</x:String>
+                                <x:String>Prefiro não informar</x:String>
+                            </x:Array>
+                        </Picker.ItemsSource>
+                    </Picker>
+                </Border>
+            </VerticalStackLayout>
+
+            <VerticalStackLayout Spacing="0">
+                <Label Text="Idade" Style="{StaticResource FormLabelStyle}"/>
+                <Border Style="{StaticResource FormFieldBorderStyle}">
+                    <Entry x:Name="IdadeEntry" Placeholder="Digite sua idade" Keyboard="Numeric" Style="{StaticResource FormEntryStyle}" />
+                </Border>
+            </VerticalStackLayout>
+
+            <VerticalStackLayout Spacing="0">
+                <Label Text="Ocupação" Style="{StaticResource FormLabelStyle}"/>
+                <Border Style="{StaticResource FormFieldBorderStyle}">
+                    <Picker x:Name="OcupacaoPicker" Title="Selecione sua ocupação" Style="{StaticResource FormPickerStyle}">
+                        <Picker.ItemsSource>
+                            <x:Array Type="{x:Type x:String}">
+                                <x:String>Médico(a)</x:String>
+                                <x:String>Engenheiro(a)</x:String>
+                                <x:String>Enfermeiro(a)</x:String>
+                                <x:String>Professor(a)</x:String>
+                                <x:String>Advogado(a)</x:String>
+                                <x:String>Engenheiro(a) de Software</x:String>
+                                <x:String>Cientista</x:String>
+                                <x:String>Contador(a)</x:String>
+                                <x:String>Gerente</x:String>
+                                <x:String>Representante de Vendas</x:String>
+                                <x:String>Vendedor(a)</x:String>
+                            </x:Array>
+                        </Picker.ItemsSource>
+                    </Picker>
+                </Border>
+            </VerticalStackLayout>
+
+            <VerticalStackLayout Spacing="0">
+                <Label Text="Duração do Sono (horas)" Style="{StaticResource FormLabelStyle}" />
+                <Slider x:Name="DuracaoSonoSlider" Minimum="0" Maximum="24" Value="8" ValueChanged="OnSliderValueChanged" Margin="10,0" />
+                <Label x:Name="DuracaoSonoLabel" Text="8.0 horas" HorizontalOptions="Center" />
+            </VerticalStackLayout>
+
+            <VerticalStackLayout Spacing="0">
+                <Label Text="Categoria IMC" Style="{StaticResource FormLabelStyle}"/>
+                <Border Style="{StaticResource FormFieldBorderStyle}">
+                    <Picker x:Name="ImcPicker" Title="Selecione a categoria do seu IMC" Style="{StaticResource FormPickerStyle}">
+                        <Picker.ItemsSource>
+                            <x:Array Type="{x:Type x:String}">
+                                <x:String>Abaixo do peso</x:String>
+                                <x:String>Peso normal</x:String>
+                                <x:String>Sobrepeso</x:String>
+                                <x:String>Obesidade</x:String>
+                            </x:Array>
+                        </Picker.ItemsSource>
+                    </Picker>
+                </Border>
+            </VerticalStackLayout>
+
+            <VerticalStackLayout Spacing="0">
+                <Label Text="Nível de Atividade Física (0-100)" Style="{StaticResource FormLabelStyle}"/>
+                <Slider x:Name="AtividadeSlider" Minimum="0" Maximum="100" Value="50" ValueChanged="OnSliderValueChanged" Margin="10,0" />
+                <Label x:Name="AtividadeLabel" Text="50" HorizontalOptions="Center" />
+            </VerticalStackLayout>
+
+            <VerticalStackLayout Spacing="0">
+                <Label Text="Passos Diários (0-50000)" Style="{StaticResource FormLabelStyle}"/>
+                <Slider x:Name="PassosSlider" Minimum="0" Maximum="50000" Value="5000" ValueChanged="OnSliderValueChanged" Margin="10,0" />
+                <Label x:Name="PassosLabel" Text="5000 passos" HorizontalOptions="Center" />
+            </VerticalStackLayout>
+
+            <VerticalStackLayout Spacing="0">
+                <Label Text="Pressão Arterial" Style="{StaticResource FormLabelStyle}" />
+                <Border Style="{StaticResource FormFieldBorderStyle}">
+                    <Entry x:Name="PressaoEntry"
+                           Placeholder="Ex: 120/80" 
+                           Style="{StaticResource FormEntryStyle}" />
+                </Border>
+            </VerticalStackLayout>
+
+            <VerticalStackLayout Spacing="0">
+                <Label Text="Frequência Cardíaca" Style="{StaticResource FormLabelStyle}" />
+                <Border Style="{StaticResource FormFieldBorderStyle}">
+                    <Entry x:Name="FreqCardiacaEntry" Placeholder="Ex: 70" Keyboard="Numeric" Style="{StaticResource FormEntryStyle}" />
+                </Border>
+            </VerticalStackLayout>
+
+            <VerticalStackLayout Spacing="0">
+                <Label Text="Nível de Stress (1-10)" Style="{StaticResource FormLabelStyle}"/>
+                <Slider x:Name="StressSlider" Minimum="1" Maximum="10" Value="4" ValueChanged="OnSliderValueChanged" Margin="10,0" />
+                <Label x:Name="StressLabel" Text="4" HorizontalOptions="Center" />
+            </VerticalStackLayout>
+
+            <VerticalStackLayout Spacing="0">
+                <Label Text="Qualidade do Sono (1-10)" Style="{StaticResource FormLabelStyle}"/>
+                <Slider x:Name="QualidadeSonoSlider" Minimum="1" Maximum="10" Value="7" ValueChanged="OnSliderValueChanged" Margin="10,0" />
+                <Label x:Name="QualidadeSonoLabel" Text="7" HorizontalOptions="Center" />
+            </VerticalStackLayout>
+
+            <Button 
+                Text="Analisar Dados"
+                Style="{StaticResource PrimaryButtonStyle}"
+                Clicked="OnAnalisarClicked" 
+                Margin="0,20,0,0" />
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>

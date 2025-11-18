@@ -31,13 +31,13 @@
                             <Image.Source>
                                 <FontImageSource Glyph="&#xE802;"
                                                  FontFamily="FontIcons"
-                                                 Color="Black"
+                                                 Color="White"
                                                  Size="22"/>
                             </Image.Source>
                         </Image>
 
                         <Label Text="Sair" 
-                               TextColor="black" 
+                               TextColor="White" 
                                FontFamily="ComfortaaBold"
                                FontSize="12">
 
@@ -76,7 +76,7 @@
                                         <Label Text="{Binding Title}"
                                                FontFamily="ComfortaaBold"
                                                FontSize="22"
-                                               TextColor="#0fac8d"
+                                               TextColor="#5409af"
                                                HorizontalOptions="Center"
                                                HorizontalTextAlignment="Center"/>
                                         
@@ -99,7 +99,7 @@
                                    IndicatorSize="8"/>
                 </VerticalStackLayout>
 
-                <Frame HeightRequest="200"
+                <!--<Frame HeightRequest="200"
                        WidthRequest="200"
                            CornerRadius="100"
                            IsClippedToBounds="True"
@@ -115,7 +115,7 @@
 
                         <Label Text="Iniciar"
                                FontFamily="ComfortaaBold"
-                               TextColor="#0fac8d"
+                               TextColor="#5409af"
                                FontSize="22"
                                HorizontalOptions="Center"
                                VerticalOptions="Center"
@@ -125,7 +125,9 @@
                             <TapGestureRecognizer Tapped="OnStartClicked" />
                         </Grid.GestureRecognizers>
                     </Grid>
-                </Frame>
+                    
+                    
+                </Frame>-->
 
 
             </VerticalStackLayout>

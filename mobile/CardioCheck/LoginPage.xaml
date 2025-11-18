@@ -28,7 +28,7 @@
                        FontSize="15"
                        FontFamily="ComfortaaBold"
                        HorizontalOptions="Center"
-                       TextColor="Black"/>
+                       TextColor="White"/>
 
                 <Border Style="{StaticResource TranslucentEntryStyle}">
                     <Grid ColumnDefinitions="Auto, *" ColumnSpacing="10" Padding="15,0">
@@ -37,7 +37,7 @@
                                 <FontImageSource Glyph="&#xF2C0;"
                                                  FontFamily="FontIcons"
                                                  Size="20"
-                                                 Color="Black" />
+                                                 Color="White" />
                             </Image.Source>
                         </Image>
 
@@ -48,7 +48,7 @@
                                FontSize="15"
                                FontFamily="ComfortaaRegular"
                                Text="doc@gmail.com"
-                               TextColor="Black"
+                               TextColor="White"
                                PlaceholderColor="#80000000"
                                BackgroundColor="Transparent"
                                VerticalOptions="Center"/>
@@ -62,7 +62,7 @@
                                 <FontImageSource Glyph="&#xE80A;" 
                                                  FontFamily="FontIcons"
                                                  Size="20"
-                                                 Color="black" />
+                                                 Color="White" />
                             </Image.Source>
                         </Image>
 
@@ -73,7 +73,7 @@
                                FontSize="15"
                                FontFamily="ComfortaaRegular"
                                Text="123456"
-                               TextColor="Black"
+                               TextColor="White"
                                PlaceholderColor="#80000000"
                                BackgroundColor="Transparent"
                                VerticalOptions="Center"/>
@@ -88,9 +88,9 @@
 
                 <Button Text="Entrar"
                         Clicked="OnEntrarClicked"
-                        BackgroundColor="#007BFF"
+                        BackgroundColor="White"
                         FontFamily="ComfortaaBold"
-                        TextColor="White"
+                        TextColor="#7102f7"
                         CornerRadius="28"
                         HeightRequest="55"
                         FontAttributes="Bold"
@@ -98,7 +98,7 @@
 
                 <Button Text="Cadastrar Médico"
                         Clicked="OnCadastrarClicked"
-                        BackgroundColor="#595959"
+                        BackgroundColor="#a363f0"
                                                 FontFamily="ComfortaaBold"
                         TextColor="White"
                         CornerRadius="28"

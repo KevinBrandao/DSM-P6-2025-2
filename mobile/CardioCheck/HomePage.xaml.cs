@@ -26,9 +26,9 @@ public partial class HomePage : ContentPage
         // Cria a lista de slides com 3 conteúdos diferentes
         Slides = new List<Slide>
         {
-            new Slide { Icon = "icone_analise.gif", Title = "Análise Rápida", Description = "Utilize CardioCheck para uma avaliação de risco cardíaco em minutos." },
+            new Slide { Icon = "icone_apoio.gif", Title = "Análise do Sono", Description = "Utilize HealthCheck para uma avaliação de disturbios do sono." },
             new Slide { Icon = "icone_dados.gif", Title = "Baseado em Dados", Description = "Nosso algoritmo é treinado com casos reais para oferecer um apoio à sua decisão clínica." },
-            new Slide { Icon = "icone_apoio.gif", Title = "Apoio à Decisão Médica", Description = "Uma ferramenta moderna para auxiliar na triagem e no encaminhamento de pacientes." }
+            new Slide { Icon = "icone_analise.gif", Title = "Apoio à Decisão Médica", Description = "Uma ferramenta moderna para auxiliar na triagem e no encaminhamento de pacientes." }
         };
 
         // Define o BindingContext para que o XAML possa encontrar a lista "Slides"

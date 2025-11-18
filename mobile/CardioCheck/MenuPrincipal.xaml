@@ -10,7 +10,8 @@
             UnselectedTabColor="{StaticResource Gray500}">
 
     <local:HomePage Title="Início" IconImageSource="homepage.png" />
-    <local:QuestionarioPage Title="CardioCheck" IconImageSource="heartcheck.png" />
+    <local:SonoPage Title="Sono" IconImageSource="sono.png" />
+    <local:QuestionarioPage Title="Cardio" IconImageSource="heartcheck.png" />
     <local:HistoricoPage Title="Histórico" IconImageSource="history.png" />
 
 </TabbedPage>
