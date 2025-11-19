@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:model="clr-namespace:CardioCheck.Model"
+             x:Class="CardioCheck.HistoricoSonoPage"
+             Title="Histórico do Sono"
+             BackgroundColor="{StaticResource Gray100}"
+             NavigationPage.HasNavigationBar="False">
+
+    <Grid RowDefinitions="Auto, *">
+
+        <VerticalStackLayout Grid.Row="0">
+            <Image Source="logo.png"
+                   HeightRequest="40"
+                   Margin="50,25,50,20"
+                   HorizontalOptions="Center" />
+            <HorizontalStackLayout 
+                   HorizontalOptions="Center" 
+                   Spacing="10" 
+                   Margin="0,0,0,10">
+
+                <Image VerticalOptions="Center">
+                    <Image.Source>
+                        <FontImageSource 
+                         Glyph="&#xF869;" 
+                         FontFamily="FontIcons" 
+                         Size="20"
+                         Color="{StaticResource Gray900}"/>
+                    </Image.Source>
+                </Image>
+
+                <Label 
+                    Text="Histórico de Avaliações do Sono"
+                    FontSize="18"
+                    FontFamily="ComfortaaBold"
+                    TextColor="{StaticResource Gray900}"
+                    VerticalOptions="Center"/>
+
+            </HorizontalStackLayout>
+        </VerticalStackLayout>
+
+        <Grid Grid.Row="1">
+            <ActivityIndicator x:Name="LoadingIndicator" 
+                               IsRunning="True" 
+                               VerticalOptions="Center" 
+                               HorizontalOptions="Center" />
+
+            <CollectionView x:Name="HistoricoSonoCollectionView" 
+                            ItemsSource="{Binding HistoricoSono}"
+                            SelectionMode="Single"
+                            IsVisible="False"
+                            VerticalOptions="FillAndExpand">
+
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="model:AvaliacaoSono">
+                        <Frame Margin="16,8" Padding="16" CornerRadius="12" BorderColor="{StaticResource Gray200}" BackgroundColor="{StaticResource White}" HasShadow="False" >
+                            <Frame.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="OnTapped" />
+                            </Frame.GestureRecognizers>
+                            <Grid RowDefinitions="Auto, Auto" RowSpacing="12">
+
+                                <HorizontalStackLayout Grid.Row="0" Spacing="12" VerticalOptions="Center">
+                                    <Image Aspect="AspectFit">
+                                        <Image.Source>
+                                            <FontImageSource Glyph="&#xF2C0;" 
+                                                             FontFamily="FontIcons" 
+                                                             Size="22" 
+                                                             Color="{StaticResource Gray600}"/>
+                                        </Image.Source>
+                                    </Image>
+                                    <Label FontFamily="LatoBold" FontSize="18" TextColor="{StaticResource Gray900}" VerticalOptions="Center">
+                                        <Label.FormattedText>
+                                            <FormattedString>
+                                                <Span Text="{Binding Questionario.nome}"/>
+                                                <Span Text=", "/>
+                                                <Span Text="{Binding Questionario.age}"/>
+                                                <Span Text=" anos"/>
+                                            </FormattedString>
+                                        </Label.FormattedText>
+                                    </Label>
+                                </HorizontalStackLayout>
+
+                                <Grid Grid.Row="1" ColumnDefinitions="*, Auto">
+
+                                    <HorizontalStackLayout Grid.Column="0" Spacing="8" VerticalOptions="Center">
+                                        <Image Aspect="AspectFit">
+                                            <Image.Source>
+                                                <FontImageSource Glyph="&#xE804;" 
+                                                                 FontFamily="FontIcons" 
+                                                                 Size="16" 
+                                                                 Color="{StaticResource Gray600}"/>
+                                            </Image.Source>
+                                        </Image>
+                                        <Label Text="{Binding DataFormatada}" TextColor="{StaticResource Gray600}" FontSize="14" VerticalOptions="Center"/>
+                                    </HorizontalStackLayout>
+
+                                    <Label Grid.Column="1" 
+                                           Text="{Binding ResultadoTexto}" 
+                                           TextColor="{Binding ResultadoCor}" 
+                                           FontFamily="LatoBold" 
+                                           FontSize="14"
+                                           VerticalOptions="Center"/>
+                                </Grid>
+                            </Grid>
+                        </Frame>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </Grid>
+    </Grid>
+</ContentPage>

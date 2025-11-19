@@ -13,5 +13,6 @@
     <local:SonoPage Title="Sono" IconImageSource="sono.png" />
     <local:QuestionarioPage Title="Cardio" IconImageSource="heartcheck.png" />
     <local:HistoricoPage Title="Histórico" IconImageSource="history.png" />
+    <local:HistoricoSonoPage Title="Hist. Sono" IconImageSource="sono.png"/>
 
 </TabbedPage>

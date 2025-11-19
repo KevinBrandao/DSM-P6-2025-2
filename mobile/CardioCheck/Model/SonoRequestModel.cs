@@ -13,25 +13,25 @@ namespace CardioCheck.Model
         public string nome { get; set; }
 
         [JsonPropertyName("gender")]
-        public int? gender { get; set; } // int? (nullable) para o caso de "Prefiro não informar"
+        public int? gender { get; set; } // Já estava anulável
 
         [JsonPropertyName("age")]
-        public int age { get; set; }
+        public int? age { get; set; } // CORRIGIDO: de int para int?
 
         [JsonPropertyName("occupation")]
         public string occupation { get; set; }
 
         [JsonPropertyName("sleepDuration")]
-        public double sleepDuration { get; set; }
+        public double? sleepDuration { get; set; } // CORRIGIDO: de double para double? (RESOLVE O ERRO REPORTADO)
 
         [JsonPropertyName("qualityOfSleep")]
-        public int qualityOfSleep { get; set; }
+        public int? qualityOfSleep { get; set; } // CORRIGIDO: de int para int?
 
         [JsonPropertyName("physicalActivityLevel")]
-        public int physicalActivityLevel { get; set; }
+        public int? physicalActivityLevel { get; set; } // CORRIGIDO: de int para int?
 
         [JsonPropertyName("stressLevel")]
-        public int stressLevel { get; set; }
+        public int? stressLevel { get; set; } // CORRIGIDO: de int para int?
 
         [JsonPropertyName("bmiCategory")]
         public string bmiCategory { get; set; }
@@ -40,9 +40,9 @@ namespace CardioCheck.Model
         public string bloodPressure { get; set; }
 
         [JsonPropertyName("heartRate")]
-        public int heartRate { get; set; }
+        public int? heartRate { get; set; } // CORRIGIDO: de int para int?
 
         [JsonPropertyName("dailySteps")]
-        public int dailySteps { get; set; }
+        public int? dailySteps { get; set; } // CORRIGIDO: de int para int?
     }
 }
