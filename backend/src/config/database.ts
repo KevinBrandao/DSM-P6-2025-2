@@ -1,5 +1,6 @@
 import { DataSource } from "typeorm";
 import dotenv from "dotenv";
+import path from "path";
 
 dotenv.config();
 
@@ -11,8 +12,8 @@ export const AppDataSource = new DataSource({
     password: process.env.DB_PASSWORD || "root",
     database: process.env.DB_DATABASE || "cardiocheck",
     logging: process.env.NODE_ENV === "development",
-    entities: ["src/models/entities/**/*.ts"],
-    migrations: ["src/migrations/**/*.ts"],
-    subscribers: ["src/subscribers/**/*.ts"],
+    entities: [path.join(__dirname, "..", "models", "entities", "*.{ts,js}")],
+    migrations: [path.join(__dirname, "..", "migrations", "*.{ts,js}")],
+    subscribers: [path.join(__dirname, "..", "subscribers", "*.{ts,js}")],
     charset: "utf8mb4", // Suporte a caracteres Unicode
 });
