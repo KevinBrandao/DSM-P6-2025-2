@@ -27,9 +27,9 @@ class AnalysisService:
         self.model = None
         self.model_path = model_path
         self.all_columns = [
-            'age', 'resting bp s', 'cholesterol', 'max heart rate', 'oldpeak',
-            'sex', 'chest pain type', 'fasting blood sugar', 'resting ecg',
-            'exercise angina', 'ST slope'
+            'age', 'sex', 'chest pain type', 'resting bp s',
+            'cholesterol', 'fasting blood sugar', 'resting ecg',
+            'max heart rate', 'exercise angina', 'oldpeak', 'ST slope'
         ]
 
     def load_model(self):
