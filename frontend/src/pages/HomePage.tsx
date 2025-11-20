@@ -8,7 +8,7 @@ const HomePage: React.FC = () => {
 
     return (
         <div className="home-container">
-            
+
             <div className="welcome-section">
                 <div className="welcome-card card">
                     <div className="welcome-icon">

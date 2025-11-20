@@ -23,8 +23,8 @@
 
 .historico-tabs {
     display: flex;
-    justify-content: center; 
-    gap: 15rem; 
+    justify-content: center;
+    gap: 15rem;
     margin-bottom: 2rem;
     border-bottom: 1px solid var(--color-border);
     padding-bottom: 1rem;
@@ -43,7 +43,7 @@
     cursor: pointer;
     transition: all 0.3s ease;
     position: relative;
-    min-width: 180px; 
+    min-width: 180px;
     justify-content: center;
 }
 
@@ -162,11 +162,14 @@
 .paciente-idade {
     font-size: 0.875rem;
     color: var(--color-text-muted);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
 }
 
 .card-icon {
-    padding: 0.5rem;    
-    border-radius: var(--radius-md);    
+    padding: 0.5rem;
+    border-radius: var(--radius-md);
 }
 
 .avaliacao-data {
@@ -248,6 +251,7 @@
         opacity: 0;
         transform: translateY(10px);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);
@@ -278,20 +282,20 @@
         grid-template-columns: 1fr;
         gap: 1rem;
     }
-    
+
     .historico-tabs {
         flex-direction: column;
         gap: 0.5rem;
     }
-    
+
     .tab-button {
         justify-content: center;
     }
-    
+
     .historico-title {
         font-size: 1.5rem;
     }
-    
+
     .avaliacao-card {
         padding: 1.25rem;
     }
@@ -301,17 +305,16 @@
     .historico-container {
         padding: 0 1rem;
     }
-    
+
     .card-header {
         flex-direction: column;
         gap: 0.75rem;
         align-items: flex-start;
     }
-    
+
     .avaliacao-data {
         flex-direction: column;
         align-items: flex-start;
         gap: 0.5rem;
     }
 }
-

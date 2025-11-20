@@ -19,7 +19,7 @@ export interface IResultado {
 }
 
 export interface IAvaliacao {
-    id: number;
+    id: string;
     data: string;
     resultado: number;
     questionario: IQuestionario;

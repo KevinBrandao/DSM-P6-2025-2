@@ -7,7 +7,7 @@ import {
     LogOut,
     Activity,
     ChevronLeft,
-    ChevronRight,    
+    ChevronRight,
     Bed
 } from "lucide-react";
 import "./SideBar.css";
@@ -29,9 +29,9 @@ const Sidebar: React.FC<SidebarProps> = ({ isCollapsed, onToggle }) => {
 
     const menuItems = [
         { path: "/home", icon: Home, label: "Início" },
-        { path: "/questionario", icon: Heart, label: "Cardio" },        
+        { path: "/questionario", icon: Heart, label: "Cardio" },
         { path: "/questionario-sono", icon: Bed, label: "Sono" },
-        { path: "/historico", icon: FileText, label: "Histórico" }        
+        { path: "/historico", icon: FileText, label: "Histórico" }
     ];
 
     const isActive = (path: string) => location.pathname === path;

@@ -90,7 +90,7 @@
   white-space: nowrap;
   margin-right: 10px;
   font-weight: normal;
-  order: 1; 
+  order: 1;
 }
 
 .data-item-row::after {
@@ -99,7 +99,7 @@
   border-bottom: 1px dashed #ccc;
   margin: 0 8px;
   align-self: center;
-  order: 2; 
+  order: 2;
 }
 
 .data-item-row .data-value {

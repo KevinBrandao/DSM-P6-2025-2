@@ -1,6 +1,5 @@
 import React from "react";
 import { useLocation, useNavigate, Navigate } from "react-router-dom";
-import { AlertTriangle } from "lucide-react";
 import { type IQuestionario, type IResultado } from "../types";
 import "./ResultadoPage.css";
 
@@ -101,8 +100,8 @@ const ResultadoPage: React.FC = () => {
     return (
         <div className="resultado-container">
             <div className={`resultado-card ${isHighRisk
-                    ? "resultado-card--high-risk"
-                    : "resultado-card--low-risk"
+                ? "resultado-card--high-risk"
+                : "resultado-card--low-risk"
                 }`}
             >
                 <div className="resultado-icon">

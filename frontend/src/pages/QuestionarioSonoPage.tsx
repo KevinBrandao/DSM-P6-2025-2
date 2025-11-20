@@ -71,7 +71,6 @@ const QuestionarioSonoPage: React.FC = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [isPolling, setIsPolling] = useState(false);
     const [error, setError] = useState<string | null>(null);
-    // @ts-ignore: avaliacaoId mantido para consistência futura, mesmo que não usado diretamente no render
     const [avaliacaoId, setAvaliacaoId] = useState<string | null>(null);
     const navigate = useNavigate();
 
@@ -91,26 +90,21 @@ const QuestionarioSonoPage: React.FC = () => {
 
     const categoriasIMC = ["Normal", "Overweight", "Obese"];
 
-    // Função de polling adaptada para o Sono
     const pollResultado = async (id: string, attempts = 0): Promise<IResultadoSono> => {
-        const maxAttempts = 36; // 36 tentativas (6 minutos no total)
+        const maxAttempts = 36;
 
         const getInterval = (attempt: number) => {
-            if (attempt < 3) return 10000; // 10 segundos
-            if (attempt < 6) return 15000; // 15 segundos
-            return 20000; // 20 segundos
+            if (attempt < 3) return 10000;
+            if (attempt < 6) return 15000;
+            return 20000;
         };
 
         try {
-            console.log(`🔄 Polling tentativa ${attempts + 1}/${maxAttempts} para: ${id}`);
-
-            // Busca histórico de sono
             const response = await api.get<IAvaliacaoSono[]>("/historico/sono");
 
             const avaliacao = response.data.find(item => item.id === id);
 
             if (!avaliacao) {
-                console.log(`⏳ Avaliação ${id} ainda não está no histórico (processando...)`);
                 if (attempts < maxAttempts) {
                     const interval = getInterval(attempts);
                     await new Promise(resolve => setTimeout(resolve, interval));
@@ -120,12 +114,7 @@ const QuestionarioSonoPage: React.FC = () => {
                 }
             }
 
-            console.log("✅ Avaliação encontrada no histórico:", avaliacao);
-
-            // Verifica se ainda está processando (resultado -1)
-            // @ts-ignore: Assumindo que o backend retorna resultado numérico similar ao coração
             if (avaliacao.resultado === -1 && attempts < maxAttempts) {
-                console.log(`⏳ Avaliação encontrada mas ainda processando (resultado: -1)`);
                 const interval = getInterval(attempts);
                 await new Promise(resolve => setTimeout(resolve, interval));
                 return pollResultado(id, attempts + 1);
@@ -135,14 +124,8 @@ const QuestionarioSonoPage: React.FC = () => {
                 throw new Error("Processamento está demorando mais que o normal. Verifique o histórico mais tarde.");
             }
 
-            console.log("🎯 Resultado final obtido:", avaliacao.resultado);
-
-            // Retorna objeto compatível com IResultadoSono
-            // Ajuste a lógica de recomendação conforme a regra de negócio do seu backend (0 = bom, 1 = ruim)
             return {
-                // @ts-ignore: Ajuste de tipagem conforme backend
                 predicao: avaliacao.resultado,
-                // @ts-ignore: Ajuste de tipagem conforme backend
                 resultado: avaliacao.resultado,
                 recomendacao: avaliacao.resultado === 1
                     ? "Indícios de distúrbio do sono identificados. Recomenda-se consultar um especialista."
@@ -153,7 +136,6 @@ const QuestionarioSonoPage: React.FC = () => {
             console.error("❌ Erro no polling:", error);
 
             if (attempts < maxAttempts && (error.message?.includes('Network') || error.message?.includes('timeout'))) {
-                console.log(`🌐 Erro de rede, tentando novamente em 10s...`);
                 await new Promise(resolve => setTimeout(resolve, 10000));
                 return pollResultado(id, attempts + 1);
             }
@@ -185,9 +167,6 @@ const QuestionarioSonoPage: React.FC = () => {
                 dataToSend.nome = `Paciente ${new Date().toLocaleTimeString()}`;
             }
 
-            console.log("📤 Enviando dados de sono:", dataToSend);
-
-            // Envia para o endpoint de sono
             const response = await api.post<{
                 message: string;
                 avaliacao: {
@@ -199,14 +178,12 @@ const QuestionarioSonoPage: React.FC = () => {
                 };
             }>("/questionarios/sono", dataToSend);
 
-            console.log("📥 Resposta da API:", response.data);
             const { avaliacao } = response.data;
 
             if (!avaliacao || typeof avaliacao.resultado === 'undefined') {
                 throw new Error("Resposta da API em formato inválido");
             }
 
-            // Se resultado imediato
             if (avaliacao.resultado !== -1) {
                 navigate("/resultado-sono", {
                     state: {
@@ -222,8 +199,6 @@ const QuestionarioSonoPage: React.FC = () => {
                 return;
             }
 
-            // Inicia Polling
-            console.log("🔄 Iniciando polling via histórico para avaliação:", avaliacao.id);
             setIsLoading(false);
             setIsPolling(true);
             setAvaliacaoId(avaliacao.id);
@@ -251,58 +226,14 @@ const QuestionarioSonoPage: React.FC = () => {
     return (
         <div className="questionario-container">
 
-            {/* Overlay de Polling Adicionado */}
             {isPolling && (
                 <div className="polling-overlay">
                     <div className="polling-content">
                         <RefreshCw size={32} className="polling-spinner" />
-                        <h3>Processando Avaliação do Sono</h3>
-
-                        <div className="polling-steps">
-                            <div className="step active">
-                                <div className="step-number">1</div>
-                                <div className="step-text">Questionário enviado</div>
-                            </div>
-                            <div className="step active">
-                                <div className="step-number">2</div>
-                                <div className="step-text">Na fila de processamento</div>
-                            </div>
-                            <div className="step">
-                                <div className="step-number">3</div>
-                                <div className="step-text">IA analisando dados</div>
-                            </div>
-                            <div className="step">
-                                <div className="step-number">4</div>
-                                <div className="step-text">Resultado pronto</div>
-                            </div>
-                        </div>
-
-                        <div className="polling-info">
-                            <p><strong>Status:</strong> Aguardando processamento pela mensageria...</p>
-                            <p><strong>Tempo estimado:</strong> 1-3 minutos</p>
-                            <p><small>O sistema verifica automaticamente a cada 10-20 segundos</small></p>
-                        </div>
-
-                        <div className="polling-actions">
-                            <button
-                                onClick={() => {
-                                    setIsPolling(false);
-                                    navigate("/historico");
-                                }}
-                                className="btn btn-secondary"
-                            >
-                                Ver Histórico
-                            </button>
-                            <button
-                                onClick={() => {
-                                    setIsPolling(false);
-                                    navigate("/home");
-                                }}
-                                className="btn btn-outline"
-                            >
-                                Voltar para Home
-                            </button>
-                        </div>
+                        <h3>Processando Avaliação de Sono</h3>
+                        <p className="polling-message">
+                            Sua avaliação está sendo processada e o resultado será retornado automaticamente.
+                        </p>
                     </div>
                 </div>
             )}

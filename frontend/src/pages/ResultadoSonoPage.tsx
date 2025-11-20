@@ -1,9 +1,30 @@
 import React from "react";
 import { useLocation, useNavigate, Navigate } from "react-router-dom";
-import { AlertTriangle, Moon, CheckCircle } from "lucide-react";
 import { type IQuestionarioSono, type IResultadoSono } from "../types";
 import "./ResultadoSonoPage.css";
 
+const getGender = (gender: number) => {
+    return gender === 1 ? "Masculino" : "Feminino";
+};
+
+const getOccupation = (occupation: string) => {
+    const occupations: { [key: string]: string } = {
+        "Nurse": "Enfermeiro(a)",
+        "Doctor": "Médico(a)",
+        "Engineer": "Engenheiro(a)",
+        "Teacher": "Professor(a)",
+        "Accountant": "Contador(a)",
+        "Software Engineer": "Desenvolvedor(a)",
+        "Salesperson": "Vendedor(a)",
+        "Manager": "Gerente",
+        "Scientist": "Cientista",
+        "Lawyer": "Advogado(a)",
+        "Student": "Estudante",
+        "Other": "Outro",
+        "Sales Representative": "Representante de Vendas"
+    };
+    return occupations[occupation] || occupation;
+};
 
 const ResultadoSonoPage: React.FC = () => {
     const location = useLocation();
@@ -21,37 +42,7 @@ const ResultadoSonoPage: React.FC = () => {
     const { questionario, resultado } = state;
     const isHighRisk = resultado.predicao === 1;
 
-    const getQualityColor = (score: number) => {
-        if (score >= 8) return "#10B981"; 
-        if (score >= 6) return "#F59E0B"; 
-        return "#EF4444"; 
-    };
-
-    const getQualityText = (score: number) => {
-        if (score == 0) return "BAIXO RISCO";
-        if (score == 1) return "ALTO RISCO";
-        if (score == -1) return "EM PROCESSAMENTO";
-        if (score == -2) return "ERRO NO PROCESSAMENTO";
-    };
-
-    const MoonIcon = () => (
-        <svg
-            width="80"
-            height="80"
-            viewBox="0 0 24 24"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-        >
-            <path
-                d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"
-                fill="#E8F5E9"
-                stroke="#10B981"
-                strokeWidth="2"
-            />
-        </svg>
-    );
-
-const SmileyIcon = () => (
+    const SmileyIcon = () => (
         <svg
             width="80"
             height="80"
@@ -107,8 +98,8 @@ const SmileyIcon = () => (
     return (
         <div className="resultado-sono-container">
             <div className={`resultado-card ${isHighRisk
-                    ? "resultado-card--high-risk"
-                    : "resultado-card--low-risk"
+                ? "resultado-card--high-risk"
+                : "resultado-card--low-risk"
                 }`}
             >
                 <div className="resultado-icon">
@@ -151,13 +142,13 @@ const SmileyIcon = () => (
                         <div className="data-item-row">
                             <span className="data-label">Gênero</span>
                             <span className="data-value">
-                                {questionario.gender === 0 ? 1 : 0}
+                                {getGender(questionario.gender)}
                             </span>
                         </div>
                         <div className="data-item-row">
                             <span className="data-label">Ocupação</span>
                             <span className="data-value">
-                                {questionario.occupation}
+                                {getOccupation(questionario.occupation)}
                             </span>
                         </div>
                         <div className="data-item-row">
@@ -187,8 +178,8 @@ const SmileyIcon = () => (
                         <div className="data-item-row">
                             <span className="data-label">IMC</span>
                             <span className="data-value">
-                                {questionario.bmiCategory === "Normal" ? "Normal" : 
-                                 questionario.bmiCategory === "Overweight" ? "Sobrepeso" : "Obeso"}
+                                {questionario.bmiCategory === "Normal" ? "Normal" :
+                                    questionario.bmiCategory === "Overweight" ? "Sobrepeso" : "Obeso"}
                             </span>
                         </div>
                         <div className="data-item-row">

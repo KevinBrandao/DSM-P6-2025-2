@@ -15,7 +15,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
 
     return (
         <div className="main-layout">
-            <Sidebar 
+            <Sidebar
                 isCollapsed={isSidebarCollapsed}
                 onToggle={handleToggleSidebar}
             />

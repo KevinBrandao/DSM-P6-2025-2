@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Calendar, User, Activity, FileText, Heart, Bed } from "lucide-react";
+import { Calendar, User, Activity, FileText, Heart, Bed, Clock } from "lucide-react";
 import api from "../services/api";
 import { type IAvaliacao, type IAvaliacaoSono } from "../types";
 import "./HistoricoPage.css";
@@ -18,18 +18,16 @@ const HistoricoPage: React.FC = () => {
             try {
                 setLoading(true);
                 setError(null);
-                
-                console.log("🔍 Buscando histórico cardíaco...");
 
                 try {
                     const responseCardiaco = await api.get<IAvaliacao[]>("/historico/coracao");
                     console.log("✅ Histórico cardíaco carregado:", responseCardiaco.data);
-                    
+
                     const sortedCardiaco = responseCardiaco.data.sort(
                         (a, b) => new Date(b.data).getTime() - new Date(a.data).getTime()
                     );
                     setHistoricoCardiaco(sortedCardiaco);
-                    
+
                 } catch (cardiacoError: any) {
                     console.error("❌ Erro no histórico cardíaco:", cardiacoError);
                     setError("Não foi possível carregar o histórico cardíaco");
@@ -39,18 +37,18 @@ const HistoricoPage: React.FC = () => {
                     console.log("🔍 Tentando buscar histórico de sono...");
                     const responseSono = await api.get<IAvaliacaoSono[]>("/historico/sono");
                     console.log("✅ Histórico sono carregado:", responseSono.data);
-                    
+
                     const sortedSono = responseSono.data.sort(
                         (a, b) => new Date(b.data).getTime() - new Date(a.data).getTime()
                     );
                     setHistoricoSono(sortedSono);
-                    
+
                 } catch (sonoError: any) {
                     console.log("❌ Erro no histórico do sono:", sonoError);
                     setError("Não foi possível carregar o histórico do sono");
                     setHistoricoSono([]);
                 }
-                
+
             } catch (err: any) {
                 console.error("💥 Erro inesperado:", err);
                 setError("Erro ao carregar histórico");
@@ -76,15 +74,15 @@ const HistoricoPage: React.FC = () => {
     };
 
     const handleViewSonoResult = (avaliacao: IAvaliacaoSono) => {
-    const resultado = {
+        const resultado = {
             predicao: avaliacao.resultado,
             recomendacao: avaliacao.resultado === 1
-                    ? "Paciente apresenta alto risco de distúrbio do sono. Recomenda-se a busca por avaliação especializada com um médico do sono ou neurologista e, se necessário, a realização de exames complementares."
-                    : "Paciente apresenta baixo risco de distúrbio do sono. Mantenha a higiene do sono e hábitos saudáveis.",
+                ? "Indícios de distúrbio do sono identificados. Recomenda-se consultar um especialista."
+                : "Padrões de sono dentro da normalidade. Continue mantendo bons hábitos."
         };
         navigate("/resultado-sono", {
-            state: { 
-                questionario: avaliacao.questionario, 
+            state: {
+                questionario: avaliacao.questionario,
                 resultado
             },
         });
@@ -145,10 +143,10 @@ const HistoricoPage: React.FC = () => {
                         <span className="tab-badge">{historicoCardiaco.length}</span>
                     )}
                 </button>
-                
+
                 <button
                     className={`tab-button ${activeTab === 'sono' ? 'tab-active' : ''}`}
-                    onClick={() => setActiveTab('sono')}                    
+                    onClick={() => setActiveTab('sono')}
                 >
                     <Bed size={20} />
                     Avaliações de Sono
@@ -166,7 +164,7 @@ const HistoricoPage: React.FC = () => {
                         <FileText size={64} className="empty-icon" />
                         <h3>Nenhuma avaliação encontrada</h3>
                         <p>
-                            {activeTab === 'cardiaco' 
+                            {activeTab === 'cardiaco'
                                 ? "Realize sua primeira avaliação cardíaca para ver o histórico aqui."
                                 : "O histórico de sono ainda não está disponível."
                             }
@@ -174,7 +172,7 @@ const HistoricoPage: React.FC = () => {
                     </div>
                 ) : (
                     <div className="historico-grid">
-                        {activeTab === 'cardiaco' ? (  
+                        {activeTab === 'cardiaco' ? (
                             historicoCardiaco.map((item, index) => (
                                 <div
                                     key={`cardiaco-${item.id || index}-${item.data}`}
@@ -188,6 +186,7 @@ const HistoricoPage: React.FC = () => {
                                                 {item.questionario.nome || "Paciente não identificado"}
                                             </h3>
                                             <span className="paciente-idade">
+                                                <Clock size={14} />
                                                 {item.questionario.age} anos
                                             </span>
                                         </div>
@@ -223,6 +222,7 @@ const HistoricoPage: React.FC = () => {
                                                 {item.questionario.nome || "Paciente não identificado"}
                                             </h3>
                                             <span className="paciente-idade">
+                                                <Clock size={14} />
                                                 {item.questionario.age} anos
                                             </span>
                                         </div>
@@ -236,7 +236,7 @@ const HistoricoPage: React.FC = () => {
                                             <Calendar size={14} />
                                             <span>{formatarData(item.data)}</span>
                                         </div>
-                                        
+
                                         {/* Atualizado: Removido scoreQualidade e padronizado com o card cardíaco */}
                                         <span
                                             // @ts-ignore: Assumindo que resultado agora é comparável a number

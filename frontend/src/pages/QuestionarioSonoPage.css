@@ -68,7 +68,7 @@
 .exams-symptoms-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 1.5rem;    
+    gap: 1.5rem;
 }
 
 .grid-column {
@@ -124,7 +124,7 @@
     font-size: 0.85rem;
     background: white;
     transition: all 0.2s ease;
-    font-family: inherit;    
+    font-family: inherit;
 }
 
 .input:focus,
