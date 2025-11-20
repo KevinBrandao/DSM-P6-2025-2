@@ -91,17 +91,17 @@ export class QuestionarioSonoService {
 			questionario: IQuestionarioSono
 		): any[] {
 			return [
-				questionario.gender === 0 ? "Female" : "Male",
-				questionario.age,
+				Number(questionario.gender) === 0 ? "Female" : "Male",
+				Number(questionario.age),
 				questionario.occupation,
-				questionario.sleepDuration,
-				questionario.qualityOfSleep,
-				questionario.physicalActivityLevel,
-				questionario.stressLevel,
+				Number(questionario.sleepDuration),
+				Number(questionario.qualityOfSleep),
+				Number(questionario.physicalActivityLevel),
+				Number(questionario.stressLevel),
 				questionario.bmiCategory,
 				questionario.bloodPressure,
-				questionario.heartRate,
-				questionario.dailySteps,
+				Number(questionario.heartRate),
+				Number(questionario.dailySteps),
 			];
 		}
 	

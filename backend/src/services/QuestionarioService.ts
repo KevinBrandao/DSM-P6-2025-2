@@ -77,6 +77,8 @@ export class QuestionarioService {
 				data: modelInput, // Enviar o array de números diretamente
 			};
 
+			console.log(messagePayload);
+
 			// Publicar a mensagem no NATS para ser consumida pelo serviço de IA
 			await this.natsService.publish("analyses.heart.request", messagePayload);
 
@@ -103,17 +105,17 @@ export class QuestionarioService {
 		questionario: IQuestionario
 	): number[] {
 		return [
-			questionario.age,                  // 1. age
-			questionario.sex,                  // 2. sex
-			questionario.chestPainType,        // 3. chest pain type
-			questionario.restingBloodPressure, // 4. resting bp s
-			questionario.serumCholesterol,     // 5. cholesterol
-			questionario.fastingBloodSugar,    // 6. fasting blood sugar
-			questionario.restingECG,           // 7. resting ecg
-			questionario.maxHeartRate,         // 8. max heart rate
-			questionario.exerciseAngina,       // 9. exercise angina
-			questionario.oldpeak,              // 10. oldpeak
-			questionario.stSlope,              // 11. ST slope
+			Number(questionario.age),                  // 1. age
+			Number(questionario.sex),                  // 2. sex
+			Number(questionario.chestPainType),        // 3. chest pain type
+			Number(questionario.restingBloodPressure), // 4. resting bp s
+			Number(questionario.serumCholesterol),     // 5. cholesterol
+			Number(questionario.fastingBloodSugar),    // 6. fasting blood sugar
+			Number(questionario.restingECG),           // 7. resting ecg
+			Number(questionario.maxHeartRate),         // 8. max heart rate
+			Number(questionario.exerciseAngina),       // 9. exercise angina
+			Number(questionario.oldpeak),              // 10. oldpeak
+			Number(questionario.stSlope),              // 11. ST slope
 		];
 	}
 
