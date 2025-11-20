@@ -9,7 +9,7 @@ const initialFormState: IQuestionarioSono = {
 	nome: "",
 	gender: 1,
 	age: 35,
-	occupation: "Engeneer",
+	occupation: "Engineer",
 	sleepDuration: 7.0,
 	qualityOfSleep: 7,
 	physicalActivityLevel: 60,
@@ -78,27 +78,27 @@ const QuestionarioSonoPage: React.FC = () => {
 
 	const ocupacoes = [
 		{
-			"Nome": "Engenheiro",
+			"Nome": "Engenheiro(a)",
 			"Value": "Engineer"
 		},
 		{
-			"Nome": "Médico",
+			"Nome": "Médico(a)",
 			"Value": "Doctor"
 		},
 		{
-			"Nome": "Professor",
+			"Nome": "Professor(a)",
 			"Value": "Teacher"
 		},
 		{
-			"Nome": "Enfermeiro",
+			"Nome": "Enfermeiro(a)",
 			"Value": "Nurse"
 		},
 		{
-			"Nome": "Contador",
+			"Nome": "Contador(a)",
 			"Value": "Accountant"
 		},
 		{
-			"Nome": "Engenheiro de Software",
+			"Nome": "Engenheiro(a) de Software",
 			"Value": "Software Engineer"
 		},
 		{
@@ -110,12 +110,16 @@ const QuestionarioSonoPage: React.FC = () => {
 			"Value": "Manager"
 		},
 		{
-			"Nome": "Estudante",
-			"Value": "Student"
+			"Nome": "Advogado(a)",
+			"Value": "Lawyer"
 		},
 		{
-			"Nome": "Outro",
-			"Value": "Other"
+			"Nome": "Vendedor(a)",
+			"Value": "Salesperson"
+		},
+		{
+			"Nome": "Cientista",
+			"Value": "Scientist"
 		}
 	];
 
@@ -395,7 +399,6 @@ const QuestionarioSonoPage: React.FC = () => {
 							: "Analisar Qualidade do Sono"}
 					</button>
 				</div>
-
 				{error && <div className="error-message">{error}</div>}
 			</form>
 		</div>

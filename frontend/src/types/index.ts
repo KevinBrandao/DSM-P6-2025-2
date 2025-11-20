@@ -53,5 +53,5 @@ export interface IAvaliacaoSono {
     id: number;
     data: string;
     questionario: IQuestionarioSono;
-    resultado: IResultadoSono;
+    resultado: number;
 }
