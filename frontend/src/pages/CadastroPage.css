@@ -157,6 +157,10 @@
     color: var(--text-primary);
 }
 
+.input-wrapper .form-select {  
+    padding-left: 50px; 
+}
+
 .form-input:focus,
 .form-select:focus {
     outline: none;
