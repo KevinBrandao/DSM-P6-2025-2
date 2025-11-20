@@ -50,7 +50,7 @@ export interface IResultadoSono {
 }
 
 export interface IAvaliacaoSono {
-    id: number;
+    id: string;
     data: string;
     questionario: IQuestionarioSono;
     resultado: number;
