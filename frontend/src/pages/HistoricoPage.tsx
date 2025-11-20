@@ -154,8 +154,7 @@ const HistoricoPage: React.FC = () => {
                 
                 <button
                     className={`tab-button ${activeTab === 'sono' ? 'tab-active' : ''}`}
-                    onClick={() => setActiveTab('sono')}
-                    disabled={historicoSono.length === 0}
+                    onClick={() => setActiveTab('sono')}                    
                 >
                     <Bed size={20} />
                     Avaliações de Sono
@@ -230,7 +229,7 @@ const HistoricoPage: React.FC = () => {
                                                 {item.questionario.nome || "Paciente não identificado"}
                                             </h3>
                                             <span className="paciente-idade">
-                                                {item.questionario.idade} anos
+                                                {item.questionario.age} anos
                                             </span>
                                         </div>
                                         <div className="card-icon">
@@ -250,10 +249,6 @@ const HistoricoPage: React.FC = () => {
                                         </span>
                                     </div>
 
-                                    <div className="sono-score">
-                                        <span className="score-label">Qualidade:</span>
-                                        <span className="score-value">{item.resultado.scoreQualidade}/10</span>
-                                    </div>
                                 </div>
                             ))
                         )}

@@ -77,16 +77,46 @@ const QuestionarioSonoPage: React.FC = () => {
 	const navigate = useNavigate();
 
 	const ocupacoes = [
-		"Engeneer",
-		"Doctor",
-		"Teacher",
-		"Nurse",
-		"Accountant",
-		"Software Engineer",
-		"Sales",
-		"Manager",
-		"Student",
-		"Other",
+		{
+			"Nome": "Engenheiro",
+			"Value": "Engineer"
+		},
+		{
+			"Nome": "Médico",
+			"Value": "Doctor"
+		},
+		{
+			"Nome": "Professor",
+			"Value": "Teacher"
+		},
+		{
+			"Nome": "Enfermeiro",
+			"Value": "Nurse"
+		},
+		{
+			"Nome": "Contador",
+			"Value": "Accountant"
+		},
+		{
+			"Nome": "Engenheiro de Software",
+			"Value": "Software Engineer"
+		},
+		{
+			"Nome": "Representante de Vendas",
+			"Value": "Sales Representative"
+		},
+		{
+			"Nome": "Gerente",
+			"Value": "Manager"
+		},
+		{
+			"Nome": "Estudante",
+			"Value": "Student"
+		},
+		{
+			"Nome": "Outro",
+			"Value": "Other"
+		}
 	];
 
 	const categoriasIMC = ["Normal", "Overweight", "Obese"];
@@ -204,8 +234,8 @@ const QuestionarioSonoPage: React.FC = () => {
 								className="form-select"
 							>
 								{ocupacoes.map((occupation) => (
-									<option key={occupation} value={occupation}>
-										{occupation}
+									<option key={occupation.Nome} value={occupation.Value}>
+										{occupation.Nome}
 									</option>
 								))}
 							</select>
@@ -222,7 +252,7 @@ const QuestionarioSonoPage: React.FC = () => {
 							<div className="column-header">
 								<h4>Padrões de Sono</h4>
 							</div>
-							<div className="column-content">
+							<div className="column-content" style={{ gap: '3rem' }}>
 								<SliderField
 									label="Duração do Sono"
 									name="sleepDuration"
@@ -235,41 +265,14 @@ const QuestionarioSonoPage: React.FC = () => {
 								/>
 
 								<SliderField
-									label={
-										<>
-											Qualidade do Sono
-											<Info
-												size={14}
-												className="info-icon"
-											/>
-										</>
-									}
+									label="Qualidade do Sono"															
 									name="qualityOfSleep"
 									value={formData.qualityOfSleep}
 									min={1}
 									max={10}
 									unit="/10"
 									onChange={handleChange}
-								/>
-
-								{/* <div className="form-group">
-                                    <label htmlFor="disturbioSono">Distúrbio do Sono</label>
-                                    <select
-                                        id="disturbioSono"
-                                        name="disturbioSono"
-                                        value={formData.sleepDisorder}
-                                        onChange={handleChange}
-                                        className="form-select"
-                                    >
-                                        {disturbiosSono.map((disturbio) => (
-                                            <option key={disturbio} value={disturbio}>
-                                                {disturbio === "None" ? "Nenhum" : 
-                                                 disturbio === "Sleep Apnea" ? "Apneia do Sono" : 
-                                                 "Insônia"}
-                                            </option>
-                                        ))}
-                                    </select>
-                                </div> */}
+								/>								
 							</div>
 						</div>
 
@@ -297,9 +300,9 @@ const QuestionarioSonoPage: React.FC = () => {
 												{bmiCategory === "Normal"
 													? "Normal"
 													: bmiCategory ===
-													  "Overweight"
-													? "Sobrepeso"
-													: "Obeso"}
+														"Overweight"
+														? "Sobrepeso"
+														: "Obeso"}
 											</option>
 										))}
 									</select>

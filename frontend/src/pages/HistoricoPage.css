@@ -47,11 +47,6 @@
     justify-content: center;
 }
 
-.tab-button:hover {
-    background: var(--color-bg-secondary);
-    color: var(--color-text-primary);
-}
-
 .tab-active {
     background: var(--color-primary);
     color: white;
