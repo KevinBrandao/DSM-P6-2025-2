@@ -27,6 +27,7 @@ export class HistoricoService {
 
 		// Formatar para o formato esperado pela API
 		return avaliacoes.map((avaliacao) => ({
+			id: avaliacao.id,
 			data: avaliacao.data,
 			resultado: avaliacao.resultado,
 			questionario: avaliacao.questionario,
@@ -47,6 +48,7 @@ export class HistoricoService {
 
 		// Formatar para o formato esperado pela API
 		return avaliacoes.map((avaliacao) => ({
+			id: avaliacao.id,
 			data: avaliacao.data,
 			resultado: avaliacao.resultado,
 			questionario: avaliacao.questionario,
