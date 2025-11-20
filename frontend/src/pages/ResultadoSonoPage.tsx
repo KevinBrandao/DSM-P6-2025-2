@@ -4,6 +4,7 @@ import { AlertTriangle, Moon, CheckCircle } from "lucide-react";
 import { type IQuestionarioSono, type IResultadoSono } from "../types";
 import "./ResultadoSonoPage.css";
 
+
 const ResultadoSonoPage: React.FC = () => {
     const location = useLocation();
     const navigate = useNavigate();
@@ -18,7 +19,7 @@ const ResultadoSonoPage: React.FC = () => {
     }
 
     const { questionario, resultado } = state;
-    const isPoorQuality = resultado.scoreQualidade < 7;
+    const isHighRisk = resultado.predicao === 1;
 
     const getQualityColor = (score: number) => {
         if (score >= 8) return "#10B981"; 
@@ -27,9 +28,10 @@ const ResultadoSonoPage: React.FC = () => {
     };
 
     const getQualityText = (score: number) => {
-        if (score >= 8) return "EXCELENTE";
-        if (score >= 6) return "REGULAR";
-        return "RUIM";
+        if (score == 0) return "BAIXO RISCO";
+        if (score == 1) return "ALTO RISCO";
+        if (score == -1) return "EM PROCESSAMENTO";
+        if (score == -2) return "ERRO NO PROCESSAMENTO";
     };
 
     const MoonIcon = () => (
@@ -49,46 +51,82 @@ const ResultadoSonoPage: React.FC = () => {
         </svg>
     );
 
+const SmileyIcon = () => (
+        <svg
+            width="80"
+            height="80"
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+        >
+            <circle
+                cx="12"
+                cy="12"
+                r="10"
+                fill="#E8F5E9"
+                stroke="#4CAF50"
+                strokeWidth="2"
+            />
+            <circle cx="9" cy="10" r="1" fill="#4CAF50" />
+            <circle cx="15" cy="10" r="1" fill="#4CAF50" />
+            <path
+                d="M8 16 C9.5 17.5 14.5 17.5 16 16"
+                stroke="#4CAF50"
+                strokeWidth="2"
+                strokeLinecap="round"
+            />
+        </svg>
+    );
+
+    const SadIcon = () => (
+        <svg
+            width="80"
+            height="80"
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+        >
+            <circle
+                cx="12"
+                cy="12"
+                r="10"
+                fill="#FFEBEE"
+                stroke="#F44336"
+                strokeWidth="2"
+            />
+            <circle cx="9" cy="10" r="1" fill="#F44336" />
+            <circle cx="15" cy="10" r="1" fill="#F44336" />
+            <path
+                d="M8 16 C9.5 14.5 14.5 14.5 16 16"
+                stroke="#F44336"
+                strokeWidth="2"
+                strokeLinecap="round"
+            />
+        </svg>
+    );
     return (
         <div className="resultado-sono-container">
-            <div
-                className={`resultado-sono-card ${
-                    isPoorQuality
-                        ? "resultado-sono-card--poor"
-                        : "resultado-sono-card--good"
+            <div className={`resultado-card ${isHighRisk
+                    ? "resultado-card--high-risk"
+                    : "resultado-card--low-risk"
                 }`}
             >
-                <div className="resultado-sono-icon">
-                    {isPoorQuality ? (
-                        <AlertTriangle size={48} color="#EF4444" />
+                <div className="resultado-icon">
+                    {isHighRisk ? (
+                        <SadIcon />
                     ) : (
-                        <MoonIcon />
+                        <SmileyIcon />
                     )}
                 </div>
 
-                <div className="quality-score">
-                    <div className="score-circle">
-                        <span className="score-number">
-                            {resultado.scoreQualidade}
-                        </span>
-                        <span className="score-label">/10</span>
-                    </div>
-                    <div 
-                        className="quality-status"
-                        style={{ color: getQualityColor(resultado.scoreQualidade) }}
-                    >
-                        {getQualityText(resultado.scoreQualidade)}
-                    </div>
+                <div
+                    className={`risk-status-text ${isHighRisk ? "high-risk" : "low-risk"
+                        }`}
+                >
+                    {isHighRisk ? "ALTO RISCO" : "BAIXO RISCO"}
                 </div>
 
                 <p className="recommendation">{resultado.recomendacao}</p>
-
-                {resultado.disturbiosIdentificados.length > 0 && (
-                    <div className="disturbios-alert">
-                        <AlertTriangle size={16} />
-                        <span>Possíveis distúrbios identificados: {resultado.disturbiosIdentificados.join(", ")}</span>
-                    </div>
-                )}
             </div>
 
             <div className="summary-card card">
@@ -125,7 +163,7 @@ const ResultadoSonoPage: React.FC = () => {
                         <div className="data-item-row">
                             <span className="data-label">Duração do Sono</span>
                             <span className="data-value">
-                                {questionario.sleepDuration.toFixed(1)} horas
+                                {questionario.sleepDuration} horas
                             </span>
                         </div>
                         <div className="data-item-row">
@@ -169,12 +207,6 @@ const ResultadoSonoPage: React.FC = () => {
                             <span className="data-label">Passos Diários</span>
                             <span className="data-value">
                                 {questionario.dailySteps}
-                            </span>
-                        </div>
-                        <div className="data-item-row">
-                            <span className="data-label">Distúrbio do Sono</span>
-                            <span className="data-value">
-                                {questionario.sleepDisorder === "None" ? "Nenhum" : questionario.sleepDisorder}
                             </span>
                         </div>
                     </div>

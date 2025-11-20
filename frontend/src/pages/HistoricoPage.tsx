@@ -76,10 +76,16 @@ const HistoricoPage: React.FC = () => {
     };
 
     const handleViewSonoResult = (avaliacao: IAvaliacaoSono) => {
+    const resultado = {
+            predicao: avaliacao.resultado,
+            recomendacao: avaliacao.resultado === 1
+                    ? "Paciente apresenta alto risco de distúrbio do sono. Recomenda-se a busca por avaliação especializada com um médico do sono ou neurologista e, se necessário, a realização de exames complementares."
+                    : "Paciente apresenta baixo risco de distúrbio do sono. Mantenha a higiene do sono e hábitos saudáveis.",
+        };
         navigate("/resultado-sono", {
             state: { 
                 questionario: avaliacao.questionario, 
-                resultado: avaliacao.resultado
+                resultado
             },
         });
     };
@@ -96,18 +102,6 @@ const HistoricoPage: React.FC = () => {
         } catch {
             return "Data inválida";
         }
-    };
-
-    const getQualidadeSonoTexto = (score: number) => {
-        if (score >= 8) return "Excelente";
-        if (score >= 6) return "Boa";
-        return "Ruim";
-    };
-
-    const getQualidadeSonoCor = (score: number) => {
-        if (score >= 8) return "sono-excelente";
-        if (score >= 6) return "sono-boa";
-        return "sono-ruim";
     };
 
     if (loading) return (
@@ -242,10 +236,14 @@ const HistoricoPage: React.FC = () => {
                                             <Calendar size={14} />
                                             <span>{formatarData(item.data)}</span>
                                         </div>
+                                        
+                                        {/* Atualizado: Removido scoreQualidade e padronizado com o card cardíaco */}
                                         <span
-                                            className={`sono-badge ${getQualidadeSonoCor(item.resultado.scoreQualidade)}`}
+                                            // @ts-ignore: Assumindo que resultado agora é comparável a number
+                                            className={`risco-badge ${item.resultado === 1 ? "alto-risco" : "baixo-risco"}`}
                                         >
-                                            {getQualidadeSonoTexto(item.resultado.scoreQualidade)}
+                                            {/* @ts-ignore */}
+                                            {item.resultado === 1 ? "Alto Risco" : "Baixo Risco"}
                                         </span>
                                     </div>
 
