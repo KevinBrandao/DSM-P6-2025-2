@@ -1,8 +1,8 @@
 import React, { useState, type FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
-import { Heart, Info } from "lucide-react";
+import { Heart, Info, RefreshCw } from "lucide-react";
 import api from "../services/api";
-import { type IQuestionario, type IResultado } from "../types";
+import { type IAvaliacao, type IQuestionario, type IResultado } from "../types";
 import "./QuestionarioPage.css";
 
 const initialFormState: IQuestionario = {
@@ -124,8 +124,83 @@ const TooltipIcon: React.FC<TooltipIconProps> = ({ content }) => {
 const QuestionarioPage: React.FC = () => {
     const [formData, setFormData] = useState<IQuestionario>(initialFormState);
     const [isLoading, setIsLoading] = useState(false);
+    const [isPolling, setIsPolling] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const [avaliacaoId, setAvaliacaoId] = useState<string | null>(null);
     const navigate = useNavigate();
+
+    // Função de polling melhorada
+    const pollResultado = async (id: string, attempts = 0): Promise<IResultado> => {
+        const maxAttempts = 36; // 36 tentativas (6 minutos no total)
+
+        // Intervalos crescentes: 10s, 10s, 10s, 15s, 15s, 20s, 20s...
+        const getInterval = (attempt: number) => {
+            if (attempt < 3) return 10000; // 10 segundos primeiras 3 tentativas
+            if (attempt < 6) return 15000; // 15 segundos próximas 3
+            return 20000; // 20 segundos para o resto
+        };
+
+        try {
+            console.log(`🔄 Polling tentativa ${attempts + 1}/${maxAttempts} para: ${id}`);
+
+            // Busca todo o histórico
+            const response = await api.get<IAvaliacao[]>("/historico/coracao");
+
+            // Encontra a avaliação específica pelo ID
+            const avaliacao = response.data.find(item => item.id === id);
+
+            // SE NÃO ENCONTRAR: ainda está processando, continua polling
+            if (!avaliacao) {
+                console.log(`⏳ Avaliação ${id} ainda não está no histórico (processando...)`);
+
+                if (attempts < maxAttempts) {
+                    const interval = getInterval(attempts);
+                    console.log(`⏰ Aguardando ${interval / 1000}s para próxima tentativa...`);
+                    await new Promise(resolve => setTimeout(resolve, interval));
+                    return pollResultado(id, attempts + 1);
+                } else {
+                    throw new Error("Tempo limite excedido. A avaliação ainda está sendo processada.");
+                }
+            }
+
+            console.log("✅ Avaliação encontrada no histórico:", avaliacao);
+
+            // Se encontrou mas ainda está com resultado -1 (processando)
+            if (avaliacao.resultado === -1 && attempts < maxAttempts) {
+                console.log(`⏳ Avaliação encontrada mas ainda processando (resultado: -1)`);
+                const interval = getInterval(attempts);
+                await new Promise(resolve => setTimeout(resolve, interval));
+                return pollResultado(id, attempts + 1);
+            }
+
+            // Se excedeu tentativas
+            if (attempts >= maxAttempts) {
+                throw new Error("Processamento está demorando mais que o normal. Verifique o histórico mais tarde.");
+            }
+
+            // 🎯 RESULTADO FINAL!
+            console.log("🎯 Resultado final obtido:", avaliacao.resultado);
+
+            return {
+                predicao: avaliacao.resultado,
+                recomendacao: avaliacao.resultado === 1
+                    ? "Paciente apresenta alto risco cardiovascular. Recomenda-se acompanhamento médico especializado e exames complementares."
+                    : "Paciente apresenta baixo risco cardiovascular. Mantenha hábitos saudáveis e acompanhamento regular."
+            };
+
+        } catch (error) {
+            console.error("❌ Erro no polling:", error);
+
+            // Se for erro de rede, continua tentando (até o limite)
+            if (attempts < maxAttempts && error.message?.includes('Network') || error.message?.includes('timeout')) {
+                console.log(`🌐 Erro de rede, tentando novamente em 10s...`);
+                await new Promise(resolve => setTimeout(resolve, 10000));
+                return pollResultado(id, attempts + 1);
+            }
+
+            throw error;
+        }
+    };
 
     const handleChange = (
         e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -161,21 +236,70 @@ const QuestionarioPage: React.FC = () => {
                 dataToSend.nome = `Paciente ${new Date().toLocaleTimeString()}`;
             }
 
-            const response = await api.post<IResultado>(
-                "/questionarios/coracao",
-                dataToSend
-            );
+            console.log("📤 Enviando dados:", dataToSend);
 
+            // 1. Envia o questionário
+            const response = await api.post<{
+                message: string;
+                avaliacao: {
+                    id: string;
+                    resultado: number;
+                    recomendacao: string;
+                    data: string;
+                    questionarioId: string;
+                };
+            }>("/questionarios/coracao", dataToSend);
+
+            console.log("📥 Resposta da API:", response.data);
+
+            const { avaliacao } = response.data;
+
+            // 2. Verifica se a estrutura está correta
+            if (!avaliacao || typeof avaliacao.resultado === 'undefined') {
+                throw new Error("Resposta da API em formato inválido");
+            }
+
+            // 3. Se já veio resultado final (caso raro), redireciona
+            if (avaliacao.resultado !== -1) {
+                console.log("✅ Resultado veio imediatamente");
+                navigate("/resultado", {
+                    state: {
+                        questionario: dataToSend,
+                        resultado: {
+                            predicao: avaliacao.resultado,
+                            recomendacao: avaliacao.resultado === 1
+                                ? "Paciente apresenta alto risco cardiovascular. Recomenda-se acompanhamento médico especializado e exames complementares."
+                                : "Paciente apresenta baixo risco cardiovascular. Mantenha hábitos saudáveis e acompanhamento regular."
+                        },
+                    },
+                });
+                return;
+            }
+
+            // 4. Se está processando, inicia polling via histórico
+            console.log("🔄 Iniciando polling via histórico para avaliação:", avaliacao.id);
+            setIsLoading(false);
+            setIsPolling(true);
+            setAvaliacaoId(avaliacao.id);
+
+            const resultadoFinal = await pollResultado(avaliacao.id);
+
+            console.log("🎯 Resultado final obtido:", resultadoFinal);
+
+            // 5. Com resultado final, redireciona
             navigate("/resultado", {
                 state: {
                     questionario: dataToSend,
-                    resultado: response.data,
+                    resultado: resultadoFinal,
                 },
             });
-        } catch {
+
+        } catch (error: any) {
+            console.error("💥 Erro detalhado:", error);
             setError(
-                "Houve um erro ao enviar o questionário. Tente novamente."
+                error.message || "Houve um erro ao enviar o questionário. Tente novamente."
             );
+            setIsPolling(false);
         } finally {
             setIsLoading(false);
         }
@@ -193,6 +317,63 @@ const QuestionarioPage: React.FC = () => {
 
     return (
         <div className="questionario-container">
+
+            // No return do componente, adicione:
+            {isPolling && (
+                <div className="polling-overlay">
+                    <div className="polling-content">
+                        <RefreshCw size={32} className="polling-spinner" />
+                        <h3>Processando Avaliação Cardíaca</h3>
+
+                        <div className="polling-steps">
+                            <div className="step active">
+                                <div className="step-number">1</div>
+                                <div className="step-text">Questionário enviado</div>
+                            </div>
+                            <div className="step active">
+                                <div className="step-number">2</div>
+                                <div className="step-text">Na fila de processamento</div>
+                            </div>
+                            <div className="step">
+                                <div className="step-number">3</div>
+                                <div className="step-text">IA analisando dados</div>
+                            </div>
+                            <div className="step">
+                                <div className="step-number">4</div>
+                                <div className="step-text">Resultado pronto</div>
+                            </div>
+                        </div>
+
+                        <div className="polling-info">
+                            <p><strong>Status:</strong> Aguardando processamento pela mensageria...</p>
+                            <p><strong>Tempo estimado:</strong> 1-3 minutos</p>
+                            <p><small>O sistema verifica automaticamente a cada 10-20 segundos</small></p>
+                        </div>
+
+                        <div className="polling-actions">
+                            <button
+                                onClick={() => {
+                                    setIsPolling(false);
+                                    navigate("/historico");
+                                }}
+                                className="btn btn-secondary"
+                            >
+                                Ver Histórico
+                            </button>
+                            <button
+                                onClick={() => {
+                                    setIsPolling(false);
+                                    navigate("/home");
+                                }}
+                                className="btn btn-outline"
+                            >
+                                Voltar para Home
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
             <div className="questionario-header">
                 <h2>Avaliação de Risco Cardíaco</h2>
                 <p>
