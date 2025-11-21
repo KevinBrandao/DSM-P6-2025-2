@@ -120,7 +120,7 @@ const HistoricoPage: React.FC = () => {
         );
     }
 
-    const historicoAtual = activeTab === 'cardiaco' ? historicoCardiaco : historicoSono;
+    // const historicoAtual = activeTab === 'cardiaco' ? historicoCardiaco : historicoSono;
     const isEmpty = activeTab === 'cardiaco' ? historicoCardiaco.length === 0 : historicoSono.length === 0;
 
     return (

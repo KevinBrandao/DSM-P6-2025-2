@@ -126,16 +126,16 @@ const QuestionarioPage: React.FC = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [isPolling, setIsPolling] = useState(false);
     const [error, setError] = useState<string | null>(null);
-    const [avaliacaoId, setAvaliacaoId] = useState<string | null>(null);
+    const [, setAvaliacaoId] = useState<string | null>(null);
     const navigate = useNavigate();
 
     const pollResultado = async (id: string, attempts = 0): Promise<IResultado> => {
-        const maxAttempts = 36;
+        const maxAttempts = 15;
 
         const getInterval = (attempt: number) => {
-            if (attempt < 3) return 10000;
-            if (attempt < 6) return 15000;
-            return 20000;
+            if (attempt < 3) return 3000;
+            if (attempt < 6) return 10000;
+            return 15000;
         };
 
         try {

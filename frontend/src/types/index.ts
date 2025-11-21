@@ -26,8 +26,7 @@ export interface IAvaliacao {
 }
 
 export interface IQuestionarioSono {
-    id?: number;
-    nome?: string;
+    nome: string;
     gender: number;
     age: number;
     occupation: string;
@@ -39,14 +38,11 @@ export interface IQuestionarioSono {
     bloodPressure: string;
     heartRate: number;
     dailySteps: number;
-    sleepDisorder?: string;
 }
 
 export interface IResultadoSono {
     predicao: number;
-    scoreQualidade: number;
     recomendacao: string;
-    disturbiosIdentificados: string[];
 }
 
 export interface IAvaliacaoSono {
