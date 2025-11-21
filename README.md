@@ -1,128 +1,179 @@
-# CardioCheck - Aplicação Mobile para Verificação de Risco Cardíaco
+# HealthCheck - Plataforma de Avaliação de Saúde e Sono
 
 ### 🎙️ [Deep dive](docs/deepdive.mp3)
-
 ### 📹 [Vídeo no YouTube](https://youtu.be/Yk_RNUFOG6M)
 
 ## 🚀 Visão Geral do Projeto
 
-O CardioCheck é um sistema composto por uma aplicação móvel e uma API de backend, projetado para auxiliar médicos na avaliação de risco de doenças cardíacas em pacientes. A aplicação utiliza um modelo de inteligência artificial para processar dados de saúde inseridos pelo médico, como idade, pressão arterial, colesterol e resultados de exames, fornecendo uma classificação de risco (baixo ou alto) e recomendações apropriadas.
+O **HealthCheck** é uma evolução do projeto CardioCheck, transformando-se em uma plataforma abrangente de saúde. O sistema agora combina duas funcionalidades principais: **avaliação de risco cardíaco** e **análise da qualidade do sono**.
+
+A solução utiliza Inteligência Artificial para processar dados clínicos e comportamentais, fornecendo classificações de risco e recomendações personalizadas tanto para a saúde cardiovascular quanto para padrões de sono.
 
 **Participantes do Grupo:**
+* GIAN CARLO FAVA
+* FELIPE FERREIRA REZENDE
+* KEVIN DE ALMEIDA BRANDAO
+* SILVIO ALVES DA SILVA JUNIOR
 
-  * GIAN CARLO FAVA
-  * FELIPE FERREIRA REZENDE
-  * KEVIN DE ALMEIDA BRANDAO
-  * SILVIO ALVES DA SILVA JUNIOR
 
-## ✨ Principais Funcionalidades
+## ✨ Funcionalidades Principais
 
-  * **Cadastro e Autenticação de Médicos:** O sistema permite que médicos se cadastrem e façam login de forma segura para acessar as funcionalidades.
-  * **Questionário de Saúde Detalhado:** Coleta de 11 fatores de risco para doenças cardíacas, incluindo dados demográficos, resultados de exames e sintomas do paciente.
-  * **Análise com Inteligência Artificial:** Os dados do questionário são enviados para a API, que utiliza um modelo de IA em Python para classificar o risco do paciente.
-  * **Visualização de Resultados:** A aplicação exibe o resultado da análise (ALTO RISCO ou BAIXO RISCO) de forma clara, juntamente com recomendações médicas baseadas no perfil do paciente.
-  * **Histórico de Avaliações:** Médicos podem consultar o histórico de todas as avaliações realizadas para acompanhar os pacientes.
+### ❤️ Módulo Cardíaco
+* **Questionário de Saúde:** Coleta de 11 fatores de risco (pressão arterial, colesterol, ECG, etc.).
+* **IA Preditiva:** Classificação de risco (Baixo ou Alto) utilizando modelos de Machine Learning.
+* **Recomendações:** Orientações médicas baseadas no perfil de risco.
+
+### 💤 Módulo de Sono (Novo)
+* **Análise de Qualidade:** Avaliação baseada em duração, nível de estresse, IMC e atividade física.
+* **Detecção de Distúrbios:** Identificação de padrões compatíveis com Insônia ou Apneia do Sono.
+* **Score de Sono:** Pontuação de 1 a 10 para qualidade do sono.
+
+### 💻 Funcionalidades Gerais
+* **Multiplataforma:** Acesso via **App Mobile** (Android) e **Web** (Navegador).
+* **Autenticação Segura:** Login para médicos com JWT.
+* **Histórico:** Visualização de avaliações anteriores de ambos os módulos.
+
+
 
 ## 🛠️ Arquitetura e Tecnologias
 
-O sistema é dividido em três componentes principais:
+O sistema evoluiu para uma arquitetura distribuída, utilizando mensageria para processamento assíncrono das avaliações de IA.
 
-1.  **Aplicação Mobile (Frontend):**
+![Arquitetura](docs/arquitetura.png)
 
-      * Desenvolvida em **C\#** com o framework **.NET MAUI**, garantindo compatibilidade com a plataforma Android.
-      * Responsável pela interface do usuário, coleta de dados e comunicação com o backend.
+### 1. Interfaces (Frontend)
+* **Mobile:** Desenvolvido em **.NET MAUI (C#)** para Android.
+* **Web:** Desenvolvido em **React (Vite + TypeScript)** para navegadores.
 
-2.  **API (Backend):**
+### 2. Backend (API Gateway)
+* **Tecnologia:** Node.js com Express e TypeScript.
+* **Banco de Dados:** MySQL gerenciado via TypeORM.
+* **Função:** Gerencia autenticação, persistência de dados e orquestra as solicitações para a fila de mensagens.
 
-      * Construída em **Node.js** com **Express** e **TypeScript**.
-      * Utiliza **TypeORM** para a comunicação com o banco de dados **MySQL**.
-      * Gerencia o cadastro de médicos, autenticação via **JWT (JSON Web Token)** e o processamento dos questionários.
-      * Orquestra a chamada ao modelo de IA para obter as predições.
+### 3. Inteligência Artificial (Workers)
+* **Tecnologia:** Python (Scikit-learn, Pandas).
+* **Funcionamento:** Scripts "Consumers" que escutam filas do NATS, processam os modelos preditivos (`.joblib`) e retornam os resultados.
+    * `ia_consumer_heart.py`: Processa dados cardíacos.
+    * `ia_consumer_sleep.py`: Processa dados de sono.
 
-3.  **Modelo de Inteligência Artificial:**
-
-      * Um script em **Python** (`class_heart.py`) que utiliza bibliotecas como **scikit-learn**, **pandas** e **numpy**.
-      * Carrega um modelo de classificação pré-treinado (`heart_modelo_lda.joblib`) para realizar a predição de risco cardíaco.
+### 4. Infraestrutura e Mensageria
+* **NATS:** Sistema de mensageria para comunicação assíncrona entre a API e os Workers Python.
+* **Docker:** Utilizado para containerização do serviço de mensageria (NATS).
 
 ## 🌐 Ambiente de Produção (Online)
 
 O backend do projeto está hospedado na nuvem e pode ser acessado publicamente através do seguinte endereço:
 
-  * **URL da API:** `http://cardiocheck.eastus2.cloudapp.azure.com/`
+* **URL da API:** `http://healthcheck.eastus2.cloudapp.azure.com/api`
 
 Para conectar o aplicativo mobile a este ambiente, utilize o endereço acima no arquivo de configuração da API.
 
+## 📋 Endpoints da API
+
+A API segue o padrão REST e os endpoints estão documentados no arquivo `docs/openapi.yaml`. Abaixo os principais recursos disponíveis:
+
+### 🔐 Autenticação e Médicos
+| Método | Endpoint | Descrição |
+|---|---|---|
+| `POST` | `/v1/medicos` | Realiza o cadastro de um novo médico no sistema. |
+| `POST` | `/v1/auth/login` | Autentica um médico e retorna o token JWT de acesso. |
+
+### ❤️ Questionários
+| Método | Endpoint | Descrição |
+|---|---|---|
+| `POST` | `/v1/questionarios/coracao` | Envia questionário cardíaco para análise de risco via IA. |
+| `POST` | `/v1/questionarios/sono` | Envia questionário de sono para análise de qualidade via IA. |
+
+### 📂 Histórico
+| Método | Endpoint | Descrição |
+|---|---|---|
+| `GET` | `/v1/historico/coracao` | Retorna o histórico de avaliações cardíacas do médico logado. |
+| `GET` | `/v1/historico/sono` | Retorna o histórico de avaliações de sono do médico logado. |
+
+---
+
 ## ⚙️ Como Executar o Projeto Localmente
 
-Siga os passos abaixo para configurar e executar o ambiente de desenvolvimento em sua máquina local.
+### Pré-requisitos
+* Node.js e Yarn/NPM
+* Python 3.x
+* .NET SDK (para Mobile)
+* Docker (para o NATS)
+* MySQL
 
-### **Backend (API)**
+### Passo 1: Infraestrutura (NATS)
+Na raiz do projeto, suba o serviço de mensageria:
+```bash
+docker-compose up -d
+````
 
-1.  **Navegue até o diretório do backend:**
+### Passo 2: Backend (API)
 
+1.  Acesse a pasta `backend`:
     ```bash
     cd backend
     ```
-
-2.  **Crie o arquivo de ambiente:**
-    Copie o conteúdo de `.env.sample` para um novo arquivo chamado `.env` e ajuste as variáveis de ambiente, como as credenciais do banco de dados MySQL.
-
-3.  **Instale as dependências do Node.js:**
-
+2.  Configure o `.env` (baseado no `.env.sample`).
+3.  Instale as dependências e rode as migrações:
     ```bash
     npm install
+    npm run typeorm migration:run -d ./src/config/database.ts
     ```
-
-4.  **Instale as dependências do Python:**
-    O projeto utiliza um script para instalar as dependências Python automaticamente após a instalação do Node.js. Caso não funcione, instale manualmente:
-
-    ```bash
-    pip install -r requirements.txt
-    ```
-
-4.  **Instale demais dependências globais e execute as migrations para construir a estrutura do database:**
-
-    ```bash
-    npm i -g yarn
-
-    npm i -g ts-node-dev
-
-    yarn typeorm migration:run -d ./src/config/database.ts
-    ```
-
-5.  **Execute a API em modo de desenvolvimento:**
-
+4.  Inicie o servidor:
     ```bash
     npm run dev
     ```
 
-    O servidor será iniciado, por padrão, na porta `3000`.
+### Passo 3: Workers de IA (Python)
 
-### **Mobile (Aplicativo .NET MAUI)**
+Para que as avaliações funcionem, os consumidores Python precisam estar rodando para processar as mensagens da fila.
 
-1.  **Abra o projeto:**
-    Abra o arquivo de solução `CardioCheck.sln` ou o projeto `CardioCheck.csproj` localizado no diretório `mobile/CardioCheck` utilizando o Visual Studio.
+1.  Acesse a pasta `ia`:
+    ```bash
+    cd ia
+    ```
+2.  Instale as dependências:
+    ```bash
+    pip install -r requirements.txt
+    ```
+3.  Execute os consumidores (em terminais separados):
+    ```bash
+    # Terminal A - Consumidor Cardíaco
+    python heart/ia_consumer_heart.py
 
-2.  **Configure o Endereço da API:**
-    No arquivo `SessaoLogin.cs`, verifique se a `UrlApi` está configurada corretamente.
+    # Terminal B - Consumidor de Sono
+    python sleep/ia_consumer_sleep.py
+    ```
 
-      * **Para usar o backend online:** Aponte para `http://cardiocheck.eastus2.cloudapp.azure.com/v1`
-      * **Para usar o backend local (emulador Android):** Aponte para `http://10.0.2.2:3000/v1`. Este endereço IP é um alias para o `localhost` da máquina que está executando o emulador.
+### Passo 4: Frontend Web
 
-3.  **Compile e Execute:**
-    Selecione o dispositivo ou emulador Android desejado e execute o projeto a partir do Visual Studio.
+1.  Acesse a pasta `frontend`:
+    ```bash
+    cd frontend
+    ```
+2.  Instale e execute:
+    ```bash
+    npm install
+    npm run dev
+    ```
 
-## 📋 Endpoints da API
+### Passo 5: Mobile (.NET MAUI)
 
-A API, documentada com `openapi.yaml`, expõe os seguintes endpoints principais (prefixados com `/v1`):
-
-  * `POST /medicos`: Realiza o cadastro de um novo médico no sistema.
-  * `POST /auth/login`: Autentica um médico utilizando email e senha, retornando um token de acesso.
-  * `POST /questionarios`: Recebe os dados do questionário de saúde do paciente, processa através do modelo de IA e retorna o resultado da avaliação.
-  * `GET /historico`: Retorna a lista de avaliações já realizadas pelo médico autenticado.
+1.  Abra o projeto `mobile/CardioCheck/CardioCheck.sln` no Visual Studio.
+2.  No arquivo `SessaoLogin.cs` (ou configuração equivalente), aponte a URL da API para o seu IP local (ex: `http://10.0.2.2:3000/v1` para emulador Android).
+3.  Execute o projeto em um emulador Android.
 
 
-### Imagens APP
+## 🌐 Ambiente de Produção
+
+  * **URL da API:** `http://healthcheck.eastus2.cloudapp.azure.com/`
+  * A documentação da API pode ser consultada via Swagger/OpenAPI em `docs/openapi.yaml`.
+
+
+## 🖼️ Galeria
+
+### Aplicação Mobile e Web
+
 ![alt text](docs/Imagens/qemu-system-x86_64_nQeOUJGuQQ.png)   
 ![alt text](docs/Imagens/qemu-system-x86_64_hsUzrEe4xl.png)   
 ![alt text](docs/Imagens/1.png)
@@ -131,7 +182,3 @@ A API, documentada com `openapi.yaml`, expõe os seguintes endpoints principais 
 ![alt text](docs/Imagens/qemu-system-x86_64_8l40OLBYZS.png)   
 ![alt text](docs/Imagens/qemu-system-x86_64_awzGWE4Lfe.png)
 ![alt text](docs/Imagens/qemu-system-x86_64_94IZlXeUF3.png)
-
-
-# API
-![alt text](docs/Imagens/Code_zWGxsJF1V2.png)
