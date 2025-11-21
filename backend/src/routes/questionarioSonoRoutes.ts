@@ -65,7 +65,7 @@ questionarioSonoRoutes.post(
 			),
 
 		body("bmiCategory")
-			.isIn(["Normal", "Overweight", "Obese", "Underweight"])
+			.isIn(["Normal", "Overweight", "Obese"])
 			.withMessage(
 				"BMI Category deve ser: Normal, Overweight, Obese ou Underweight"
 			),
