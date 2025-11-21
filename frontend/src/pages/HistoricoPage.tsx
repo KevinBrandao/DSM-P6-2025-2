@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Calendar, User, Activity, FileText, Heart, Bed, Clock, AlertTriangle, XCircle } from "lucide-react";
+import { Calendar, User, Activity, FileText, Heart, Bed, Clock } from "lucide-react";
 import api from "../services/api";
 import { type IAvaliacao, type IAvaliacaoSono } from "../types";
 import "./HistoricoPage.css";
