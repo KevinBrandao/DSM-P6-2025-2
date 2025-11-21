@@ -17,7 +17,7 @@ const initialFormState: IQuestionario = {
     maxHeartRate: 150,
     exerciseAngina: 0,
     oldpeak: 1.0,
-    stSlope: 0,
+    stSlope: 1,
 };
 
 interface SliderFieldProps {
