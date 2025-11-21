@@ -80,31 +80,53 @@ if [ ! -d "dist" ]; then
 fi
 
 # --- 4. Frontend (Build) ---
-# echo "--- 4. Configurando Frontend (Install & Build) ---"
-# cd "$PROJECT_ROOT/frontend" || exit
-# if [ ! -d "node_modules" ]; then npm install; fi
-# npm run build
-# if [ ! -d "dist" ]; then echo "ERRO: Falha no build do frontend."; exit 1; fi
+echo "--- 4. Configurando Frontend (Install & Build) ---"
+cd "$PROJECT_ROOT/frontend" || exit
+# 1.1 Instala dependências
+echo "Instalando node_modules..."
+npm install
+npm run build
+if [ ! -d "dist" ]; then echo "ERRO: Falha no build do frontend."; exit 1; fi
 
 # --- 5. Deploy Frontend (Nginx) ---
 echo "--- 5. Configurando Nginx ---"
 sudo mkdir -p $FRONTEND_DEPLOY_PATH
 sudo rm -rf $FRONTEND_DEPLOY_PATH/*
-# sudo cp -r dist/* $FRONTEND_DEPLOY_PATH/
+sudo cp -r dist/* $FRONTEND_DEPLOY_PATH/
 sudo chown -R www-data:www-data $FRONTEND_DEPLOY_PATH
 sudo chmod -R 755 $FRONTEND_DEPLOY_PATH
 
-sudo bash -c "cat > /etc/nginx/sites-available/healthcheck <<EOF
+cat <<'EOF' | sudo tee /etc/nginx/sites-available/healthcheck
 server {
     listen 80;
-    server_name _; 
-    root $FRONTEND_DEPLOY_PATH;
+    server_name _;
+
+    root /var/www/healthcheck-frontend;
     index index.html;
+
+    # Logs
+    error_log /var/log/nginx/healthcheck_error.log debug;
+    access_log /var/log/nginx/healthcheck_access.log;
+
+    # --- ROTA API ---
+    location /api/ {
+        # Redireciona para o backend (ajuste a porta 3000 se necessário)
+        proxy_pass http://127.0.0.1:3000/;
+        
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_cache_bypass $http_upgrade;
+    }
+
+    # --- ROTA FRONTEND ---
     location / {
-        try_files \$uri \$uri/ /index.html;
+        # Evita o loop de redirecionamento na raiz
+        try_files $uri $uri/ /index.html;
     }
 }
-EOF"
+EOF
 sudo ln -sf /etc/nginx/sites-available/healthcheck /etc/nginx/sites-enabled/
 if [ -f /etc/nginx/sites-enabled/default ]; then sudo rm /etc/nginx/sites-enabled/default; fi
 sudo nginx -t && sudo systemctl restart nginx
@@ -146,8 +168,8 @@ After=network.target
 [Service]
 Type=simple
 User=$CURRENT_USER
-WorkingDirectory=$PROJECT_ROOT/ia
-ExecStart=$VENV_PYTHON heart/ia_consumer_heart.py
+WorkingDirectory=$PROJECT_ROOT/ia/heart
+ExecStart=$VENV_PYTHON ia_consumer_heart.py
 Restart=on-failure
 
 [Install]
@@ -164,8 +186,8 @@ After=network.target
 [Service]
 Type=simple
 User=$CURRENT_USER
-WorkingDirectory=$PROJECT_ROOT/ia
-ExecStart=$VENV_PYTHON sleep/ia_consumer_sleep.py
+WorkingDirectory=$PROJECT_ROOT/ia/sleep
+ExecStart=$VENV_PYTHON ia_consumer_sleep.py
 Restart=on-failure
 
 [Install]
