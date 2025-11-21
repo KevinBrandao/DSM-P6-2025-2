@@ -1,6 +1,6 @@
 import React, { useState, type FormEvent } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { Mail, Lock, Heart, Activity } from "lucide-react";
+import { Mail, Lock, Activity } from "lucide-react";
 import api from "../services/api";
 import "./LoginPage.css";
 
