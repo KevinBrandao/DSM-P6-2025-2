@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import Sidebar from "./SideBar";
+import SideBar from "./SideBar";
 import "./MainLayout.css";
 
 interface MainLayoutProps {
@@ -15,7 +15,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
 
     return (
         <div className="main-layout">
-            <Sidebar
+            <SideBar
                 isCollapsed={isSidebarCollapsed}
                 onToggle={handleToggleSidebar}
             />

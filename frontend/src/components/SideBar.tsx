@@ -17,7 +17,7 @@ interface SidebarProps {
     onToggle: () => void;
 }
 
-const Sidebar: React.FC<SidebarProps> = ({ isCollapsed, onToggle }) => {
+const SideBar: React.FC<SidebarProps> = ({ isCollapsed, onToggle }) => {
     const navigate = useNavigate();
     const location = useLocation();
 
@@ -87,4 +87,4 @@ const Sidebar: React.FC<SidebarProps> = ({ isCollapsed, onToggle }) => {
     );
 };
 
-export default Sidebar;
+export default SideBar;
