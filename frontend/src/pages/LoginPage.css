@@ -23,20 +23,21 @@
 
 .app-logo {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
+    justify-content: center;
     align-items: center;
     gap: 0.75rem;
     margin-bottom: 1rem;
-}
-
-.logo-icon {
     color: var(--color-primary);
 }
 
-.app-logo h1 {
-    font-size: 1.875rem;
+.app-logo svg {
+    stroke-width: 2.5;
+}
+
+.app-logo span {
+    font-size: 2rem;
     font-weight: 700;
-    color: var(--color-text-primary);
 }
 
 .login-subtitle {

@@ -35,6 +35,26 @@
     animation: slideUp 0.6s ease-out;
 }
 
+.app-logo {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+    color: var(--color-primary);
+}
+
+.app-logo svg {
+    stroke-width: 2.5;
+}
+
+.app-logo span {
+    font-size: 2rem;
+    font-weight: 700;
+}
+
+
 @keyframes slideUp {
     from {
         opacity: 0;
