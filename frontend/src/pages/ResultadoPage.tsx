@@ -7,7 +7,7 @@ import {
 import jsPDF from "jspdf";
 import {
     Download, ChevronDown, ChevronUp, Activity,
-    AlertTriangle, CheckCircle, ArrowLeft
+    AlertTriangle, CheckCircle, ArrowLeft, Clock, XCircle
 } from "lucide-react";
 import { type IQuestionario, type IResultado } from "../types";
 import "./ResultadoPage.css";
@@ -46,7 +46,48 @@ const ResultadoPage: React.FC = () => {
     }
 
     const { questionario, resultado } = state;
-    const isHighRisk = resultado.predicao === 1;
+    const predicao = resultado.predicao;
+
+    // Configuração de exibição baseada na predição
+    const getStatusConfig = (val: number) => {
+        switch (val) {
+            case 1:
+                return {
+                    class: "status-high",
+                    icon: <AlertTriangle size={48} />,
+                    title: "Alto Risco Identificado",
+                    subtitle: "Baseado na análise dos parâmetros clínicos fornecidos.",
+                    pdfText: "ALTO RISCO"
+                };
+            case 0:
+                return {
+                    class: "status-low",
+                    icon: <CheckCircle size={48} />,
+                    title: "Baixo Risco Identificado",
+                    subtitle: "Baseado na análise dos parâmetros clínicos fornecidos.",
+                    pdfText: "BAIXO RISCO"
+                };
+            case -1:
+                return {
+                    class: "status-processing", // Sugestão: adicionar estilo laranja/azul neutro no CSS
+                    icon: <Clock size={48} />,
+                    title: "Em Processamento",
+                    subtitle: "A inteligência artificial está analisando seus dados.",
+                    pdfText: "EM PROCESSAMENTO"
+                };
+            case -2:
+            default:
+                return {
+                    class: "status-error", // Sugestão: adicionar estilo vermelho escuro/cinza no CSS
+                    icon: <XCircle size={48} />,
+                    title: "Erro no Processamento",
+                    subtitle: "Ocorreu um erro ao analisar seus dados.",
+                    pdfText: "ERRO"
+                };
+        }
+    };
+
+    const statusConfig = getStatusConfig(predicao);
 
     const chartData = [
         {
@@ -69,29 +110,50 @@ const ResultadoPage: React.FC = () => {
         },
     ];
 
-    const recomendacoesDetalhadas = isHighRisk ? [
-        {
-            titulo: "Consulte um Cardiologista",
-            detalhe: "Agende uma consulta com urgência para realizar exames complementares como Teste Ergométrico ou Ecocardiograma."
-        },
-        {
-            titulo: "Monitoramento de Pressão",
-            detalhe: "Recomenda-se aferir a pressão arterial diariamente em horários variados e anotar os resultados."
-        },
-        {
-            titulo: "Ajuste na Dieta",
-            detalhe: "Reduza o consumo de sódio (sal) e gorduras saturadas. Priorize frutas, legumes e grãos integrais."
-        }
-    ] : [
-        {
-            titulo: "Manutenção de Hábitos",
-            detalhe: "Continue com sua rotina atual de exercícios e alimentação equilibrada."
-        },
-        {
-            titulo: "Check-up Anual",
-            detalhe: "Mesmo com baixo risco, é importante realizar exames de rotina anualmente."
-        }
-    ];
+    // Definição das recomendações baseadas no status
+    let recomendacoesDetalhadas = [];
+
+    if (predicao === 1) {
+        recomendacoesDetalhadas = [
+            {
+                titulo: "Consulte um Cardiologista",
+                detalhe: "Agende uma consulta com urgência para realizar exames complementares como Teste Ergométrico ou Ecocardiograma."
+            },
+            {
+                titulo: "Monitoramento de Pressão",
+                detalhe: "Recomenda-se aferir a pressão arterial diariamente em horários variados e anotar os resultados."
+            },
+            {
+                titulo: "Ajuste na Dieta",
+                detalhe: "Reduza o consumo de sódio (sal) e gorduras saturadas. Priorize frutas, legumes e grãos integrais."
+            }
+        ];
+    } else if (predicao === 0) {
+        recomendacoesDetalhadas = [
+            {
+                titulo: "Manutenção de Hábitos",
+                detalhe: "Continue com sua rotina atual de exercícios e alimentação equilibrada."
+            },
+            {
+                titulo: "Check-up Anual",
+                detalhe: "Mesmo com baixo risco, é importante realizar exames de rotina anualmente."
+            }
+        ];
+    } else if (predicao === -1) {
+        recomendacoesDetalhadas = [
+            {
+                titulo: "Aguarde a Análise",
+                detalhe: "Seus dados foram enviados e estão sendo processados. Verifique o histórico em alguns minutos para o resultado final."
+            }
+        ];
+    } else {
+        recomendacoesDetalhadas = [
+            {
+                titulo: "Tente Novamente",
+                detalhe: "Houve um problema técnico. Por favor, tente reenviar o questionário mais tarde."
+            }
+        ];
+    }
 
     const handleDownloadPDF = () => {
         const doc = new jsPDF();
@@ -104,7 +166,7 @@ const ResultadoPage: React.FC = () => {
         doc.setTextColor(0);
         doc.text(`Paciente: ${questionario.nome}`, 20, 40);
         doc.text(`Data: ${new Date().toLocaleDateString()}`, 20, 50);
-        doc.text(`Resultado: ${isHighRisk ? "ALTO RISCO" : "BAIXO RISCO"}`, 20, 60);
+        doc.text(`Resultado: ${statusConfig.pdfText}`, 20, 60);
 
         doc.setFontSize(14);
         doc.text("Dados Clínicos Completos:", 20, 80);
@@ -128,7 +190,7 @@ const ResultadoPage: React.FC = () => {
         doc.setFontSize(14);
         doc.text("Recomendação Principal:", 20, y + 20);
         doc.setFontSize(10);
-        const splitRecomendacao = doc.splitTextToSize(resultado.recomendacao, 170);
+        const splitRecomendacao = doc.splitTextToSize(resultado.recomendacao || "Sem recomendação disponível.", 170);
         doc.text(splitRecomendacao, 20, y + 30);
 
         doc.save(`relatorio_cardio_${questionario.nome.replace(/\s+/g, '_').toLowerCase()}.pdf`);
@@ -137,7 +199,6 @@ const ResultadoPage: React.FC = () => {
     return (
         <div className="resultado-container">
             <header className="resultado-page-header">
-                {/* ALTERADO AQUI: navigate(-1) retorna para a página anterior */}
                 <button onClick={() => navigate(-1)} className="back-link">
                     <ArrowLeft size={20} />
                     <span>Voltar</span>
@@ -150,13 +211,13 @@ const ResultadoPage: React.FC = () => {
 
             <div className="resultado-grid">
                 <div className="left-col">
-                    <div className={`resultado-status-card ${isHighRisk ? "status-high" : "status-low"}`}>
+                    <div className={`resultado-status-card ${statusConfig.class}`}>
                         <div className="status-icon">
-                            {isHighRisk ? <AlertTriangle size={48} /> : <CheckCircle size={48} />}
+                            {statusConfig.icon}
                         </div>
                         <div>
-                            <h2>{isHighRisk ? "Alto Risco Identificado" : "Baixo Risco Identificado"}</h2>
-                            <p className="status-subtitle">Baseado na análise dos parâmetros clínicos fornecidos.</p>
+                            <h2>{statusConfig.title}</h2>
+                            <p className="status-subtitle">{statusConfig.subtitle}</p>
                         </div>
                     </div>
 

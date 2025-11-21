@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Calendar, User, Activity, FileText, Heart, Bed, Clock } from "lucide-react";
+import { Calendar, User, Activity, FileText, Heart, Bed, Clock, AlertTriangle, XCircle } from "lucide-react";
 import api from "../services/api";
 import { type IAvaliacao, type IAvaliacaoSono } from "../types";
 import "./HistoricoPage.css";
@@ -60,13 +60,41 @@ const HistoricoPage: React.FC = () => {
         fetchHistorico();
     }, []);
 
+    // Helper para gerar texto da recomendação baseado no código de resultado
+    const getRecommendationText = (resultado: number, tipo: 'cardiaco' | 'sono') => {
+        if (resultado === 1) {
+            return tipo === 'cardiaco' 
+                ? "Paciente apresenta alto risco cardiovascular. Recomenda-se acompanhamento médico especializado."
+                : "Indícios de distúrbio do sono identificados. Recomenda-se consultar um especialista.";
+        } else if (resultado === 0) {
+            return tipo === 'cardiaco'
+                ? "Paciente apresenta baixo risco cardiovascular. Mantenha hábitos saudáveis."
+                : "Padrões de sono dentro da normalidade. Continue mantendo bons hábitos.";
+        } else if (resultado === -1) {
+            return "Análise em andamento. Aguarde o processamento da IA.";
+        } else {
+            return "Erro ao processar análise. Tente novamente mais tarde.";
+        }
+    };
+
+    // Helper para o label e classe CSS do status
+    const getStatusInfo = (resultado: number) => {
+        switch (resultado) {
+            case 1:
+                return { label: "Alto Risco", className: "alto-risco" };
+            case 0:
+                return { label: "Baixo Risco", className: "baixo-risco" };
+            case -1:
+                return { label: "Processando", className: "processando" }; // Requer CSS
+            default:
+                return { label: "Erro", className: "erro" }; // Requer CSS
+        }
+    };
+
     const handleViewCardiacResult = (avaliacao: IAvaliacao) => {
         const resultado = {
             predicao: avaliacao.resultado,
-            recomendacao:
-                avaliacao.resultado === 1
-                    ? "Paciente apresenta alto risco cardiovascular. Recomenda-se acompanhamento médico especializado e exames complementares."
-                    : "Paciente apresenta baixo risco cardiovascular. Mantenha hábitos saudáveis e acompanhamento regular.",
+            recomendacao: getRecommendationText(avaliacao.resultado, 'cardiaco'),
         };
         navigate("/resultado", {
             state: { questionario: avaliacao.questionario, resultado },
@@ -76,9 +104,7 @@ const HistoricoPage: React.FC = () => {
     const handleViewSonoResult = (avaliacao: IAvaliacaoSono) => {
         const resultado = {
             predicao: avaliacao.resultado,
-            recomendacao: avaliacao.resultado === 1
-                ? "Indícios de distúrbio do sono identificados. Recomenda-se consultar um especialista."
-                : "Padrões de sono dentro da normalidade. Continue mantendo bons hábitos."
+            recomendacao: getRecommendationText(avaliacao.resultado, 'sono')
         };
         navigate("/resultado-sono", {
             state: {
@@ -120,7 +146,6 @@ const HistoricoPage: React.FC = () => {
         );
     }
 
-    // const historicoAtual = activeTab === 'cardiaco' ? historicoCardiaco : historicoSono;
     const isEmpty = activeTab === 'cardiaco' ? historicoCardiaco.length === 0 : historicoSono.length === 0;
 
     return (
@@ -173,82 +198,80 @@ const HistoricoPage: React.FC = () => {
                 ) : (
                     <div className="historico-grid">
                         {activeTab === 'cardiaco' ? (
-                            historicoCardiaco.map((item, index) => (
-                                <div
-                                    key={`cardiaco-${item.id || index}-${item.data}`}
-                                    className="avaliacao-card cardiaco-card"
-                                    onClick={() => handleViewCardiacResult(item)}
-                                >
-                                    <div className="card-header">
-                                        <div className="paciente-info">
-                                            <h3 className="paciente-nome">
-                                                <User size={16} />
-                                                {item.questionario.nome || "Paciente não identificado"}
-                                            </h3>
-                                            <span className="paciente-idade">
-                                                <Clock size={14} />
-                                                {item.questionario.age} anos
+                            historicoCardiaco.map((item, index) => {
+                                const status = getStatusInfo(item.resultado);
+                                return (
+                                    <div
+                                        key={`cardiaco-${item.id || index}-${item.data}`}
+                                        className="avaliacao-card cardiaco-card"
+                                        onClick={() => handleViewCardiacResult(item)}
+                                    >
+                                        <div className="card-header">
+                                            <div className="paciente-info">
+                                                <h3 className="paciente-nome">
+                                                    <User size={16} />
+                                                    {item.questionario.nome || "Paciente não identificado"}
+                                                </h3>
+                                                <span className="paciente-idade">
+                                                    <Clock size={14} />
+                                                    {item.questionario.age} anos
+                                                </span>
+                                            </div>
+                                            <div className="card-icon">
+                                                <Heart size={20} />
+                                            </div>
+                                        </div>
+
+                                        <div className="avaliacao-data">
+                                            <div className="data-info">
+                                                <Calendar size={14} />
+                                                <span>{formatarData(item.data)}</span>
+                                            </div>
+                                            <span className={`risco-badge ${status.className}`}>
+                                                {status.label}
                                             </span>
                                         </div>
-                                        <div className="card-icon">
-                                            <Heart size={20} />
-                                        </div>
                                     </div>
-
-                                    <div className="avaliacao-data">
-                                        <div className="data-info">
-                                            <Calendar size={14} />
-                                            <span>{formatarData(item.data)}</span>
-                                        </div>
-                                        <span
-                                            className={`risco-badge ${item.resultado === 1 ? "alto-risco" : "baixo-risco"}`}
-                                        >
-                                            {item.resultado === 1 ? "Alto Risco" : "Baixo Risco"}
-                                        </span>
-                                    </div>
-                                </div>
-                            ))
+                                );
+                            })
                         ) : (
-                            historicoSono.map((item, index) => (
-                                <div
-                                    key={`sono-${item.id || index}-${item.data}`}
-                                    className="avaliacao-card sono-card"
-                                    onClick={() => handleViewSonoResult(item)}
-                                >
-                                    <div className="card-header">
-                                        <div className="paciente-info">
-                                            <h3 className="paciente-nome">
-                                                <User size={16} />
-                                                {item.questionario.nome || "Paciente não identificado"}
-                                            </h3>
-                                            <span className="paciente-idade">
-                                                <Clock size={14} />
-                                                {item.questionario.age} anos
+                            historicoSono.map((item, index) => {
+                                const status = getStatusInfo(item.resultado as number); // Cast pois a interface pode estar desatualizada
+                                return (
+                                    <div
+                                        key={`sono-${item.id || index}-${item.data}`}
+                                        className="avaliacao-card sono-card"
+                                        onClick={() => handleViewSonoResult(item)}
+                                    >
+                                        <div className="card-header">
+                                            <div className="paciente-info">
+                                                <h3 className="paciente-nome">
+                                                    <User size={16} />
+                                                    {item.questionario.nome || "Paciente não identificado"}
+                                                </h3>
+                                                <span className="paciente-idade">
+                                                    <Clock size={14} />
+                                                    {item.questionario.age} anos
+                                                </span>
+                                            </div>
+                                            <div className="card-icon">
+                                                <Bed size={20} />
+                                            </div>
+                                        </div>
+
+                                        <div className="avaliacao-data">
+                                            <div className="data-info">
+                                                <Calendar size={14} />
+                                                <span>{formatarData(item.data)}</span>
+                                            </div>
+
+                                            <span className={`risco-badge ${status.className}`}>
+                                                {status.label}
                                             </span>
                                         </div>
-                                        <div className="card-icon">
-                                            <Bed size={20} />
-                                        </div>
                                     </div>
-
-                                    <div className="avaliacao-data">
-                                        <div className="data-info">
-                                            <Calendar size={14} />
-                                            <span>{formatarData(item.data)}</span>
-                                        </div>
-
-                                        {/* Atualizado: Removido scoreQualidade e padronizado com o card cardíaco */}
-                                        <span
-                                            // @ts-ignore: Assumindo que resultado agora é comparável a number
-                                            className={`risco-badge ${item.resultado === 1 ? "alto-risco" : "baixo-risco"}`}
-                                        >
-                                            {/* @ts-ignore */}
-                                            {item.resultado === 1 ? "Alto Risco" : "Baixo Risco"}
-                                        </span>
-                                    </div>
-
-                                </div>
-                            ))
+                                );
+                            })
                         )}
                     </div>
                 )}

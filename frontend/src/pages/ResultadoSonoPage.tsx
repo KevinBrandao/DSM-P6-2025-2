@@ -7,7 +7,7 @@ import {
 import jsPDF from "jspdf";
 import {
     Download, ChevronDown, ChevronUp, Moon,
-    AlertTriangle, CheckCircle, ArrowLeft, Zap
+    CheckCircle, ArrowLeft, Zap, Clock, XCircle
 } from "lucide-react";
 import { type IQuestionarioSono, type IResultadoSono } from "../types";
 import "./ResultadoSonoPage.css";
@@ -61,7 +61,44 @@ const ResultadoSonoPage: React.FC = () => {
     }
 
     const { questionario, resultado } = state;
-    const isHighRisk = resultado.predicao === 1;
+    const predicao = resultado.predicao;
+
+    // Configuração de Status
+    const getStatusConfig = (val: number) => {
+        switch (val) {
+            case 1:
+                return {
+                    class: "status-high",
+                    icon: <Moon size={48} />,
+                    title: "Atenção ao Sono",
+                    pdfText: "INDICÍOS DE DISTÚRBIO"
+                };
+            case 0:
+                return {
+                    class: "status-low",
+                    icon: <CheckCircle size={48} />,
+                    title: "Sono Saudável",
+                    pdfText: "PADRÃO NORMAL"
+                };
+            case -1:
+                return {
+                    class: "status-processing",
+                    icon: <Clock size={48} />,
+                    title: "Em Processamento",
+                    pdfText: "EM PROCESSAMENTO"
+                };
+            case -2:
+            default:
+                return {
+                    class: "status-error",
+                    icon: <XCircle size={48} />,
+                    title: "Erro na Análise",
+                    pdfText: "ERRO"
+                };
+        }
+    };
+
+    const statusConfig = getStatusConfig(predicao);
 
     const chartData = [
         {
@@ -84,29 +121,50 @@ const ResultadoSonoPage: React.FC = () => {
         }
     ];
 
-    const recomendacoes = isHighRisk ? [
-        {
-            titulo: "Higiene do Sono",
-            detalhe: "Evite telas (celular, TV) pelo menos 1 hora antes de dormir. Mantenha o quarto escuro e silencioso."
-        },
-        {
-            titulo: "Gerenciamento de Estresse",
-            detalhe: "Considere práticas como meditação ou leitura leve. Seu nível de estresse impacta diretamente a recuperação noturna."
-        },
-        {
-            titulo: "Avaliação Profissional",
-            detalhe: "Seus padrões indicam possível apneia ou insônia. Procure um especialista em sono."
-        }
-    ] : [
-        {
-            titulo: "Manutenção da Rotina",
-            detalhe: "Tente dormir e acordar nos mesmos horários, inclusive aos finais de semana."
-        },
-        {
-            titulo: "Atividade Física",
-            detalhe: "Continue praticando exercícios, mas evite treinos intensos muito próximos da hora de dormir."
-        }
-    ];
+    // Lógica de Recomendações
+    let recomendacoes = [];
+
+    if (predicao === 1) {
+        recomendacoes = [
+            {
+                titulo: "Higiene do Sono",
+                detalhe: "Evite telas (celular, TV) pelo menos 1 hora antes de dormir. Mantenha o quarto escuro e silencioso."
+            },
+            {
+                titulo: "Gerenciamento de Estresse",
+                detalhe: "Considere práticas como meditação ou leitura leve. Seu nível de estresse impacta diretamente a recuperação noturna."
+            },
+            {
+                titulo: "Avaliação Profissional",
+                detalhe: "Seus padrões indicam possível apneia ou insônia. Procure um especialista em sono."
+            }
+        ];
+    } else if (predicao === 0) {
+        recomendacoes = [
+            {
+                titulo: "Manutenção da Rotina",
+                detalhe: "Tente dormir e acordar nos mesmos horários, inclusive aos finais de semana."
+            },
+            {
+                titulo: "Atividade Física",
+                detalhe: "Continue praticando exercícios, mas evite treinos intensos muito próximos da hora de dormir."
+            }
+        ];
+    } else if (predicao === -1) {
+        recomendacoes = [
+            {
+                titulo: "Processamento em Andamento",
+                detalhe: "Sua avaliação está sendo analisada. Verifique o histórico em breve."
+            }
+        ];
+    } else {
+        recomendacoes = [
+            {
+                titulo: "Erro",
+                detalhe: "Não foi possível gerar recomendações devido a um erro no processamento."
+            }
+        ];
+    }
 
     const handleDownloadPDF = () => {
         const doc = new jsPDF();
@@ -118,7 +176,7 @@ const ResultadoSonoPage: React.FC = () => {
         doc.setFontSize(12);
         doc.setTextColor(0);
         doc.text(`Paciente: ${questionario.nome}`, 20, 40);
-        doc.text(`Resultado: ${isHighRisk ? "INDICÍOS DE DISTÚRBIO" : "PADRÃO NORMAL"}`, 20, 50);
+        doc.text(`Resultado: ${statusConfig.pdfText}`, 20, 50);
 
         doc.setFontSize(14);
         doc.text("Ficha Técnica Completa:", 20, 70);
@@ -142,7 +200,7 @@ const ResultadoSonoPage: React.FC = () => {
         doc.setFontSize(14);
         doc.text("Recomendação:", 20, y + 20);
         doc.setFontSize(10);
-        const splitRec = doc.splitTextToSize(resultado.recomendacao, 170);
+        const splitRec = doc.splitTextToSize(resultado.recomendacao || "Sem recomendação", 170);
         doc.text(splitRec, 20, y + 30);
 
         doc.save(`relatorio_sono_${questionario.nome.replace(/\s+/g, '_').toLowerCase()}.pdf`);
@@ -151,7 +209,6 @@ const ResultadoSonoPage: React.FC = () => {
     return (
         <div className="resultado-sono-container">
             <header className="resultado-page-header">
-                {/* ALTERADO AQUI: navigate(-1) retorna para a página anterior */}
                 <button onClick={() => navigate(-1)} className="back-link">
                     <ArrowLeft size={20} />
                     <span>Voltar</span>
@@ -164,12 +221,12 @@ const ResultadoSonoPage: React.FC = () => {
 
             <div className="resultado-grid">
                 <div className="left-col">
-                    <div className={`resultado-status-card ${isHighRisk ? "status-high" : "status-low"}`}>
+                    <div className={`resultado-status-card ${statusConfig.class}`}>
                         <div className="status-icon">
-                            {isHighRisk ? <Moon size={48} /> : <CheckCircle size={48} />}
+                            {statusConfig.icon}
                         </div>
                         <div>
-                            <h2>{isHighRisk ? "Atenção ao Sono" : "Sono Saudável"}</h2>
+                            <h2>{statusConfig.title}</h2>
                             <p className="status-subtitle">{resultado.recomendacao}</p>
                         </div>
                     </div>
