@@ -1,6 +1,6 @@
 import React, { useState, type FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
-import { Moon, RefreshCw } from "lucide-react";
+import { Moon, RefreshCw, Info } from "lucide-react";
 import api from "../services/api";
 import {
 	type IQuestionarioSono,
@@ -72,12 +72,39 @@ const SliderField: React.FC<SliderFieldProps> = ({
 	</div>
 );
 
+// --- Componente Tooltip ---
+interface TooltipIconProps {
+	content: string;
+}
+
+const TooltipIcon: React.FC<TooltipIconProps> = ({ content }) => {
+	const [isVisible, setIsVisible] = useState(false);
+
+	return (
+		<div className="tooltip-container">
+			<Info
+				size={14}
+				className="info-icon"
+				onMouseEnter={() => setIsVisible(true)}
+				onMouseLeave={() => setIsVisible(false)}
+			/>
+			{isVisible && (
+				<div className="tooltip">
+					<div className="tooltip-content">{content}</div>
+				</div>
+			)}
+		</div>
+	);
+};
+
 const QuestionarioSonoPage: React.FC = () => {
 	const [formData, setFormData] =
 		useState<IQuestionarioSono>(initialFormState);
 	const [isLoading, setIsLoading] = useState(false);
 	const [isPolling, setIsPolling] = useState(false);
 	const [error, setError] = useState<string | null>(null);
+	// Novo estado para erro de validação da pressão arterial
+	const [bpError, setBpError] = useState<string | null>(null);
 	const [, setAvaliacaoId] = useState<string | null>(null);
 	const navigate = useNavigate();
 
@@ -97,6 +124,26 @@ const QuestionarioSonoPage: React.FC = () => {
 
 	const categoriasIMC = ["Normal", "Overweight", "Obese"];
 
+	const tooltipContent = {
+		gender: "O gênero do paciente (Masculino/Feminino).",
+		age: "A idade do paciente em anos.",
+		occupation: "A ocupação ou profissão atual do paciente.",
+		sleepDuration: "O número médio de horas que o paciente dorme por dia.",
+		qualityOfSleep:
+			"Uma avaliação subjetiva da qualidade do sono, variando de 1 a 10.",
+		physicalActivityLevel:
+			"O número de minutos que o paciente dedica a atividades físicas diariamente.",
+		stressLevel:
+			"Uma avaliação subjetiva do nível de estresse vivenciado pelo paciente, variando de 1 a 10.",
+		bmiCategory:
+			"A categoria de IMC do paciente (ex: Peso Normal, Sobrepeso, Obesidade).",
+		bloodPressure:
+			"A medida da pressão arterial do paciente (sistólica/diastólica). Formato obrigatório: 120/80.",
+		heartRate:
+			"A frequência cardíaca de repouso do paciente em batimentos por minuto (bpm).",
+		dailySteps: "O número médio de passos que o paciente dá por dia.",
+	};
+
 	const pollResultado = async (
 		id: string,
 		attempts = 0
@@ -111,7 +158,6 @@ const QuestionarioSonoPage: React.FC = () => {
 
 		try {
 			const response = await api.get<IAvaliacaoSono[]>("/historico/sono");
-
 			const avaliacao = response.data.find((item) => item.id === id);
 
 			if (!avaliacao) {
@@ -163,6 +209,26 @@ const QuestionarioSonoPage: React.FC = () => {
 		}
 	};
 
+	// --- Lógica de Validação ---
+	const validateBloodPressure = (value: string): boolean => {
+		// Regex aceita formatos como 120/80, 90/60, 140/100
+		const regex = /^\d{2,3}\/\d{2,3}$/;
+
+		if (!value || !regex.test(value)) {
+			setBpError(
+				"Formato inválido. Use 'sistólica/diastólica' (ex: 120/80)."
+			);
+			return false;
+		}
+
+		setBpError(null);
+		return true;
+	};
+
+	const handleBpBlur = () => {
+		validateBloodPressure(formData.bloodPressure);
+	};
+
 	const handleChange = (
 		e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
 	) => {
@@ -173,12 +239,26 @@ const QuestionarioSonoPage: React.FC = () => {
 			...prev,
 			[name]: processedValue,
 		}));
+
+		// Limpa o erro enquanto o usuário digita, se desejar
+		if (name === "bloodPressure" && bpError) {
+			setBpError(null);
+		}
 	};
 
 	const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 		setIsLoading(true);
 		setError(null);
+
+		// Validação antes do envio
+		if (!validateBloodPressure(formData.bloodPressure)) {
+			setIsLoading(false);
+			// Foca no campo de erro se possível, ou apenas interrompe
+			const bpInput = document.getElementById("bloodPressure");
+			bpInput?.focus();
+			return;
+		}
 
 		try {
 			const dataToSend = { ...formData };
@@ -286,7 +366,13 @@ const QuestionarioSonoPage: React.FC = () => {
 						</div>
 
 						<div className="form-group">
-							<label htmlFor="gender">Gênero</label>
+							<label
+								htmlFor="gender"
+								className="label-with-tooltip"
+							>
+								Gênero
+								<TooltipIcon content={tooltipContent.gender} />
+							</label>
 							<select
 								id="gender"
 								name="gender"
@@ -300,7 +386,10 @@ const QuestionarioSonoPage: React.FC = () => {
 						</div>
 
 						<div className="form-group">
-							<label htmlFor="age">Idade</label>
+							<label htmlFor="age" className="label-with-tooltip">
+								Idade
+								<TooltipIcon content={tooltipContent.age} />
+							</label>
 							<input
 								type="number"
 								id="age"
@@ -315,7 +404,15 @@ const QuestionarioSonoPage: React.FC = () => {
 						</div>
 
 						<div className="form-group">
-							<label htmlFor="occupation">Ocupação</label>
+							<label
+								htmlFor="occupation"
+								className="label-with-tooltip"
+							>
+								Ocupação
+								<TooltipIcon
+									content={tooltipContent.occupation}
+								/>
+							</label>
 							<select
 								id="occupation"
 								name="occupation"
@@ -350,7 +447,16 @@ const QuestionarioSonoPage: React.FC = () => {
 								style={{ gap: "3rem" }}
 							>
 								<SliderField
-									label="Duração do Sono"
+									label={
+										<span className="label-with-tooltip">
+											Duração do Sono
+											<TooltipIcon
+												content={
+													tooltipContent.sleepDuration
+												}
+											/>
+										</span>
+									}
 									name="sleepDuration"
 									value={formData.sleepDuration}
 									min={1}
@@ -361,7 +467,16 @@ const QuestionarioSonoPage: React.FC = () => {
 								/>
 
 								<SliderField
-									label="Qualidade do Sono"
+									label={
+										<span className="label-with-tooltip">
+											Qualidade do Sono
+											<TooltipIcon
+												content={
+													tooltipContent.qualityOfSleep
+												}
+											/>
+										</span>
+									}
 									name="qualityOfSleep"
 									value={formData.qualityOfSleep}
 									min={1}
@@ -378,8 +493,14 @@ const QuestionarioSonoPage: React.FC = () => {
 							</div>
 							<div className="column-content">
 								<div className="form-group">
-									<label htmlFor="bmiCategory">
+									<label
+										htmlFor="bmiCategory"
+										className="label-with-tooltip"
+									>
 										Categoria de IMC
+										<TooltipIcon
+											content={tooltipContent.bmiCategory}
+										/>
 									</label>
 									<select
 										id="bmiCategory"
@@ -405,8 +526,16 @@ const QuestionarioSonoPage: React.FC = () => {
 								</div>
 
 								<div className="form-group">
-									<label htmlFor="bloodPressure">
+									<label
+										htmlFor="bloodPressure"
+										className="label-with-tooltip"
+									>
 										Pressão Arterial
+										<TooltipIcon
+											content={
+												tooltipContent.bloodPressure
+											}
+										/>
 									</label>
 									<input
 										type="text"
@@ -415,14 +544,40 @@ const QuestionarioSonoPage: React.FC = () => {
 										placeholder="Ex: 120/80"
 										value={formData.bloodPressure}
 										onChange={handleChange}
-										className="input"
+										onBlur={handleBpBlur}
+										className={`input ${
+											bpError ? "input-error" : ""
+										}`}
+										style={
+											bpError
+												? { borderColor: "#dc3545" }
+												: {}
+										}
 										required
 									/>
+									{bpError && (
+										<span
+											style={{
+												color: "#dc3545",
+												fontSize: "0.85rem",
+												marginTop: "0.25rem",
+												display: "block",
+											}}
+										>
+											{bpError}
+										</span>
+									)}
 								</div>
 
 								<div className="form-group">
-									<label htmlFor="heartRate">
+									<label
+										htmlFor="heartRate"
+										className="label-with-tooltip"
+									>
 										Frequência Cardíaca
+										<TooltipIcon
+											content={tooltipContent.heartRate}
+										/>
 									</label>
 									<input
 										type="number"
@@ -445,17 +600,35 @@ const QuestionarioSonoPage: React.FC = () => {
 							</div>
 							<div className="column-content">
 								<SliderField
-									label="Nível de Atividade Física"
+									label={
+										<span className="label-with-tooltip">
+											Nível de Atividade Física
+											<TooltipIcon
+												content={
+													tooltipContent.physicalActivityLevel
+												}
+											/>
+										</span>
+									}
 									name="physicalActivityLevel"
 									value={formData.physicalActivityLevel}
 									min={0}
 									max={100}
-									unit=""
+									unit="min"
 									onChange={handleChange}
 								/>
 
 								<SliderField
-									label="Nível de Estresse"
+									label={
+										<span className="label-with-tooltip">
+											Nível de Estresse
+											<TooltipIcon
+												content={
+													tooltipContent.stressLevel
+												}
+											/>
+										</span>
+									}
 									name="stressLevel"
 									value={formData.stressLevel}
 									min={1}
@@ -465,7 +638,16 @@ const QuestionarioSonoPage: React.FC = () => {
 								/>
 
 								<SliderField
-									label="Passos Diários"
+									label={
+										<span className="label-with-tooltip">
+											Passos Diários
+											<TooltipIcon
+												content={
+													tooltipContent.dailySteps
+												}
+											/>
+										</span>
+									}
 									name="dailySteps"
 									value={formData.dailySteps}
 									min={0}

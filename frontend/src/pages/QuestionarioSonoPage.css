@@ -240,6 +240,61 @@
     color: #374151;
 }
 
+.label-with-tooltip {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.tooltip-container {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+}
+
+.info-icon {
+    cursor: help;
+    color: #666;
+}
+
+.info-icon:hover {
+    color: #007bff;
+}
+
+.tooltip {
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    margin-bottom: 0.5rem;
+    z-index: 1000;
+    width: max-content;
+    max-width: 250px;
+}
+
+.tooltip-content {
+    background-color: #333;
+    color: white;
+    padding: 0.5rem 0.75rem;
+    border-radius: 4px;
+    font-size: 0.875rem;
+    line-height: 1.4;
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+/* Seta do tooltip (opcional) */
+.tooltip-content::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #333 transparent transparent transparent;
+}
+
 @media (max-width: 1200px) {
     .exams-symptoms-grid {
         grid-template-columns: repeat(2, 1fr);
