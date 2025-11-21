@@ -1,159 +1,236 @@
 .resultado-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 0;
-  gap: 0;
-  min-height: 100vh;
-  box-sizing: border-box;
-  font-family: Arial, sans-serif;
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  animation: fadeIn 0.5s ease-in-out;
 }
 
-.card {
-  background-color: #fff;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  width: 100%;
-  max-width: 500px;
-  padding: 20px;
-  box-sizing: border-box;
-}
-
-.resultado-card {
-  text-align: center;
-  padding: 10px 10px;
-  border-radius: 0;
-  box-shadow: none;
-  width: 80%;
-  max-width: none;
-}
-
-.resultado-icon {
-  margin-bottom: 15px;
-}
-
-.resultado-icon svg {
-  width: 80px;
-  height: 80px;
-}
-
-.risk-status-text {
-  font-size: 28px;
-  font-weight: bold;
-  margin-bottom: 15px;
-  text-transform: uppercase;
-}
-
-.recommendation {
-  font-size: 16px;
-  color: #555;
-  line-height: 1.5;
-  text-align: center;
-}
-
-.summary-card {
-  margin-top: 0;
-  border-top-left-radius: 0;
-  border-top-right-radius: 0;
-}
-
-.summary-header h3 {
-  font-size: 18px;
-  color: #1976D2;
-  margin-bottom: 20px;
-  font-weight: bold;
-  text-align: left;
-}
-
-.patient-info {
-  width: 100%;
-}
-
-.data-list {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.data-item-row {
+/* Cabeçalho da Página */
+.resultado-page-header {
   display: flex;
   justify-content: space-between;
-  align-items: baseline;
-  font-size: 16px;
-  color: #333;
-  padding: 2px 0;
-  position: relative;
+  align-items: center;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+  gap: 1rem;
 }
 
-.data-item-row .data-label {
-  flex-grow: 0;
-  white-space: nowrap;
-  margin-right: 10px;
-  font-weight: normal;
-  order: 1;
-}
-
-.data-item-row::after {
-  content: "";
-  flex-grow: 1;
-  border-bottom: 1px dashed #ccc;
-  margin: 0 8px;
-  align-self: center;
-  order: 2;
-}
-
-.data-item-row .data-value {
-  flex-grow: 0;
-  font-weight: bold;
-  text-align: right;
-  color: #333;
-  order: 3;
-}
-
-.action-buttons {
-  width: 100%;
-  max-width: 500px;
-  margin-top: 20px;
-  padding: 0 20px 20px 20px;
-  box-sizing: border-box;
-}
-
-.btn-primary {
-  width: 100%;
-  padding: 15px 20px;
-  background-color: #1976D2;
-  color: white;
+.back-link {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: none;
   border: none;
-  border-radius: 8px;
-  font-size: 18px;
+  color: #64748b;
   font-weight: 500;
   cursor: pointer;
+  font-size: 1rem;
+  transition: color 0.2s;
+}
+
+.back-link:hover {
+  color: #0f172a;
+}
+
+.btn-download {
   display: flex;
-  justify-content: center;
   align-items: center;
-  transition: background-color 0.2s ease;
+  gap: 0.5rem;
+  background-color: #fff;
+  border: 1px solid #e2e8f0;
+  padding: 0.6rem 1.2rem;
+  border-radius: 8px;
+  font-weight: 600;
+  color: #475569;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
 }
 
-.btn-primary:hover {
-  background-color: #1565C0;
+.btn-download:hover {
+  background-color: #f8fafc;
+  border-color: #cbd5e1;
+  color: #334155;
 }
 
-@media (max-width: 600px) {
+/* Grid Principal */
+.resultado-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* Duas colunas iguais */
+  gap: 1.5rem;
+}
+
+/* Layout Responsivo para Mobile */
+@media (max-width: 768px) {
+  .resultado-grid {
+    grid-template-columns: 1fr; /* Uma coluna */
+  }
+  
   .resultado-container {
-    padding: 0;
-  }
-
-  .resultado-card,
-  .summary-card {
-    border-radius: 0;
-    padding-left: 20px;
-    padding-right: 20px;
+    padding: 1rem;
   }
 }
 
-.patient-basic,
-.clinical-data,
-.data-grid,
-.data-item {
-  display: none;
+.left-col, .right-col {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* Card Genérico */
+.card {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  border: 1px solid #f1f5f9;
+}
+
+.card h3 {
+  font-size: 1.1rem;
+  color: #1e293b;
+  margin-bottom: 1rem;
+  font-weight: 600;
+}
+
+/* Card de Status (Alto/Baixo Risco) */
+.resultado-status-card {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 1.5rem;
+  border-radius: 12px;
+  border-left: 6px solid transparent;
+}
+
+.status-icon {
+  flex-shrink: 0;
+}
+
+.resultado-status-card h2 {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.status-subtitle {
+  margin: 0.5rem 0 0 0;
+  font-size: 0.95rem;
+  opacity: 0.9;
+}
+
+/* Temas de Risco Cardio */
+.status-high {
+  background-color: #fef2f2;
+  border-left-color: #dc2626;
+  color: #991b1b;
+}
+
+.status-high .status-icon {
+  color: #dc2626;
+}
+
+.status-low {
+  background-color: #f0fdf4;
+  border-left-color: #16a34a;
+  color: #166534;
+}
+
+.status-low .status-icon {
+  color: #16a34a;
+}
+
+/* Gráficos */
+.chart-subtitle, .chart-footer {
+  font-size: 0.875rem;
+  color: #64748b;
+  margin-bottom: 1rem;
+}
+
+.chart-footer {
+  margin-top: 1rem;
+  font-style: italic;
+}
+
+/* Acordeão (Accordion) */
+.accordion {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.accordion-item {
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.accordion-item.active {
+  border-color: #3b82f6;
+  background-color: #eff6ff;
+}
+
+.accordion-header {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  color: #334155;
+}
+
+.accordion-title {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-weight: 600;
+}
+
+.accordion-icon {
+  color: #3b82f6;
+}
+
+.accordion-content {
+  padding: 0 1rem 1rem 3.25rem; /* Alinhado com o texto do título */
+  color: #475569;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+/* Grid Compacto (Resumo de Dados) */
+.compact-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+}
+
+.compact-item {
+  display: flex;
+  flex-direction: column;
+  padding: 0.75rem;
+  background-color: #f8fafc;
+  border-radius: 6px;
+}
+
+.compact-item .label {
+  font-size: 0.75rem;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.compact-item .value {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #0f172a;
+  margin-top: 0.25rem;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
 }

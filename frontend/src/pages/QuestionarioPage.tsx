@@ -273,7 +273,7 @@ const QuestionarioPage: React.FC = () => {
     };
 
     const tooltipContent = {
-        inclinacaoST: "Inclinação do Pico do Segmento ST\n\nEste campo descreve a inclinação do segmento ST no eletrocardiograma durante o pico do exercício.\n\n• Normal (Flat): Risco intermediário.\n\n• Ascendente (Upsloping): Geralmente considerado de baixo risco.\n\n• Descendente (Downsloping): Geralmente indica um maior risco de isquemia miocárdica (fluxo sanguíneo inadequado para o coração).",
+        inclinacaoST: "Inclinação do Pico do Segmento ST\n\nEste campo descreve a inclinação do segmento ST no eletrocardiograma durante o pico do exercício.\n\n• Ascendente (Upsloping): Geralmente considerado de baixo risco.\n\n• Normal (Flat): Risco intermediário.\n\n• Descendente (Downsloping): Geralmente indica um maior risco de isquemia miocárdica (fluxo sanguíneo inadequado para o coração).",
 
         oldpeak: "Oldpeak\n\nRefere-se à depressão do segmento ST induzida pelo exercício em relação ao estado de repouso.\n\nÉ um importante indicador eletrocardiográfico de isquemia miocárdica.",
 
@@ -454,9 +454,9 @@ const QuestionarioPage: React.FC = () => {
                                         onChange={handleChange}
                                         className="form-select"
                                     >
-                                        <option value="0">Normal</option>
-                                        <option value="1">Ascendente</option>
-                                        <option value="2">Descendente</option>
+                                        <option value="1">Ascendente (Upsloping)</option>
+                                        <option value="2">Normal (Flat)</option>
+                                        <option value="3">Descendente (Downsloping)</option>
                                     </select>
                                 </div>
                             </div>

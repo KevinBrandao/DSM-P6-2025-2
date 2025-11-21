@@ -38,8 +38,8 @@ questionarioRoutes.post(
             .withMessage("Angina induzida por exercício deve ser 0 ou 1"),
         body("oldpeak").isFloat().withMessage("Oldpeak deve ser um número"),
         body("stSlope")
-            .isInt({ min: 0, max: 2 })
-            .withMessage("Inclinação ST deve ser entre 0 e 2"),
+            .isInt({ min: 1, max: 3 })
+            .withMessage("Inclinação ST deve ser entre 1 e 3"),
     ],
     questionarioController.process.bind(questionarioController)
 );
