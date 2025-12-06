@@ -30,6 +30,14 @@
             <Setter Property="Padding" Value="14" />
             <Setter Property="CornerRadius" Value="8" />
         </Style>
+
+        <Style x:Key="DottedSeparator" TargetType="BoxView">
+            <Setter Property="HeightRequest" Value="1"/>
+            <Setter Property="Color" Value="{StaticResource Gray200}"/>
+            <Setter Property="HorizontalOptions" Value="FillAndExpand"/>
+            <Setter Property="VerticalOptions" Value="Center"/>
+            <Setter Property="Margin" Value="8,0"/>
+        </Style>
     </ContentPage.Resources>
 
     <ScrollView>
@@ -85,6 +93,24 @@
                        TextColor="{StaticResource Primary}" Margin="0,5,0,0" />
 
                 <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10" RowSpacing="10">
+
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+
 
                     <Label Text="Nome" Style="{StaticResource DetailLabelStyle}" Grid.Row="0" Grid.Column="0"/>
                     <Label x:Name="NomeLabel" Text="[Nome]" Style="{StaticResource DetailValueStyle}" Grid.Row="0" Grid.Column="1"/>

@@ -1,7 +1,6 @@
 # HealthCheck - Plataforma de Avaliação de Saúde e Sono
 
-### 🎙️ [Deep dive](docs/deepdive.mp3)
-### 📹 [Vídeo no YouTube](https://youtu.be/Yk_RNUFOG6M)
+### 📹 [Vídeo no YouTube](https://youtu.be/HyWEk_p2UE0)
 
 ## 🚀 Visão Geral do Projeto
 
@@ -174,11 +173,31 @@ Para que as avaliações funcionem, os consumidores Python precisam estar rodand
 
 ### Aplicação Mobile e Web
 
-![alt text](docs/Imagens/qemu-system-x86_64_nQeOUJGuQQ.png)   
-![alt text](docs/Imagens/qemu-system-x86_64_hsUzrEe4xl.png)   
-![alt text](docs/Imagens/1.png)
-![alt text](docs/Imagens/2.png)
-![alt text](docs/Imagens/3.png)
-![alt text](docs/Imagens/qemu-system-x86_64_8l40OLBYZS.png)   
-![alt text](docs/Imagens/qemu-system-x86_64_awzGWE4Lfe.png)
-![alt text](docs/Imagens/qemu-system-x86_64_94IZlXeUF3.png)
+#### Mobile
+![Tela Login](docs/Imagens/Mobile2-2025/mobile_1.png)
+
+![Tela Inicial](docs/Imagens/Mobile2-2025/mobile_2.png)
+
+![Questionário Sono](docs/Imagens/Mobile2-2025/mobile_3.png)
+
+![Questionário Coração](docs/Imagens/Mobile2-2025/mobile_4.png)
+
+![Histórico Coração](docs/Imagens/Mobile2-2025/mobile_5.png)
+
+![Histórico Sono](docs/Imagens/Mobile2-2025/mobile_6.png)
+
+![Resultado Coração](docs/Imagens/Mobile2-2025/mobile_7.png)
+
+#### Web
+
+![Tela Login](docs/Imagens/Web2-2025/login.png)
+
+![Tela Inicial](docs/Imagens/Web2-2025/login.png)
+
+![Questionário Sono](docs/Imagens/Web2-2025/questionarioSono.png)
+
+![Questionário Coração](docs/Imagens/Web2-2025/questionario%20cardio.png)
+
+![Histórico](docs/Imagens/Web2-2025/Historicoavaliacoes.png)
+
+![Resultado Coração](docs/Imagens/Web2-2025/avaliacaoCardioco.png)

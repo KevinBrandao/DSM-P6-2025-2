@@ -41,57 +41,59 @@ public partial class SonoPage : ContentPage
             return;
         }
 
-        // Cria o modelo de requisição com os dados traduzidos (o restante do seu código)
-        var requestData = new SonoRequestModel
-        {
-            nome = NomeEntry.Text,
-            gender = TraduzirGenero(SexoPicker.SelectedItem as string),
-            age = int.TryParse(IdadeEntry.Text, out int i) ? i : 0,
-            occupation = TraduzirOcupacao(OcupacaoPicker.SelectedItem as string),
-            // Usa CultureInfo.InvariantCulture para garantir que o ponto decimal seja usado na serialização
-            sleepDuration = double.Parse(DuracaoSonoSlider.Value.ToString(CultureInfo.InvariantCulture), CultureInfo.InvariantCulture),
-            qualityOfSleep = (int)QualidadeSonoSlider.Value,
-            physicalActivityLevel = (int)AtividadeSlider.Value,
-            stressLevel = (int)StressSlider.Value,
-            bmiCategory = TraduzirImc(ImcPicker.SelectedItem as string),
-            bloodPressure = PressaoEntry.Text,
-            heartRate = int.TryParse(FreqCardiacaEntry.Text, out int f) ? f : 0,
-            dailySteps = (int)PassosSlider.Value
-        };
+        // 2. Ativa o loader antes de começar o processamento pesado
+        await SetLoadingState(true);
 
         try
         {
-            // 2. Define o token de autenticação
-            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", SessaoLogin.Token);
+            // Cria o modelo de requisição
+            var requestData = new SonoRequestModel
+            {
+                nome = NomeEntry.Text,
+                gender = TraduzirGenero(SexoPicker.SelectedItem as string),
+                age = int.TryParse(IdadeEntry.Text, out int i) ? i : 0,
+                occupation = TraduzirOcupacao(OcupacaoPicker.SelectedItem as string),
+                sleepDuration = double.Parse(DuracaoSonoSlider.Value.ToString(CultureInfo.InvariantCulture), CultureInfo.InvariantCulture),
+                qualityOfSleep = (int)QualidadeSonoSlider.Value,
+                physicalActivityLevel = (int)AtividadeSlider.Value,
+                stressLevel = (int)StressSlider.Value,
+                bmiCategory = TraduzirImc(ImcPicker.SelectedItem as string),
+                bloodPressure = PressaoEntry.Text,
+                heartRate = int.TryParse(FreqCardiacaEntry.Text, out int f) ? f : 0,
+                dailySteps = (int)PassosSlider.Value
+            };
 
-            // 3. Define a URL da API, usando a rota correta do OpenAPI
+            // Configurações da API
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", SessaoLogin.Token);
             var url = $"{SessaoLogin.UrlApi}/questionarios/sono";
 
-            // 4. Serializar e enviar
             string jsonPayload = JsonSerializer.Serialize(requestData);
             var content = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
+
+            // Envia a requisição
             HttpResponseMessage response = await client.PostAsync(url, content);
             string responseBody = await response.Content.ReadAsStringAsync();
 
-            // 5. Tratar a resposta
             if (response.IsSuccessStatusCode)
             {
-                // Deserializar a resposta (Modelo Resultado da API)
                 var resultadoResponse = JsonSerializer.Deserialize<Resultado>(responseBody);
 
-                // Navegar para a página de resultado de sono
+                // Navegar para a página de resultado
                 await Navigation.PushAsync(new ResultadoSonoPage(requestData, resultadoResponse));
             }
             else
             {
-                // Mostra o erro do backend
                 await DisplayAlert("Erro da API", $"Falha ao processar a avaliação. Status: {response.StatusCode}\nDetalhes: {responseBody}", "OK");
             }
         }
         catch (Exception ex)
         {
-            // Captura erros de rede, desserialização ou outros
             await DisplayAlert("Erro Crítico", $"Ocorreu um erro: {ex.Message}", "OK");
+        }
+        finally
+        {
+            // 3. Desativa o loader SEMPRE, independente de sucesso ou erro
+            await SetLoadingState(false);
         }
     }
 
@@ -132,6 +134,44 @@ public partial class SonoPage : ContentPage
                SexoPicker.SelectedIndex != -1 &&
                OcupacaoPicker.SelectedIndex != -1 &&
                ImcPicker.SelectedIndex != -1;
+    }
+
+    // Adicione este método na classe SonoPage (pode ser logo antes ou depois dos métodos de validação)
+    private async Task SetLoadingState(bool isLoading)
+    {
+        uint duration = 250; // Duração da animação em milissegundos
+        Easing easing = Easing.CubicInOut; // Efeito de aceleração/desaceleração suave
+
+        if (isLoading)
+        {
+            // Prepara o loader para a animação de FadeIn
+            LoaderGrid.Opacity = 0;
+            LoaderGrid.IsVisible = true;
+
+            // Inicia as duas animações ao mesmo tempo
+            await Task.WhenAll(
+                MainScrollView.FadeTo(0.3, duration, easing), // Deixa o formulário semitransparente
+                LoaderGrid.FadeTo(1, duration, easing) // Deixa o loader totalmente visível
+            );
+
+            // Esconde o formulário do layout para não ser clicável por baixo do loader
+            MainScrollView.IsVisible = false;
+        }
+        else
+        {
+            // Prepara o formulário para a animação de FadeIn
+            MainScrollView.Opacity = 0;
+            MainScrollView.IsVisible = true;
+
+            // Inicia as duas animações de volta ao mesmo tempo
+            await Task.WhenAll(
+                LoaderGrid.FadeTo(0, duration, easing), // Deixa o loader transparente
+                MainScrollView.FadeTo(1, duration, easing) // Deixa o formulário totalmente visível
+            );
+
+            // Esconde o loader do layout após a animação
+            LoaderGrid.IsVisible = false;
+        }
     }
 
     public async Task ClearFormSono()

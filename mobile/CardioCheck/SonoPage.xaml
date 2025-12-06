@@ -48,28 +48,49 @@
     </ContentPage.Resources>
 
 
+    <Grid>
     <ScrollView x:Name="MainScrollView">
         <VerticalStackLayout Spacing="16" Padding="25,20">
 
-            <Label 
-                Text="Questionário do Sono 💤"
-                FontSize="20" FontFamily="ComfortaaBold"
-                FontAttributes="Bold"
-                HorizontalOptions="Center"
-                TextColor="{StaticResource Primary}"
-                Margin="0,0,0,10"/>
+
+                <VerticalStackLayout Spacing="5" Margin="0,0,20,20">
+                    <Border BackgroundColor="{StaticResource Primary}"
+                            StrokeShape="RoundRectangle 12"
+                            Padding="20"
+                            Margin="-0,0,-25,0">
+                        <Grid ColumnDefinitions="Auto, *" ColumnSpacing="15">
+
+                            <VerticalStackLayout Grid.Column="1" VerticalOptions="Center">
+                                <Label Text="😴 Questionário Sono"
+                                       FontSize="22" 
+                                       FontFamily="ComfortaaBold"
+                                       TextColor="{StaticResource White}"
+                                       VerticalOptions="Center"/>
+                                <Label Text="Avaliação dos hábitos de sono e fatores de risco."
+                                       FontSize="14" 
+                                       FontFamily="LatoRegular"
+                                       TextColor="{StaticResource White}"
+                                       Opacity="0.8"/>
+                            </VerticalStackLayout>
+                        </Grid>
+                    </Border>
+                </VerticalStackLayout>
+
+
+
+       
 
             <VerticalStackLayout Spacing="0">
                 <Label Text="Nome" Style="{StaticResource FormLabelStyle}" />
                 <Border Style="{StaticResource FormFieldBorderStyle}">
-                    <Entry x:Name="NomeEntry" Placeholder="Digite seu nome" Style="{StaticResource FormEntryStyle}" />
+                    <Entry x:Name="NomeEntry"  Style="{StaticResource FormEntryStyle}" />
                 </Border>
             </VerticalStackLayout>
 
             <VerticalStackLayout Spacing="0">
                 <Label Text="Sexo" Style="{StaticResource FormLabelStyle}" />
                 <Border Style="{StaticResource FormFieldBorderStyle}">
-                    <Picker x:Name="SexoPicker" Title="Selecione seu sexo" Style="{StaticResource FormPickerStyle}">
+                    <Picker x:Name="SexoPicker" Title="Selecione o sexo do paciente" Style="{StaticResource FormPickerStyle}">
                         <Picker.ItemsSource>
                             <x:Array Type="{x:Type x:String}">
                                 <x:String>Masculino</x:String>
@@ -84,14 +105,14 @@
             <VerticalStackLayout Spacing="0">
                 <Label Text="Idade" Style="{StaticResource FormLabelStyle}"/>
                 <Border Style="{StaticResource FormFieldBorderStyle}">
-                    <Entry x:Name="IdadeEntry" Placeholder="Digite sua idade" Keyboard="Numeric" Style="{StaticResource FormEntryStyle}" />
+                    <Entry x:Name="IdadeEntry" Placeholder="Digite a idade do paciente" Keyboard="Numeric" Style="{StaticResource FormEntryStyle}" />
                 </Border>
             </VerticalStackLayout>
 
             <VerticalStackLayout Spacing="0">
                 <Label Text="Ocupação" Style="{StaticResource FormLabelStyle}"/>
                 <Border Style="{StaticResource FormFieldBorderStyle}">
-                    <Picker x:Name="OcupacaoPicker" Title="Selecione sua ocupação" Style="{StaticResource FormPickerStyle}">
+                    <Picker x:Name="OcupacaoPicker" Title="Selecione a ocupação" Style="{StaticResource FormPickerStyle}">
                         <Picker.ItemsSource>
                             <x:Array Type="{x:Type x:String}">
                                 <x:String>Médico(a)</x:String>
@@ -120,7 +141,7 @@
             <VerticalStackLayout Spacing="0">
                 <Label Text="Categoria IMC" Style="{StaticResource FormLabelStyle}"/>
                 <Border Style="{StaticResource FormFieldBorderStyle}">
-                    <Picker x:Name="ImcPicker" Title="Selecione a categoria do seu IMC" Style="{StaticResource FormPickerStyle}">
+                    <Picker x:Name="ImcPicker" Title="Selecione a categoria do IMC" Style="{StaticResource FormPickerStyle}">
                         <Picker.ItemsSource>
                             <x:Array Type="{x:Type x:String}">
                                 <x:String>Abaixo do peso</x:String>
@@ -181,5 +202,44 @@
 
         </VerticalStackLayout>
     </ScrollView>
+
+    <Grid x:Name="LoaderGrid" 
+              IsVisible="False" 
+              HorizontalOptions="FillAndExpand" 
+              VerticalOptions="FillAndExpand">
+
+        <BoxView BackgroundColor="White" />
+
+        <VerticalStackLayout VerticalOptions="Center" 
+                                 HorizontalOptions="Center" 
+                                 Spacing="20">
+
+            <HorizontalStackLayout Spacing="10" HorizontalOptions="Center">
+
+                <Image Source="braindata.gif"
+                       IsAnimationPlaying="True"
+                       HeightRequest="100"
+                       WidthRequest="100"/>
+
+                <Image Source="python.gif"
+                           IsAnimationPlaying="True"
+                           HeightRequest="100"
+                           WidthRequest="100"/>
+
+            </HorizontalStackLayout>
+
+
+            <Label Text="Analisando os dados, aguarde..."
+                       TextColor="#0fac8d"
+                       HorizontalOptions="Center"
+                       FontFamily="ComfortaaBold"
+                       FontSize="20"/>
+
+
+
+
+        </VerticalStackLayout>
+    </Grid>
+    </Grid>
 
 </ContentPage>

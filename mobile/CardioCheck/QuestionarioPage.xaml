@@ -50,14 +50,30 @@
         <Grid>
         <ScrollView x:Name="MainContentScrollView">
             <VerticalStackLayout Spacing="16" Padding="25,20">
+                <VerticalStackLayout Spacing="5" Margin="0,0,20,20">
+                    <Border BackgroundColor="{StaticResource Primary}"
+                           StrokeShape="RoundRectangle 12"
+                           Padding="20"
+                           Margin="-0,0,-25,0">
+                        <Grid ColumnDefinitions="Auto, *" ColumnSpacing="15">
 
-                <Label 
-                   Text="Questionário do Coração 💖"
-                   FontSize="20" FontFamily="ComfortaaBold"
-                   FontAttributes="Bold"
-                   HorizontalOptions="Center"
-                   TextColor="{StaticResource Primary}"
-                   Margin="0,0,0,10"/>
+                            <VerticalStackLayout Grid.Column="1" VerticalOptions="Center">
+                                <Label Text="❤️  Questionário Coração"
+                                      FontSize="22" 
+                                      FontFamily="ComfortaaBold"
+                                      TextColor="{StaticResource White}"
+                                      VerticalOptions="Center"/>
+                                <Label Text="                Avaliação do risco cardíaco."
+                                      FontSize="14" 
+                                      FontFamily="LatoRegular"
+                                      TextColor="{StaticResource White}"
+                                      Opacity="0.8"/>
+                            </VerticalStackLayout>
+                        </Grid>
+                    </Border>
+                </VerticalStackLayout>
+
+
 
 
                 <VerticalStackLayout>
@@ -68,7 +84,6 @@
                         <Entry x:Name="NomePacienteEntry" Placeholder="Digite o nome completo" Style="{StaticResource FormEntryStyle}" />
                     </Border>
                 </VerticalStackLayout>
-
 
 
                 <VerticalStackLayout>

@@ -64,9 +64,7 @@ export class QuestionarioSonoService {
 				requestId: avaliacao.id,
 				data: modelInput,
 			};
-
-			console.log(messagePayload);
-
+			
 			// Publicar no NATS
 			await this.natsService.publish("analyses.sleep.request", messagePayload);
 

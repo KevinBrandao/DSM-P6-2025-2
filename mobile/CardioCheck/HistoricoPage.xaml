@@ -9,34 +9,41 @@
 
     <Grid RowDefinitions="Auto, *">
 
-        <VerticalStackLayout>
-            <Image Source="logo.png"
-                   HeightRequest="40"
-                   Margin="50,25,50,20"
-                   HorizontalOptions="Center" />
-            <HorizontalStackLayout 
-                    HorizontalOptions="Center" 
-                    Spacing="10" 
-                    Margin="0,0,0,10">
+        <VerticalStackLayout Spacing="5" Margin="0,0,0,0">
 
-                <Image VerticalOptions="Center">
-                    <Image.Source>
-                        <FontImageSource 
-                        Glyph="&#xF0F6;"
-                        FontFamily="FontIcons" 
-                        Size="20"
-                        Color="{StaticResource Gray900}"/>
-                    </Image.Source>
-                </Image>
+            <Border BackgroundColor="{StaticResource Primary}"
+                           StrokeShape="RoundRectangle 1"
+                           WidthRequest="500"
+                           Padding="90, 40, 90, 40"
+                           Margin="-50,-10,0,0">
 
-                <Label 
-                    Text="Histórico de Avaliações"
-                    FontSize="18"
-                    FontFamily="ComfortaaBold"
-                    TextColor="{StaticResource Gray900}"
-                    VerticalOptions="Center"/>
+                <Grid ColumnDefinitions="Auto, *" ColumnSpacing="15">
 
-            </HorizontalStackLayout>
+
+                    <VerticalStackLayout Grid.Column="1" VerticalOptions="Center">
+                        <HorizontalStackLayout>
+
+                            <Image VerticalOptions="Center">
+                                <Image.Source>
+                                    <FontImageSource 
+                                            Glyph="&#xF0F6;"
+                                            FontFamily="FontIcons" 
+                                            Size="20"
+                                            Color="{StaticResource White}"/>
+                                </Image.Source>
+                            </Image>
+
+                            <Label Text="  Histórico Cardio"
+                                      FontSize="22" 
+                                      FontFamily="ComfortaaBold"
+                                      TextColor="{StaticResource White}"
+                                      VerticalOptions="Center"/>
+
+                        </HorizontalStackLayout>
+
+                    </VerticalStackLayout>
+                </Grid>
+            </Border>
         </VerticalStackLayout>
 
         <Grid Grid.Row="1">
